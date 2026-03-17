@@ -81,14 +81,20 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, onCorrect, 
       borderTop: isPaused ? "2px solid #fbbf24" : "1px solid #2d1f40",
       overflow: "hidden",
       transition: "border-color 0.3s",
+      /* モバイルでは残り領域を全部使う */
+      ...(isMobile ? { flex: 1, display: "flex", flexDirection: "column" as const } : {}),
     }}>
-      <div style={{ padding: p }}>
+      <div style={{
+        padding: p,
+        ...(isMobile ? { flex: 1, display: "flex", flexDirection: "column" as const } : {}),
+      }}>
 
         {/* ── ヘッダー行 ── */}
         <div style={{
           display: "flex", justifyContent: "space-between",
           alignItems: "center", marginBottom: isMobile ? 6 : 10,
           flexWrap: "wrap", gap: 6,
+          flexShrink: 0,
         }}>
           {/* カテゴリ + コンボ */}
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
@@ -129,7 +135,7 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, onCorrect, 
           </div>
         </div>
 
-        {/* ── 問題文 ── */}
+        {/* ── 問題文（固定サイズ） ── */}
         <div style={{
           fontSize: isMobile ? 15 : 18, fontWeight: "bold", color: "#f8fafc",
           marginBottom: isMobile ? 6 : 10,
@@ -143,12 +149,18 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, onCorrect, 
           lineHeight: 1.55,
           letterSpacing: 0.2,
           boxShadow: `inset 0 0 20px ${meta.color}08`,
+          flexShrink: 0,
         }}>
           {current.question}
         </div>
 
         {/* ── 選択肢 ── */}
-        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? 5 : 6 }}>
+        <div style={isMobile ? {
+          flex: 1, minHeight: 0,
+          display: "flex", flexDirection: "column", gap: 5,
+        } : {
+          display: "grid", gridTemplateColumns: "1fr 1fr", gap: 6,
+        }}>
           {current.choices.map((c, i) => {
             const isAnswer = c === current.answer;
             let bg = "#334155";
@@ -162,7 +174,8 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, onCorrect, 
                 disabled={!!disabled || !!feedback}
                 style={{
                   padding: isMobile ? "0 14px" : "9px 13px",
-                  minHeight: isMobile ? "12vh" : undefined,
+                  /* モバイルでは flex: 1 で均等分割、PCは auto */
+                  ...(isMobile ? { flex: 1 } : {}),
                   background: bg, color: "#f1f5f9",
                   border, borderRadius: 7,
                   cursor: (!disabled && !feedback) ? "pointer" : "default",
@@ -184,7 +197,7 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, onCorrect, 
 
         {/* ── フィードバック（固定高さ・レイアウトズレなし） ── */}
         <div style={{
-          height: isMobile ? 22 : 26, marginTop: 5,
+          height: isMobile ? 22 : 26, marginTop: 5, flexShrink: 0,
           display: "flex", alignItems: "center", justifyContent: "center",
           fontWeight: "bold", fontSize: isMobile ? 12 : 14,
           color: feedback === "correct" ? "#22c55e" : "#ef4444",

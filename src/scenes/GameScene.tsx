@@ -141,7 +141,9 @@ export function GameScene({ stage, subCategories, onBack, onClear }: Props) {
 
       {/* ── 戦場（上） ── */}
       <div style={{
-        flex: 1, display: "flex", flexDirection: "column",
+        /* モバイルでは固定高さ（キャンバスのアスペクト比で決まる）、PCは flex:1 で広げる */
+        ...(isMobile ? { flexShrink: 0 } : { flex: 1 }),
+        display: "flex", flexDirection: "column",
         background: "#0f172a", overflow: "hidden", position: "relative",
       }}>
         {/* アクティブ時間バー */}
@@ -184,7 +186,7 @@ export function GameScene({ stage, subCategories, onBack, onClear }: Props) {
       {/* ── 操作パネル（中） ── */}
       <CommandPanel energy={energy} onDeploy={handleDeploy} disabled={isDone} />
 
-      {/* ── クイズ（下） ── */}
+      {/* ── クイズ（下）：モバイルでは残り全部を使う ── */}
       <QuizPanel
         energy={energy}
         maxEnergy={MAX_ENERGY}
