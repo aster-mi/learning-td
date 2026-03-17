@@ -161,13 +161,13 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, onCorrect, 
                 onClick={() => answer(c)}
                 disabled={!!disabled || !!feedback}
                 style={{
-                  padding: isMobile ? "0 12px" : "9px 13px",
-                  minHeight: isMobile ? 40 : undefined,
+                  padding: isMobile ? "0 14px" : "9px 13px",
+                  minHeight: isMobile ? "12vh" : undefined,
                   background: bg, color: "#f1f5f9",
                   border, borderRadius: 7,
                   cursor: (!disabled && !feedback) ? "pointer" : "default",
                   fontWeight: "bold",
-                  fontSize: 14,
+                  fontSize: isMobile ? 16 : 14,
                   textAlign: "left",
                   transition: "background 0.15s",
                   lineHeight: 1.4,
