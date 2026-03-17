@@ -65,8 +65,9 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, onCorrect, 
   return (
     <div style={{
       background: "#1c1028",
-      borderTop: "1px solid #2d1f40",
+      borderTop: isPaused ? "2px solid #fbbf24" : "1px solid #2d1f40",
       overflow: "hidden",
+      transition: "border-color 0.3s",
     }}>
       <div style={{ padding: p }}>
 
