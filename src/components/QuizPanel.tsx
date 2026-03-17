@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { questions, SUB_CATEGORIES, type Question } from "../data/questions";
 import { useWindowSize } from "../hooks/useWindowSize";
 
@@ -27,6 +27,8 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, onCorrect, 
   const pool = questions.filter(q => subCategories.includes(q.sub));
   const [current, setCurrent] = useState<Question>(() => pickRandom(pool));
   const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
+  // このフィールド中で正解した問題IDを管理（全問正解したらリセット）
+  const answeredCorrectRef = useRef(new Set<string>());
 
   const answer = useCallback(
     (choice: string) => {
@@ -34,13 +36,24 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, onCorrect, 
       if (choice === current.answer) {
         setFeedback("correct");
         onCorrect();
+        answeredCorrectRef.current.add(current.id);
       } else {
         setFeedback("wrong");
         onWrong();
       }
       setTimeout(() => {
         setFeedback(null);
-        setCurrent(pickRandom(pool, current.id));
+        // 正解済みを除いたプールを使う
+        const remaining = pool.filter(
+          q => q.id !== current.id && !answeredCorrectRef.current.has(q.id)
+        );
+        if (remaining.length === 0) {
+          // 全問正解 → リセットして最初から
+          answeredCorrectRef.current = new Set();
+          setCurrent(pickRandom(pool, current.id));
+        } else {
+          setCurrent(pickRandom(remaining));
+        }
       }, 700);
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -148,7 +161,8 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, onCorrect, 
                 onClick={() => answer(c)}
                 disabled={!!disabled || !!feedback}
                 style={{
-                  padding: isMobile ? "3px 12px" : "9px 13px",
+                  padding: isMobile ? "0 12px" : "9px 13px",
+                  minHeight: isMobile ? 40 : undefined,
                   background: bg, color: "#f1f5f9",
                   border, borderRadius: 7,
                   cursor: (!disabled && !feedback) ? "pointer" : "default",
