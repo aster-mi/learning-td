@@ -11,8 +11,8 @@ interface Props {
   isPaused?: boolean;
 }
 
-const CANVAS_HEIGHT = 200;
-const GROUND_Y = 150;
+const CANVAS_HEIGHT = 300;
+const GROUND_Y = 220;
 
 function drawHpBar(
   ctx: CanvasRenderingContext2D,

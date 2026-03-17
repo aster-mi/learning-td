@@ -148,7 +148,7 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, onCorrect, 
                 onClick={() => answer(c)}
                 disabled={!!disabled || !!feedback}
                 style={{
-                  padding: isMobile ? "11px 13px" : "9px 13px",
+                  padding: isMobile ? "3px 12px" : "9px 13px",
                   background: bg, color: "#f1f5f9",
                   border, borderRadius: 7,
                   cursor: (!disabled && !feedback) ? "pointer" : "default",
