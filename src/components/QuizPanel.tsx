@@ -135,7 +135,7 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, onCorrect, 
         </div>
 
         {/* ── 選択肢 ── */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: isMobile ? 5 : 6 }}>
+        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: isMobile ? 5 : 6 }}>
           {current.choices.map((c, i) => {
             const isAnswer = c === current.answer;
             let bg = "#334155";
@@ -148,12 +148,12 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, onCorrect, 
                 onClick={() => answer(c)}
                 disabled={!!disabled || !!feedback}
                 style={{
-                  padding: isMobile ? "7px 10px" : "9px 13px",
+                  padding: isMobile ? "11px 13px" : "9px 13px",
                   background: bg, color: "#f1f5f9",
                   border, borderRadius: 7,
                   cursor: (!disabled && !feedback) ? "pointer" : "default",
                   fontWeight: "bold",
-                  fontSize: isMobile ? 13 : 14,
+                  fontSize: 14,
                   textAlign: "left",
                   transition: "background 0.15s",
                   lineHeight: 1.4,

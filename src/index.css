@@ -2,6 +2,11 @@
   box-sizing: border-box;
 }
 
+html {
+  height: 100%;
+  overflow: hidden;
+}
+
 body {
   margin: 0;
   padding: 0;
@@ -9,11 +14,15 @@ body {
   background: #0f172a;
   color: #f8fafc;
   -webkit-font-smoothing: antialiased;
+  height: 100%;
+  overflow: hidden;
+  /* iOS Safari の "ゴム引き" スクロールを無効化 */
+  overscroll-behavior: none;
 }
 
 #root {
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
 }
 
 button {

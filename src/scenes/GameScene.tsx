@@ -105,7 +105,13 @@ export function GameScene({ stage, subCategories, onBack, onClear }: Props) {
   const isPaused = !isDone && activeLeft <= 0;
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", height: "100vh", background: "#0f172a", color: "#fff" }}>
+    <div style={{
+      display: "flex", flexDirection: "column",
+      height: "100dvh",
+      background: "#0f172a", color: "#fff",
+      /* iOS ホームインジケーター分の余白 */
+      paddingBottom: "env(safe-area-inset-bottom, 0px)",
+    }}>
       {/* ── ヘッダー ── */}
       <div style={{
         display: "flex", alignItems: "center",
@@ -149,7 +155,7 @@ export function GameScene({ stage, subCategories, onBack, onClear }: Props) {
             animation: isPaused ? "pulse 1s infinite" : "none",
           }} />
         </div>
-        <div style={{ flex: 1, position: "relative", display: "flex", alignItems: "center" }}>
+        <div style={{ flex: 1, position: "relative", display: "flex", alignItems: isMobile ? "flex-start" : "center" }}>
         <BattleCanvas
           state={gameState}
           playerBaseX={engineRef.current.playerBaseX}
