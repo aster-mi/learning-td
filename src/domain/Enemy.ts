@@ -15,23 +15,23 @@ export interface EnemyDef {
 export const ENEMY_DEFS: Record<EnemyType, EnemyDef> = {
   weak: {
     type: "weak", label: "ザコ犬",
-    hp: 80,  atk: 10, atkInterval: 1500, speed: 50,  range: 38, color: "#e63946", radius: 15,
+    hp: 80,  atk: 10, atkInterval: 1500, speed: 25,  range: 38, color: "#e63946", radius: 15,
   },
   fast: {
     type: "fast", label: "速攻犬",
-    hp: 40,  atk: 8,  atkInterval: 900,  speed: 110, range: 32, color: "#ff6b6b", radius: 12,
+    hp: 40,  atk: 8,  atkInterval: 900,  speed: 55,  range: 32, color: "#ff6b6b", radius: 12,
   },
   tank: {
     type: "tank", label: "重装犬",
-    hp: 250, atk: 20, atkInterval: 2200, speed: 25,  range: 45, color: "#c1121f", radius: 22,
+    hp: 250, atk: 20, atkInterval: 2200, speed: 13,  range: 45, color: "#c1121f", radius: 22,
   },
   speedy: {
     type: "speedy", label: "すばやい犬",
-    hp: 28,  atk: 5,  atkInterval: 500,  speed: 200, range: 26, color: "#fb923c", radius: 9,
+    hp: 28,  atk: 5,  atkInterval: 500,  speed: 100, range: 26, color: "#fb923c", radius: 9,
   },
   boss: {
     type: "boss", label: "ボス犬",
-    hp: 450, atk: 35, atkInterval: 2800, speed: 12,  range: 65, color: "#7c3aed", radius: 30,
+    hp: 450, atk: 35, atkInterval: 2800, speed: 6,   range: 65, color: "#7c3aed", radius: 30,
   },
 };
 
