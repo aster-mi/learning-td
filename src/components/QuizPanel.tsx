@@ -244,7 +244,7 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
 
           {/* ── 問題文 ── */}
           <div style={{
-            fontSize: isMobile ? 15 : 18, fontWeight: "bold", color: "#f8fafc",
+            fontSize: isMobile ? 13 : 15, fontWeight: "bold", color: "#f8fafc",
             marginBottom: isMobile ? 6 : 10,
             padding: isMobile ? "8px 12px" : "12px 16px",
             background: "#110822",
@@ -253,9 +253,14 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
             borderTop: `1px solid ${meta.color}55`,
             borderRight: `1px solid ${meta.color}22`,
             borderBottom: `1px solid ${meta.color}22`,
-            lineHeight: 1.55, letterSpacing: 0.2,
+            lineHeight: 1.6, letterSpacing: 0.2,
             boxShadow: `inset 0 0 20px ${meta.color}08`,
             flexShrink: 0,
+            whiteSpace: "pre-wrap",       // コードスニペットの改行を保持
+            fontFamily: current.question.includes('\n') && current.question.includes('{')
+              ? "'Consolas','Courier New',monospace"
+              : "inherit",               // コードを含む問題はモノスペースフォント
+            overflowX: "auto",
           }}>
             {current.question}
           </div>
