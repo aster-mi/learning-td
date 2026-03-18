@@ -476,6 +476,56 @@ export const questions: Question[] = [
   { id: "js27", main: "プログラミング", sub: "Java Silver", level: 8, question: "Set インターフェースの特徴は？",                       choices: ["順序が保証される","nullが複数格納できる","インデックスでアクセスできる","重複要素を持たない"],  answer: "重複要素を持たない" },
   { id: "js28", main: "プログラミング", sub: "Java Silver", level: 9, question: "equals()をオーバーライドするとき一緒にオーバーライドすべきメソッドは？", choices: ["toString()","compareTo()","hashCode()","clone()"],               answer: "hashCode()" },
 
+  // ════════ プログラミング / Java Silver (追加 js29〜js68) ════════
+  // ── アクセス修飾子・クラス基礎 ──
+  { id: "js29", main: "プログラミング", sub: "Java Silver", level: 8, question: "同一クラス内からしかアクセスできない修飾子は？", choices: ["protected","package-private","public","private"], answer: "private" },
+  { id: "js30", main: "プログラミング", sub: "Java Silver", level: 8, question: "サブクラスと同一パッケージからアクセスできる修飾子は？", choices: ["private","public","package-private","protected"], answer: "protected" },
+  { id: "js31", main: "プログラミング", sub: "Java Silver", level: 8, question: "final クラスの特徴は？", choices: ["インスタンス化できない","abstractが必須","フィールドが定数になる","継承できない"], answer: "継承できない" },
+  { id: "js32", main: "プログラミング", sub: "Java Silver", level: 8, question: "コンストラクタの戻り値の型は？", choices: ["void","int","Object","宣言不要"], answer: "宣言不要" },
+  { id: "js33", main: "プログラミング", sub: "Java Silver", level: 8, question: "static フィールドの特徴は？", choices: ["インスタンスごとに保持","final と同義","インスタンスメソッドから参照不可","クラス全体で共有される"], answer: "クラス全体で共有される" },
+  { id: "js34", main: "プログラミング", sub: "Java Silver", level: 8, question: "メソッドオーバーロードの条件は？", choices: ["メソッド名が異なる","戻り値の型が異なる","引数の型・数・順序が異なる","アクセス修飾子が異なる"], answer: "引数の型・数・順序が異なる" },
+  { id: "js35", main: "プログラミング", sub: "Java Silver", level: 8, question: "this() の用途は？", choices: ["親クラスのコンストラクタ呼び出し","自クラスの別コンストラクタ呼び出し","自オブジェクトをコピーする","インターフェースの初期化"], answer: "自クラスの別コンストラクタ呼び出し" },
+  { id: "js36", main: "プログラミング", sub: "Java Silver", level: 8, question: "super() はコンストラクタ内の何行目に書く必要があるか？", choices: ["最後の行","どこでも良い","2行目","最初の行"], answer: "最初の行" },
+  // ── 型・演算子 ──
+  { id: "js37", main: "プログラミング", sub: "Java Silver", level: 8, question: "int と Integer の違いは？", choices: ["どちらもオブジェクト","Integerはプリミティブ","intはオブジェクト","intはプリミティブ、IntegerはラッパークラスのObject"], answer: "intはプリミティブ、IntegerはラッパークラスのObject" },
+  { id: "js38", main: "プログラミング", sub: "Java Silver", level: 8, question: "オートボクシング（autoboxing）とは？", choices: ["int演算の高速化","配列を自動拡張する機能","プリミティブ型を自動的にラッパーに変換する機能","型キャストを省略する機能"], answer: "プリミティブ型を自動的にラッパーに変換する機能" },
+  { id: "js39", main: "プログラミング", sub: "Java Silver", level: 8, question: "10 / 3 の計算結果は（int同士）？", choices: ["3.33","3","4","コンパイルエラー"], answer: "3" },
+  { id: "js40", main: "プログラミング", sub: "Java Silver", level: 8, question: "String の == と equals() の違いは？", choices: ["どちらも内容比較","==は参照比較、equals()は内容比較","==は内容比較、equals()は参照比較","どちらも参照比較"], answer: "==は参照比較、equals()は内容比較" },
+  { id: "js41", main: "プログラミング", sub: "Java Silver", level: 8, question: "String は変更可能（mutable）か？", choices: ["可変（mutable）","null 代入で変更可能","部分的に可変","不変（immutable）"], answer: "不変（immutable）" },
+  { id: "js42", main: "プログラミング", sub: "Java Silver", level: 8, question: "StringBuilder の append() の戻り値は？", choices: ["void","String","新しいStringBuilder","同じStringBuilderインスタンス（自身）"], answer: "同じStringBuilderインスタンス（自身）" },
+  // ── 制御フロー ──
+  { id: "js43", main: "プログラミング", sub: "Java Silver", level: 8, question: "switch文でbreakを省略すると？", choices: ["コンパイルエラー","その case のみ実行","次のcaseへフォールスルーする","例外が発生"], answer: "次のcaseへフォールスルーする" },
+  { id: "js44", main: "プログラミング", sub: "Java Silver", level: 8, question: "ラベル付き break の用途は？", choices: ["メソッドを終了させる","例外を投げる","指定したラベルのループを抜ける","内側のループだけ抜ける"], answer: "指定したラベルのループを抜ける" },
+  { id: "js45", main: "プログラミング", sub: "Java Silver", level: 8, question: "do-while 文の特徴は？", choices: ["条件が真の間だけ実行","条件が偽でも必ず1回実行される","for 文と同じ","breakが使えない"], answer: "条件が偽でも必ず1回実行される" },
+  { id: "js46", main: "プログラミング", sub: "Java Silver", level: 8, question: "varargs（可変長引数）の宣言方法は？", choices: ["int[] args","int... args","int* args","<int> args"], answer: "int... args" },
+  // ── 例外処理 ──
+  { id: "js47", main: "プログラミング", sub: "Java Silver", level: 8, question: "finally ブロックが実行されないのはどのとき？", choices: ["例外が発生したとき","return が実行されたとき","catchブロックで例外が出たとき","System.exit()が呼ばれたとき"], answer: "System.exit()が呼ばれたとき" },
+  { id: "js48", main: "プログラミング", sub: "Java Silver", level: 8, question: "multi-catch の書き方は？", choices: ["catch(A || B e)","catch(A, B e)","catch(A | B e)","catch(A + B e)"], answer: "catch(A | B e)" },
+  { id: "js49", main: "プログラミング", sub: "Java Silver", level: 8, question: "非検査例外（unchecked）の親クラスは？", choices: ["Exception","Throwable","Error","RuntimeException"], answer: "RuntimeException" },
+  { id: "js50", main: "プログラミング", sub: "Java Silver", level: 8, question: "OutOfMemoryError が継承しているクラスは？", choices: ["RuntimeException","Exception","Throwable直下のError","IOException"], answer: "Throwable直下のError" },
+  { id: "js51", main: "プログラミング", sub: "Java Silver", level: 8, question: "ArrayIndexOutOfBoundsException の原因は？", choices: ["配列に null を入れた","配列のサイズが0","存在しない配列インデックスにアクセス","配列を初期化していない"], answer: "存在しない配列インデックスにアクセス" },
+  { id: "js52", main: "プログラミング", sub: "Java Silver", level: 8, question: "ClassCastException の原因は？", choices: ["クラスが見つからない","メソッドが存在しない","nullをキャストした","互換性のない型へのキャスト"], answer: "互換性のない型へのキャスト" },
+  // ── コレクション ──
+  { id: "js53", main: "プログラミング", sub: "Java Silver", level: 8, question: "TreeMap の特徴は？", choices: ["挿入順を保持する","スレッドセーフ","キーが昇順ソートされる","重複キーを許可"], answer: "キーが昇順ソートされる" },
+  { id: "js54", main: "プログラミング", sub: "Java Silver", level: 8, question: "LinkedHashMap の特徴は？", choices: ["キーで自動ソート","重複キーを許可","スレッドセーフ","挿入順にイテレートされる"], answer: "挿入順にイテレートされる" },
+  { id: "js55", main: "プログラミング", sub: "Java Silver", level: 8, question: "Queue の先頭要素を取得し削除するメソッドは？", choices: ["peek()","get()","poll()","remove()のみ"], answer: "poll()" },
+  { id: "js56", main: "プログラミング", sub: "Java Silver", level: 8, question: "Collections.unmodifiableList() の説明は？", choices: ["要素をソートする","nullを除去する","新規追加を無視する","変更操作でUnsupportedOperationExceptionをスロー"], answer: "変更操作でUnsupportedOperationExceptionをスロー" },
+  { id: "js57", main: "プログラミング", sub: "Java Silver", level: 8, question: "Arrays.sort() はどのアルゴリズムを使う（オブジェクト配列）？", choices: ["クイックソート","バブルソート","TimSort（安定ソート）","挿入ソート"], answer: "TimSort（安定ソート）" },
+  // ── ラムダ・関数型インターフェース ──
+  { id: "js58", main: "プログラミング", sub: "Java Silver", level: 8, question: "Predicate<T> の抽象メソッドは？", choices: ["apply(T t)","accept(T t)","get()","test(T t)"], answer: "test(T t)" },
+  { id: "js59", main: "プログラミング", sub: "Java Silver", level: 8, question: "Consumer<T> の抽象メソッドは？", choices: ["apply(T t)","test(T t)","get()","accept(T t)"], answer: "accept(T t)" },
+  { id: "js60", main: "プログラミング", sub: "Java Silver", level: 8, question: "Supplier<T> の抽象メソッドは？", choices: ["apply()","run()","get()","supply()"], answer: "get()" },
+  { id: "js61", main: "プログラミング", sub: "Java Silver", level: 8, question: "メソッド参照 ClassName::methodName の対応するラムダ式は？", choices: ["() -> ClassName","x -> ClassName","(x) -> ClassName.methodName(x)","ClassName.methodName"], answer: "(x) -> ClassName.methodName(x)" },
+  { id: "js62", main: "プログラミング", sub: "Java Silver", level: 9, question: "ラムダ式でキャプチャできる外部変数の条件は？", choices: ["staticであること","publicであること","finalまたは実質的にfinal","インスタンス変数であること"], answer: "finalまたは実質的にfinal" },
+  // ── enum・ネストクラス ──
+  { id: "js63", main: "プログラミング", sub: "Java Silver", level: 8, question: "enum の特徴として正しいのは？", choices: ["newでインスタンス化できる","メソッドを持てない","extendsで継承できる","定数の集合を表しinterfaceは実装できる"], answer: "定数の集合を表しinterfaceは実装できる" },
+  { id: "js64", main: "プログラミング", sub: "Java Silver", level: 8, question: "静的ネストクラス（static nested class）の特徴は？", choices: ["外部クラスのインスタンスが必要","外部クラスのprivateにアクセス不可","外部クラスのインスタンスなしで生成できる","extendsできない"], answer: "外部クラスのインスタンスなしで生成できる" },
+  { id: "js65", main: "プログラミング", sub: "Java Silver", level: 9, question: "匿名クラス（anonymous class）の特徴は？", choices: ["複数のインターフェースをimplementsできない","名前のないクラスをその場でインスタンス化する","staticメソッドのみ持てる","継承はできない"], answer: "名前のないクラスをその場でインスタンス化する" },
+  // ── 日付時刻API ──
+  { id: "js66", main: "プログラミング", sub: "Java Silver", level: 8, question: "LocalDate のインスタンス生成に使うメソッドは？", choices: ["new LocalDate()","LocalDate.create()","LocalDate.getInstance()","LocalDate.of() または LocalDate.now()"], answer: "LocalDate.of() または LocalDate.now()" },
+  { id: "js67", main: "プログラミング", sub: "Java Silver", level: 8, question: "LocalDate は変更可能（mutable）か？", choices: ["可変（mutable）","スレッドにより異なる","部分的に可変","不変（immutable）"], answer: "不変（immutable）" },
+  { id: "js68", main: "プログラミング", sub: "Java Silver", level: 9, question: "2つのLocalDate間の日数を得るには？", choices: ["LocalDate.diff()","Period.between().getDays()","Duration.between()","ChronoUnit.DAYS.between()"], answer: "ChronoUnit.DAYS.between()" },
+
   // ════════ プログラミング / Java Gold (追加 jg19〜jg28) ════════
   { id: "jg19", main: "プログラミング", sub: "Java Gold", level: 9, question: "Function<T,R> の抽象メソッドは？",                     choices: ["run()","accept(T t)","test(T t)","apply(T t)"],                          answer: "apply(T t)" },
   { id: "jg20", main: "プログラミング", sub: "Java Gold", level: 10, question: "Java の StampedLock の特徴は？",                       choices: ["自動解放される","読み取りが少ない場合に有利","書き込みロックのみ","楽観的読み取りロックが使える"], answer: "楽観的読み取りロックが使える" },
