@@ -43,8 +43,11 @@ export class GameEngine {
 
   constructor(stage: StageData, selectedLevel: number = 7) {
     this.stage = stage;
-    // Lv.1→0.35, Lv.7≈1.0, Lv.10→1.30
-    this.difficultyScale = 0.35 + (Math.max(1, Math.min(10, selectedLevel)) - 1) * (1.3 - 0.35) / 9;
+    // Lv.1→0.35, Lv.7→1.0 (標準), Lv.10→1.10（上限を抑えた2段階カーブ）
+    const lv = Math.max(1, Math.min(10, selectedLevel));
+    this.difficultyScale = lv <= 7
+      ? 0.35 + (lv - 1) * (0.65 / 6)   // Lv.1〜7: 35%→100%
+      : 1.0  + (lv - 7) * (0.10 / 3);  // Lv.8〜10: 100%→110%
     const baseHp = Math.round(stage.enemyBaseHp * this.difficultyScale);
     this.enemyBaseHp    = baseHp;
     this.enemyBaseMaxHp = baseHp;
