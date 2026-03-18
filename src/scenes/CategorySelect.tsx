@@ -264,18 +264,28 @@ export function CategorySelect({ initialSelected, initialLevels, onConfirm }: Pr
                           <div style={{ fontSize: 11, color: "#475569" }}>{sub.desc}</div>
                         </div>
                         <div style={{ marginLeft: "auto", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 3 }}>
+                          {/* このサブカテゴリに含まれる問題のレベル範囲を表示 */}
                           {(() => {
-                            const ld = LEVEL_DEFS.find(d => d.level === sub.level);
-                            return ld ? (
+                            const lvls = questions
+                              .filter(q => q.sub === sub.name)
+                              .map(q => q.level);
+                            if (lvls.length === 0) return null;
+                            const mn = Math.min(...lvls);
+                            const mx = Math.max(...lvls);
+                            const ldMin = LEVEL_DEFS.find(d => d.level === mn)!;
+                            const ldMax = LEVEL_DEFS.find(d => d.level === mx)!;
+                            return (
                               <span style={{
                                 fontSize: 10, padding: "1px 5px",
-                                background: `${ld.color}22`, color: ld.color,
-                                borderRadius: 4, border: `1px solid ${ld.color}55`,
+                                background: "#1e293b", color: "#94a3b8",
+                                borderRadius: 4, border: "1px solid #334155",
                                 whiteSpace: "nowrap",
                               }}>
-                                {ld.emoji} {ld.label}
+                                {mn === mx
+                                  ? `${ldMin.emoji} ${ldMin.label}`
+                                  : `${ldMin.emoji}〜${ldMax.emoji}`}
                               </span>
-                            ) : null;
+                            );
                           })()}
                           <span style={{ fontSize: 11, color: "#475569" }}>
                             {questions_count(sub.name)}問

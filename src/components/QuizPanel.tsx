@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { questions, SUB_CATEGORIES, type Question } from "../data/questions";
+// SUB_CATEGORIES は meta (color/emoji) 表示のために使用
 import { useWindowSize } from "../hooks/useWindowSize";
 
 interface Props {
@@ -27,12 +28,9 @@ function pickRandom(pool: Question[], excludeId?: string): Question {
 export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLevels, onCorrect, onWrong, disabled, isPaused }: Props) {
   const { isMobile } = useWindowSize();
 
-  // サブカテゴリの level を引くヘルパー
-  const subLevelMap = Object.fromEntries(SUB_CATEGORIES.map(s => [s.name, s.level]));
-
   // カテゴリ × 難易度でフィルタ。0件の場合はカテゴリのみでフォールバック
   const filteredPool = questions.filter(
-    q => subCategories.includes(q.sub) && selectedLevels.includes(subLevelMap[q.sub] ?? 1)
+    q => subCategories.includes(q.sub) && selectedLevels.includes(q.level)
   );
   const pool = filteredPool.length > 0
     ? filteredPool
