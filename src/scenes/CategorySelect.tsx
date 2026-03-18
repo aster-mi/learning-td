@@ -73,7 +73,8 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm }: Pro
 
   return (
     <div style={{
-      minHeight: "100vh",
+      height: "100%",
+      overflowY: "auto",
       background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)",
       display: "flex", flexDirection: "column", alignItems: "center",
       padding: isMobile ? "24px 12px" : "40px 16px", color: "#fff",

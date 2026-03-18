@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { questions, SUB_CATEGORIES, type Question } from "../data/questions";
+import { questions, SUB_CATEGORIES, LEVEL_DEFS, type Question } from "../data/questions";
 // SUB_CATEGORIES は meta (color/emoji) 表示のために使用
 import { useWindowSize } from "../hooks/useWindowSize";
 
@@ -82,6 +82,7 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
 
   const meta = SUB_CATEGORIES.find(s => s.name === current.sub)
     ?? { color: "#94a3b8", emoji: "❓" };
+  const levelDef = LEVEL_DEFS.find(d => d.level === current.level) ?? LEVEL_DEFS[0];
 
   const p = isMobile ? "8px 10px" : "12px 16px";
 
@@ -115,6 +116,14 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
               whiteSpace: "nowrap",
             }}>
               {meta.emoji} {current.sub}
+            </span>
+            <span style={{
+              fontSize: 11, fontWeight: "bold", padding: "2px 6px",
+              background: `${levelDef.color}22`, color: levelDef.color,
+              borderRadius: 5, border: `1px solid ${levelDef.color}55`,
+              whiteSpace: "nowrap",
+            }}>
+              {levelDef.emoji} {levelDef.label}
             </span>
             <span style={{ fontSize: 12, color: "#94a3b8", whiteSpace: "nowrap" }}>
               コンボ:{" "}
