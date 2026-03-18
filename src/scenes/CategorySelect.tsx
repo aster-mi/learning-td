@@ -3,37 +3,25 @@ import { useWindowSize } from "../hooks/useWindowSize";
 import { LEVEL_DEFS, MAIN_CATEGORY_META, SUB_CATEGORIES, type MainCategory } from "../data/questions";
 
 interface Props {
-  initialSelected: string[];       // sub名のリスト
-  initialLevels: number[];         // 選択中の難易度レベル
-  onConfirm: (selected: string[], levels: number[]) => void;
+  initialSelected: string[];   // sub名のリスト
+  initialLevel: number;        // 選択中の最大難易度レベル
+  onConfirm: (selected: string[], level: number) => void;
 }
 
 // メインカテゴリの順序
 const MAIN_ORDER: MainCategory[] = ["算数", "国語", "理科", "社会", "英語", "プログラミング"];
 
-export function CategorySelect({ initialSelected, initialLevels, onConfirm }: Props) {
+export function CategorySelect({ initialSelected, initialLevel, onConfirm }: Props) {
   const { isMobile } = useWindowSize();
   const allSubs = SUB_CATEGORIES.map(s => s.name);
-  const allLevels = LEVEL_DEFS.map(l => l.level);
+  const maxLevel = Math.max(...LEVEL_DEFS.map(l => l.level));
 
   const [selected, setSelected] = useState<Set<string>>(
     () => new Set(initialSelected.length > 0 ? initialSelected : allSubs)
   );
-  const [levels, setLevels] = useState<Set<number>>(
-    () => new Set(initialLevels.length > 0 ? initialLevels : allLevels)
-  );
+  const [level, setLevel] = useState<number>(initialLevel > 0 ? initialLevel : maxLevel);
   // どのメインカテゴリが開いているか（デフォルト閉じ）
   const [openMain, setOpenMain] = useState<Set<MainCategory>>(() => new Set());
-
-  // レベルトグル（最低1つ）
-  const toggleLevel = (lv: number) => {
-    setLevels(prev => {
-      if (prev.size <= 1 && prev.has(lv)) return prev;
-      const next = new Set(prev);
-      next.has(lv) ? next.delete(lv) : next.add(lv);
-      return next;
-    });
-  };
 
   // サブカテゴリ単体トグル
   const toggleSub = (subName: string) => {
@@ -112,33 +100,32 @@ export function CategorySelect({ initialSelected, initialLevels, onConfirm }: Pr
           <div style={{ fontSize: 13, fontWeight: "bold", color: "#94a3b8", marginBottom: 10, letterSpacing: 1 }}>
             🎯 難易度
           </div>
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
-            {LEVEL_DEFS.map(ld => {
-              const on = levels.has(ld.level);
-              return (
-                <button
-                  key={ld.level}
-                  onClick={() => toggleLevel(ld.level)}
-                  style={{
-                    flex: 1, minWidth: isMobile ? 52 : 80,
-                    padding: isMobile ? "8px 4px" : "10px 8px",
-                    background: on ? `${ld.color}22` : "#1e293b",
-                    border: `2px solid ${on ? ld.color : "#334155"}`,
-                    borderRadius: 8, cursor: "pointer",
-                    display: "flex", flexDirection: "column", alignItems: "center", gap: 3,
-                    transition: "all 0.15s",
-                  }}
-                >
-                  <span style={{ fontSize: isMobile ? 18 : 22 }}>{ld.emoji}</span>
-                  <span style={{ fontSize: isMobile ? 10 : 11, fontWeight: "bold", color: on ? ld.color : "#64748b", whiteSpace: "nowrap" }}>
-                    {ld.label}
-                  </span>
-                </button>
-              );
-            })}
-          </div>
-          <div style={{ marginTop: 8, fontSize: 11, color: "#475569", textAlign: "right" }}>
-            {levels.size === allLevels.length ? "すべての難易度" : `${[...levels].sort().map(l => LEVEL_DEFS.find(d => d.level === l)?.label).join(" / ")}`}を出題
+          {/* 単一ドロップダウン */}
+          <select
+            value={level}
+            onChange={e => setLevel(Number(e.target.value))}
+            style={{
+              width: "100%",
+              padding: isMobile ? "10px 12px" : "11px 14px",
+              background: "#1e293b", color: "#f1f5f9",
+              border: `2px solid ${LEVEL_DEFS.find(d => d.level === level)?.color ?? "#334155"}`,
+              borderRadius: 8, fontSize: isMobile ? 15 : 15,
+              cursor: "pointer", outline: "none",
+              appearance: "auto",
+            }}
+          >
+            {LEVEL_DEFS.map(ld => (
+              <option key={ld.level} value={ld.level} style={{ background: "#1e293b" }}>
+                {ld.emoji} {ld.label}まで
+              </option>
+            ))}
+          </select>
+          <div style={{ marginTop: 8, fontSize: 11, color: "#64748b" }}>
+            {(() => {
+              const ld = LEVEL_DEFS.find(d => d.level === level);
+              const count = questions.filter(q => selected.has(q.sub) && q.level <= level).length;
+              return `${ld?.emoji ?? ""} ${ld?.label ?? ""}以下の問題を出題 （対象 ${count} 問）`;
+            })()}
           </div>
         </div>
 
@@ -311,7 +298,7 @@ export function CategorySelect({ initialSelected, initialLevels, onConfirm }: Pr
 
       {/* 決定ボタン */}
       <button
-        onClick={() => onConfirm([...selected], [...levels].sort() as number[])}
+        onClick={() => onConfirm([...selected], level)}
         style={{
           marginTop: 20, padding: "14px 48px",
           background: "#3b82f6", color: "#fff",

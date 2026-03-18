@@ -9,8 +9,8 @@ interface Props {
   combo: number;
   /** 選択中のサブカテゴリ名リスト */
   subCategories: string[];
-  /** 選択中の難易度レベル (1-5) */
-  selectedLevels: number[];
+  /** 最大難易度レベル（このレベル以下の問題を出題） */
+  selectedLevel: number;
   onCorrect: () => void;
   onWrong: () => void;
   disabled?: boolean;
@@ -25,12 +25,12 @@ function pickRandom(pool: Question[], excludeId?: string): Question {
   return { ...q, choices };
 }
 
-export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLevels, onCorrect, onWrong, disabled, isPaused }: Props) {
+export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLevel, onCorrect, onWrong, disabled, isPaused }: Props) {
   const { isMobile } = useWindowSize();
 
-  // カテゴリ × 難易度でフィルタ。0件の場合はカテゴリのみでフォールバック
+  // カテゴリ × 難易度でフィルタ（selectedLevel 以下を出題）。0件ならカテゴリのみでフォールバック
   const filteredPool = questions.filter(
-    q => subCategories.includes(q.sub) && selectedLevels.includes(q.level)
+    q => subCategories.includes(q.sub) && q.level <= selectedLevel
   );
   const pool = filteredPool.length > 0
     ? filteredPool
