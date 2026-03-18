@@ -464,6 +464,66 @@ export const questions: Question[] = [
   { id: "jb27", main: "プログラミング", sub: "Java Bronze", level: 7, question: "Javaでimport文を書く場所は？",                      choices: ["メソッドの中","クラス定義の後","package文の後・class宣言の前","class定義の中"], answer: "package文の後・class宣言の前" },
   { id: "jb28", main: "プログラミング", sub: "Java Bronze", level: 8, question: "Javaのenumの特徴は？",                              choices: ["インターフェースの一種","ランダムな値を生成","継承不可の定数セット","抽象クラスの一種"], answer: "継承不可の定数セット" },
 
+  // ════════ プログラミング / Java Bronze (追加 jb29〜jb78) ════════
+  // ── 演算子・型変換 ──
+  { id: "jb29", main: "プログラミング", sub: "Java Bronze", level: 7, question: "「7 % 3」の結果は？（% は余り演算子）", choices: ["0","1","2","3"], answer: "1" },
+  { id: "jb30", main: "プログラミング", sub: "Java Bronze", level: 7, question: "「int i = 5; i++;」後の i の値は？", choices: ["4","5","6","7"], answer: "6" },
+  { id: "jb31", main: "プログラミング", sub: "Java Bronze", level: 7, question: "三項演算子の書き方は？", choices: ["if(a) b else c","a ? b : c","a then b else c","a -> b : c"], answer: "a ? b : c" },
+  { id: "jb32", main: "プログラミング", sub: "Java Bronze", level: 7, question: "「int x = 5; double d = x;」はコンパイルできる？", choices: ["できない（型エラー）","できる（自動的に拡大変換）","できない（キャスト必要）","実行時エラーになる"], answer: "できる（自動的に拡大変換）" },
+  { id: "jb33", main: "プログラミング", sub: "Java Bronze", level: 7, question: "double を int にキャストする書き方は？", choices: ["int(d)","d.toInt()","(int)d","int.cast(d)"], answer: "(int)d" },
+  { id: "jb34", main: "プログラミング", sub: "Java Bronze", level: 7, question: "Javaの整数除算「10 / 3」の結果は？", choices: ["3.33","3","4","コンパイルエラー"], answer: "3" },
+  { id: "jb35", main: "プログラミング", sub: "Java Bronze", level: 7, question: "「!=」演算子の意味は？", choices: ["等しい","以上","以下","等しくない"], answer: "等しくない" },
+  { id: "jb36", main: "プログラミング", sub: "Java Bronze", level: 7, question: "論理演算子「||」の意味は？", choices: ["AND（かつ）","NOT（否定）","OR（または）","XOR（排他的論理和）"], answer: "OR（または）" },
+  { id: "jb37", main: "プログラミング", sub: "Java Bronze", level: 7, question: "「!true」の結果は？", choices: ["true","null","1","false"], answer: "false" },
+  { id: "jb38", main: "プログラミング", sub: "Java Bronze", level: 7, question: "byte 型が表せる範囲は？", choices: ["0〜255","-32768〜32767","-128〜127","-256〜255"], answer: "-128〜127" },
+  // ── 配列 ──
+  { id: "jb39", main: "プログラミング", sub: "Java Bronze", level: 7, question: "「int[] arr = new int[3];」で arr[0] の初期値は？", choices: ["null","1","-1","0"], answer: "0" },
+  { id: "jb40", main: "プログラミング", sub: "Java Bronze", level: 7, question: "「boolean[] flags = new boolean[3];」で flags[0] の初期値は？", choices: ["true","null","1","false"], answer: "false" },
+  { id: "jb41", main: "プログラミング", sub: "Java Bronze", level: 7, question: "「String[] names = new String[3];」で names[0] の初期値は？", choices: ["\"\"（空文字）","undefined","0","null"], answer: "null" },
+  { id: "jb42", main: "プログラミング", sub: "Java Bronze", level: 7, question: "配列 arr の要素数を取得するには？", choices: ["arr.size()","arr.count()","arr.length()","arr.length"], answer: "arr.length" },
+  { id: "jb43", main: "プログラミング", sub: "Java Bronze", level: 7, question: "配列は参照型か値型か？", choices: ["値型（プリミティブ）","メソッドによる","条件による","参照型（オブジェクト）"], answer: "参照型（オブジェクト）" },
+  { id: "jb44", main: "プログラミング", sub: "Java Bronze", level: 8, question: "2次元配列の宣言方法は？", choices: ["int[2][3] arr","int arr[2][3]","Array<int> arr = new int[2][3]","int[][] arr = new int[2][3]"], answer: "int[][] arr = new int[2][3]" },
+  { id: "jb45", main: "プログラミング", sub: "Java Bronze", level: 7, question: "存在しない配列インデックスへのアクセスで発生する例外は？", choices: ["NullPointerException","IndexException","OutOfBoundsException","ArrayIndexOutOfBoundsException"], answer: "ArrayIndexOutOfBoundsException" },
+  // ── String メソッド ──
+  { id: "jb46", main: "プログラミング", sub: "Java Bronze", level: 7, question: "\"Hello\".length() の結果は？", choices: ["4","5","6","7"], answer: "5" },
+  { id: "jb47", main: "プログラミング", sub: "Java Bronze", level: 7, question: "\"Hello\".charAt(0) の結果は？", choices: ["\"H\"","'e'","'H'","\"Hello\""], answer: "'H'" },
+  { id: "jb48", main: "プログラミング", sub: "Java Bronze", level: 7, question: "\"Hello\".toLowerCase() の結果は？", choices: ["\"HELLO\"","\"Hello\"","\"hELLO\"","\"hello\""], answer: "\"hello\"" },
+  { id: "jb49", main: "プログラミング", sub: "Java Bronze", level: 7, question: "\"Hello\".substring(1, 3) の結果は？", choices: ["\"He\"","\"ell\"","\"el\"","\"Hello\""], answer: "\"el\"" },
+  { id: "jb50", main: "プログラミング", sub: "Java Bronze", level: 7, question: "\"Hello\".indexOf(\"l\") の結果は？", choices: ["1","2","3","4"], answer: "2" },
+  { id: "jb51", main: "プログラミング", sub: "Java Bronze", level: 7, question: "String が不変（immutable）とはどういう意味？", choices: ["null代入できない","finalクラスではない","値を変更するとコンパイルエラー","一度作ると内容を変えられない"], answer: "一度作ると内容を変えられない" },
+  { id: "jb52", main: "プログラミング", sub: "Java Bronze", level: 7, question: "\"abc\" == \"abc\" が false になる場合があるのはなぜ？", choices: ["長さが異なるから","比較できないから","==は参照比較のため異なるオブジェクト","文字列は比較不可"], answer: "==は参照比較のため異なるオブジェクト" },
+  // ── JVM・コンパイル ──
+  { id: "jb53", main: "プログラミング", sub: "Java Bronze", level: 7, question: "javac コマンドの役割は？", choices: ["バイトコードを実行する","テストを実行する","ライブラリを管理する","ソースコードをコンパイルしてclassファイルを生成"], answer: "ソースコードをコンパイルしてclassファイルを生成" },
+  { id: "jb54", main: "プログラミング", sub: "Java Bronze", level: 7, question: ".class ファイルの中身は？", choices: ["ソースコード","機械語","XMLデータ","バイトコード（中間コード）"], answer: "バイトコード（中間コード）" },
+  { id: "jb55", main: "プログラミング", sub: "Java Bronze", level: 7, question: "JVM の役割は？", choices: ["ソースを翻訳する","クラスを設計する","ライブラリを管理する","バイトコードをプラットフォームに合わせて実行する"], answer: "バイトコードをプラットフォームに合わせて実行する" },
+  { id: "jb56", main: "プログラミング", sub: "Java Bronze", level: 7, question: "JDK に含まれるものは？", choices: ["JVMのみ","JREのみ","実行環境のみ","JRE＋javac等の開発ツール"], answer: "JRE＋javac等の開発ツール" },
+  { id: "jb57", main: "プログラミング", sub: "Java Bronze", level: 7, question: "Javaが「Write Once, Run Anywhere」を実現できる理由は？", choices: ["コードが小さいから","JVMがOSの違いを吸収するから","Cより速いから","コンパイル不要だから"], answer: "JVMがOSの違いを吸収するから" },
+  // ── 例外処理基礎 ──
+  { id: "jb58", main: "プログラミング", sub: "Java Bronze", level: 7, question: "0で整数を割ったときに発生する例外は？", choices: ["NullPointerException","NumberFormatException","DivideByZeroException","ArithmeticException"], answer: "ArithmeticException" },
+  { id: "jb59", main: "プログラミング", sub: "Java Bronze", level: 7, question: "null のオブジェクト参照でメソッドを呼ぶと発生する例外は？", choices: ["ArithmeticException","IllegalArgumentException","ArrayIndexOutOfBoundsException","NullPointerException"], answer: "NullPointerException" },
+  { id: "jb60", main: "プログラミング", sub: "Java Bronze", level: 7, question: "try-catch 文で catch が実行されるのはいつ？", choices: ["必ず実行される","tryが成功したとき","catchの後に実行","tryブロック内で例外が発生したとき"], answer: "tryブロック内で例外が発生したとき" },
+  { id: "jb61", main: "プログラミング", sub: "Java Bronze", level: 8, question: "Integer.parseInt(\"abc\") を呼ぶと何が起きる？", choices: ["0が返る","nullが返る","\"abc\"が整数として返る","NumberFormatExceptionが発生"], answer: "NumberFormatExceptionが発生" },
+  // ── OOP基礎 ──
+  { id: "jb62", main: "プログラミング", sub: "Java Bronze", level: 7, question: "Javaですべてのクラスの親クラスは？", choices: ["Base","Root","Class","Object"], answer: "Object" },
+  { id: "jb63", main: "プログラミング", sub: "Java Bronze", level: 7, question: "クラスを継承するキーワードは？", choices: ["implements","inherits","using","extends"], answer: "extends" },
+  { id: "jb64", main: "プログラミング", sub: "Java Bronze", level: 7, question: "インターフェースを実装するキーワードは？", choices: ["extends","uses","inherits","implements"], answer: "implements" },
+  { id: "jb65", main: "プログラミング", sub: "Java Bronze", level: 7, question: "this キーワードの用途は？", choices: ["親クラスを参照する","クラス名を表す","クラス変数を参照する","自分自身のインスタンスを参照する"], answer: "自分自身のインスタンスを参照する" },
+  { id: "jb66", main: "プログラミング", sub: "Java Bronze", level: 7, question: "super キーワードの用途は？", choices: ["自クラスのコンストラクタ呼び出し","インターフェースを呼び出す","親クラスのメソッド・コンストラクタを呼び出す","static メソッドを呼び出す"], answer: "親クラスのメソッド・コンストラクタを呼び出す" },
+  { id: "jb67", main: "プログラミング", sub: "Java Bronze", level: 7, question: "デフォルトコンストラクタが自動生成されるのはいつ？", choices: ["abstractクラスのとき","常に生成される","interfaceのとき","コンストラクタが1つも定義されていないとき"], answer: "コンストラクタが1つも定義されていないとき" },
+  { id: "jb68", main: "プログラミング", sub: "Java Bronze", level: 8, question: "カプセル化の目的は？", choices: ["処理を高速化する","コードを短くする","クラスを増やす","フィールドを隠蔽しgetterとsetterでアクセスを制御する"], answer: "フィールドを隠蔽しgetterとsetterでアクセスを制御する" },
+  { id: "jb69", main: "プログラミング", sub: "Java Bronze", level: 7, question: "オーバーライドの条件は？", choices: ["引数の数が異なる","戻り値の型が異なる","メソッド名が異なる","親クラスと同じシグネチャ（名前・引数）で再定義"], answer: "親クラスと同じシグネチャ（名前・引数）で再定義" },
+  { id: "jb70", main: "プログラミング", sub: "Java Bronze", level: 7, question: "抽象クラス（abstract class）の特徴は？", choices: ["インスタンス化できる","全メソッドに実装が必要","staticのみ持てる","abstractメソッドを持てる・直接インスタンス化できない"], answer: "abstractメソッドを持てる・直接インスタンス化できない" },
+  // ── 制御フロー追加 ──
+  { id: "jb71", main: "プログラミング", sub: "Java Bronze", level: 7, question: "continue 文の動作は？", choices: ["ループを完全に抜ける","プログラムを終了する","メソッドを終了する","残りの処理をスキップして次のループへ進む"], answer: "残りの処理をスキップして次のループへ進む" },
+  { id: "jb72", main: "プログラミング", sub: "Java Bronze", level: 7, question: "拡張for文（for-each）の書き方は？", choices: ["for (arr : int x)","for (int x in arr)","for (x <- arr)","for (int x : arr)"], answer: "for (int x : arr)" },
+  { id: "jb73", main: "プログラミング", sub: "Java Bronze", level: 7, question: "switch文でどのcaseにも一致しない場合に実行されるラベルは？", choices: ["else","otherwise","default","none"], answer: "default" },
+  // ── Math・Integer ──
+  { id: "jb74", main: "プログラミング", sub: "Java Bronze", level: 7, question: "Math.abs(-7) の結果は？", choices: ["-7","0","7","14"], answer: "7" },
+  { id: "jb75", main: "プログラミング", sub: "Java Bronze", level: 7, question: "Math.max(3, 9) の結果は？", choices: ["3","6","9","12"], answer: "9" },
+  { id: "jb76", main: "プログラミング", sub: "Java Bronze", level: 7, question: "Integer.parseInt(\"42\") の結果は？", choices: ["\"42\"","42.0","文字'4'","整数42"], answer: "整数42" },
+  { id: "jb77", main: "プログラミング", sub: "Java Bronze", level: 8, question: "int 型のオーバーフローが起きると？", choices: ["例外が発生する","コンパイルエラー","0に戻る","最小値側にラップアラウンドする"], answer: "最小値側にラップアラウンドする" },
+  { id: "jb78", main: "プログラミング", sub: "Java Bronze", level: 7, question: "null をプリミティブ型（int など）の変数に代入できる？", choices: ["できる（0として扱われる）","実行時に0になる","条件による","できない（コンパイルエラー）"], answer: "できない（コンパイルエラー）" },
+
   // ════════ プログラミング / Java Silver (追加 js19〜js28) ════════
   { id: "js19", main: "プログラミング", sub: "Java Silver", level: 8, question: "try-with-resources の利点は？",                     choices: ["例外を無視できる","スレッドが安全になる","パフォーマンスが上がる","AutoCloseableリソースが自動クローズ"], answer: "AutoCloseableリソースが自動クローズ" },
   { id: "js20", main: "プログラミング", sub: "Java Silver", level: 9, question: "Java の Iterator パターンで要素を取得するメソッドは？", choices: ["get()","fetch()","read()","next()"],                                      answer: "next()" },
