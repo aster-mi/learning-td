@@ -358,6 +358,15 @@ function drawCat(ctx: CanvasRenderingContext2D, u: Unit, t: number) {
   ctx.beginPath(); ctx.moveTo(hx - hr*0.08, hy + hr*0.23); ctx.lineTo(hx - hr*0.84, hy + hr*0.31); ctx.stroke();
   ctx.restore();
 
+  // 遠距離ネコ: 弓を追加描画
+  if (u.def.type === "shooter") {
+    drawShooterBow(ctx, cx + r*0.44, cy - r*0.67, r*0.72, col, t);
+  }
+  // 火炎ネコ: 炎エフェクト
+  if (u.def.type === "bomber") {
+    drawBomberFlames(ctx, cx, cy, r, t);
+  }
+
   drawHpBar(ctx, cx, cy - r - bob - 14, r * 2.4, u.hp, u.maxHp);
 }
 
@@ -389,9 +398,11 @@ function drawEnemy(ctx: CanvasRenderingContext2D, e: Enemy, t: number) {
   ctx.globalAlpha = 1;
   ctx.restore();
 
-  if (e.def.type === "tank")      drawTankDog(ctx, cx, cy, r, col, t);
-  else if (e.def.type === "fast") drawFastDog(ctx, cx, cy, r, col, ph);
-  else                            drawWeakDog(ctx, cx, cy, r, col);
+  if      (e.def.type === "boss")   drawBossDog(ctx, cx, cy, r, col, t);
+  else if (e.def.type === "speedy") drawSpeedyDog(ctx, cx, cy, r, col, ph);
+  else if (e.def.type === "tank")   drawTankDog(ctx, cx, cy, r, col, t);
+  else if (e.def.type === "fast")   drawFastDog(ctx, cx, cy, r, col, ph);
+  else                              drawWeakDog(ctx, cx, cy, r, col);
 
   drawHpBar(ctx, cx, cy - r - bob - 14, r * 2.4, e.hp, e.maxHp);
 }
@@ -491,6 +502,137 @@ function drawTankDog(ctx: CanvasRenderingContext2D, cx:number, cy:number, r:numb
   ctx.fillStyle = col;
   ctx.beginPath(); ctx.moveTo(hx - hr*0.42, hy - hr*0.78); ctx.lineTo(hx - hr*0.62, hy - hr*1.52); ctx.lineTo(hx - hr*0.22, hy - hr*0.84); ctx.closePath(); ctx.fill();
   ctx.beginPath(); ctx.moveTo(hx + hr*0.18, hy - hr*0.78); ctx.lineTo(hx + hr*0.38, hy - hr*1.52); ctx.lineTo(hx - hr*0.02, hy - hr*0.84); ctx.closePath(); ctx.fill();
+}
+
+// ── speedy dog (tiny, lightning-fast) ─────────────────────────────────────
+function drawSpeedyDog(ctx: CanvasRenderingContext2D, cx:number, cy:number, r:number, col:string, ph:number) {
+  const lc = lighter(col, 80);
+  // Tiny streamlined body
+  ctx.fillStyle = col;
+  ctx.beginPath(); ctx.ellipse(cx, cy, r*1.3, r*0.6, -0.2, 0, Math.PI*2); ctx.fill();
+  // Lightning trail
+  ctx.save(); ctx.strokeStyle = lc; ctx.lineWidth = 1; ctx.globalAlpha = 0.6 + 0.4*Math.abs(Math.sin(ph*4));
+  ctx.beginPath(); ctx.moveTo(cx + r*1.0, cy - r*0.1); ctx.lineTo(cx + r*2.2, cy - r*0.4);
+  ctx.moveTo(cx + r*1.1, cy + r*0.2); ctx.lineTo(cx + r*2.4, cy + r*0.3); ctx.stroke();
+  ctx.restore();
+  // Tiny head (faces left)
+  const hx = cx - r*0.6, hy = cy - r*0.4, hr = r*0.55;
+  ctx.fillStyle = col;
+  ctx.beginPath(); ctx.ellipse(hx, hy, hr*1.1, hr*0.85, -0.15, 0, Math.PI*2); ctx.fill();
+  // Pointy snout
+  ctx.beginPath(); ctx.moveTo(hx - hr*1.0, hy + hr*0.15); ctx.lineTo(hx - hr*0.6, hy); ctx.lineTo(hx - hr*0.6, hy + hr*0.3); ctx.closePath(); ctx.fill();
+  // Tiny spiky ears
+  ctx.fillStyle = lc;
+  ctx.beginPath(); ctx.moveTo(hx - hr*0.1, hy - hr*0.8); ctx.lineTo(hx + hr*0.05, hy - hr*1.35); ctx.lineTo(hx + hr*0.2, hy - hr*0.8); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(hx + hr*0.25, hy - hr*0.75); ctx.lineTo(hx + hr*0.4, hy - hr*1.2); ctx.lineTo(hx + hr*0.55, hy - hr*0.75); ctx.closePath(); ctx.fill();
+  // Bright eye
+  ctx.fillStyle = "#ffe000";
+  ctx.beginPath(); ctx.arc(hx - hr*0.18, hy - hr*0.1, hr*0.2, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = "#000";
+  ctx.beginPath(); ctx.arc(hx - hr*0.18, hy - hr*0.1, hr*0.1, 0, Math.PI*2); ctx.fill();
+}
+
+// ── boss dog (huge, purple, armored with aura) ────────────────────────────
+function drawBossDog(ctx: CanvasRenderingContext2D, cx:number, cy:number, r:number, col:string, t:number) {
+  const dc = darker(col, 40);
+  const pulse = 0.5 + 0.5 * Math.sin(t * 2.5);
+  // Purple aura
+  ctx.save();
+  ctx.shadowColor = col; ctx.shadowBlur = 18 + pulse * 12;
+  ctx.globalAlpha = 0.25 + pulse * 0.15;
+  ctx.fillStyle = col;
+  ctx.beginPath(); ctx.ellipse(cx, cy, r*1.5, r*1.4, 0, 0, Math.PI*2); ctx.fill();
+  ctx.globalAlpha = 1; ctx.shadowBlur = 0;
+  ctx.restore();
+  // Heavy armored body
+  ctx.save();
+  ctx.shadowColor = col; ctx.shadowBlur = 8;
+  ctx.fillStyle = dc;
+  ctx.beginPath(); ctx.roundRect(cx - r, cy - r*0.9, r*2, r*1.9, 7); ctx.fill();
+  // Gold armor plates
+  ctx.fillStyle = "#c8a000";
+  ctx.fillRect(cx - r*0.85, cy - r*0.7, r*1.7, r*0.32);
+  ctx.fillRect(cx - r*0.85, cy - r*0.2, r*1.7, r*0.32);
+  ctx.fillRect(cx - r*0.85, cy + r*0.3, r*1.7, r*0.32);
+  // Spiky shoulder pads
+  ctx.fillStyle = col;
+  for (let i = 0; i < 3; i++) {
+    ctx.beginPath(); ctx.moveTo(cx - r*1.1 - i*3, cy - r*(0.6 - i*0.15)); ctx.lineTo(cx - r*1.4 - i*3, cy - r*(1.0 - i*0.1)); ctx.lineTo(cx - r*0.9, cy - r*0.55); ctx.closePath(); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(cx + r*1.1 + i*3, cy - r*(0.6 - i*0.15)); ctx.lineTo(cx + r*1.4 + i*3, cy - r*(1.0 - i*0.1)); ctx.lineTo(cx + r*0.9, cy - r*0.55); ctx.closePath(); ctx.fill();
+  }
+  ctx.shadowBlur = 0;
+  ctx.restore();
+  // Large helmet
+  const hx = cx - r*0.4, hy = cy - r*1.15, hr = r*0.9;
+  ctx.fillStyle = dc;
+  ctx.beginPath(); ctx.arc(hx, hy, hr, 0, Math.PI*2); ctx.fill();
+  // Gold helmet band
+  ctx.fillStyle = "#c8a000";
+  ctx.fillRect(hx - hr*0.9, hy - hr*0.12, hr*1.8, hr*0.28);
+  // Glowing purple visor
+  const vg = ctx.createLinearGradient(hx - hr*0.6, hy, hx + hr*0.3, hy);
+  vg.addColorStop(0, `rgba(180,100,255,${0.7 + pulse*0.3})`);
+  vg.addColorStop(1, `rgba(120,50,200,${0.4 + pulse*0.2})`);
+  ctx.fillStyle = vg;
+  ctx.beginPath(); ctx.roundRect(hx - hr*0.62, hy - hr*0.16, hr*1.1, hr*0.34, 3); ctx.fill();
+  // Big horns
+  ctx.fillStyle = "#c8a000";
+  ctx.beginPath(); ctx.moveTo(hx - hr*0.5, hy - hr*0.85); ctx.lineTo(hx - hr*0.8, hy - hr*1.8); ctx.lineTo(hx - hr*0.15, hy - hr*0.9); ctx.closePath(); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(hx + hr*0.2, hy - hr*0.85); ctx.lineTo(hx + hr*0.5, hy - hr*1.8); ctx.lineTo(hx - hr*0.1, hy - hr*0.9); ctx.closePath(); ctx.fill();
+  // BOSS label
+  ctx.fillStyle = `rgba(255,220,50,${0.7 + pulse*0.3})`;
+  ctx.font = `bold ${Math.round(r*0.5)}px sans-serif`;
+  ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.fillText("BOSS", cx, cy - r*2.4);
+}
+
+// ── shooter cat (with bow visual) ─────────────────────────────────────────
+function drawShooterBow(ctx: CanvasRenderingContext2D, hx:number, hy:number, hr:number, col:string, t:number) {
+  const drawAngle = Math.sin(t * 3) * 0.15;
+  ctx.save();
+  ctx.translate(hx + hr*1.1, hy + hr*0.2);
+  ctx.rotate(drawAngle);
+  // Bow arc
+  ctx.strokeStyle = "#8b5e1a"; ctx.lineWidth = 2.5; ctx.lineCap = "round";
+  ctx.beginPath(); ctx.arc(0, 0, hr*0.75, -Math.PI*0.65, Math.PI*0.65); ctx.stroke();
+  // Bow string
+  ctx.strokeStyle = "#fffacd"; ctx.lineWidth = 1;
+  ctx.beginPath();
+  ctx.moveTo(hr*0.75 * Math.cos(-Math.PI*0.65), hr*0.75 * Math.sin(-Math.PI*0.65));
+  ctx.lineTo(hr*0.75 * Math.cos(Math.PI*0.65), hr*0.75 * Math.sin(Math.PI*0.65));
+  ctx.stroke();
+  // Arrow
+  ctx.strokeStyle = col; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(-hr*0.3, 0); ctx.lineTo(hr*0.65, 0); ctx.stroke();
+  ctx.fillStyle = col;
+  ctx.beginPath(); ctx.moveTo(hr*0.65, 0); ctx.lineTo(hr*0.45, -hr*0.12); ctx.lineTo(hr*0.45, hr*0.12); ctx.closePath(); ctx.fill();
+  ctx.restore();
+}
+
+// ── bomber cat (flames around body) ───────────────────────────────────────
+function drawBomberFlames(ctx: CanvasRenderingContext2D, cx:number, cy:number, r:number, t:number) {
+  const flames = [
+    { ox: -r*0.6, oy: r*0.3, scale: 1.0 },
+    { ox:  0,     oy: r*0.55, scale: 1.2 },
+    { ox:  r*0.6, oy: r*0.3, scale: 0.9 },
+    { ox: -r*0.3, oy: r*0.45, scale: 0.8 },
+  ];
+  for (const fl of flames) {
+    const flicker = 0.7 + 0.3 * Math.sin(t * 8 + fl.ox);
+    const h = r * 0.7 * fl.scale * flicker;
+    const w = r * 0.3 * fl.scale;
+    const grd = ctx.createLinearGradient(cx + fl.ox, cy + fl.oy, cx + fl.ox, cy + fl.oy + h);
+    grd.addColorStop(0, `rgba(255,220,30,${0.9 * flicker})`);
+    grd.addColorStop(0.4, `rgba(255,100,10,${0.7 * flicker})`);
+    grd.addColorStop(1, "rgba(200,0,0,0)");
+    ctx.fillStyle = grd;
+    ctx.beginPath();
+    ctx.moveTo(cx + fl.ox - w, cy + fl.oy);
+    ctx.quadraticCurveTo(cx + fl.ox - w*0.3, cy + fl.oy + h*0.5, cx + fl.ox, cy + fl.oy + h);
+    ctx.quadraticCurveTo(cx + fl.ox + w*0.3, cy + fl.oy + h*0.5, cx + fl.ox + w, cy + fl.oy);
+    ctx.closePath();
+    ctx.fill();
+  }
 }
 
 // ── hit effect ─────────────────────────────────────────────────────────────

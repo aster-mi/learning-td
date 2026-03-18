@@ -20,7 +20,7 @@ const ACTIVE_DURATION_SEC = 10;
 
 export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear }: Props) {
   const { isMobile } = useWindowSize();
-  const engineRef    = useRef<GameEngine>(new GameEngine(stage));
+  const engineRef    = useRef<GameEngine>(new GameEngine(stage, selectedLevel));
   const lastTickRef  = useRef<number>(Date.now());
   const rafRef       = useRef<number>(0);
 

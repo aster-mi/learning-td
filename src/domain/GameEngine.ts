@@ -33,6 +33,7 @@ export class GameEngine {
   private elapsed: number = 0; // ms
   private status: GameStatus = "playing";
   private stage: StageData;
+  private difficultyScale: number;
 
   // public for rendering
   readonly playerBaseX = PLAYER_BASE_X;
@@ -40,10 +41,13 @@ export class GameEngine {
   readonly groundY     = GROUND_Y;
   readonly canvasWidth = CANVAS_WIDTH;
 
-  constructor(stage: StageData) {
-    this.stage          = stage;
-    this.enemyBaseHp    = stage.enemyBaseHp;
-    this.enemyBaseMaxHp = stage.enemyBaseHp;
+  constructor(stage: StageData, selectedLevel: number = 7) {
+    this.stage = stage;
+    // Lv.1→0.35, Lv.7≈1.0, Lv.10→1.30
+    this.difficultyScale = 0.35 + (Math.max(1, Math.min(10, selectedLevel)) - 1) * (1.3 - 0.35) / 9;
+    const baseHp = Math.round(stage.enemyBaseHp * this.difficultyScale);
+    this.enemyBaseHp    = baseHp;
+    this.enemyBaseMaxHp = baseHp;
   }
 
   /** エネルギーは外部(QuizPanel)から渡す */
@@ -69,7 +73,7 @@ export class GameEngine {
       this.stage.spawnTable[this.spawnIndex].atSecond <= elapsedSec
     ) {
       const entry = this.stage.spawnTable[this.spawnIndex++];
-      this.enemies.push(new Enemy(entry.enemyType, ENEMY_BASE_X - 60));
+      this.enemies.push(new Enemy(entry.enemyType, ENEMY_BASE_X - 60, this.difficultyScale));
     }
 
     // --- ユニット更新 ---

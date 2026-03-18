@@ -1,4 +1,4 @@
-export type UnitType = "basic" | "fast" | "tank";
+export type UnitType = "basic" | "fast" | "tank" | "shooter" | "bomber";
 
 export interface UnitDef {
   type: UnitType;
@@ -34,6 +34,16 @@ export const UNIT_DEFS: Record<UnitType, UnitDef> = {
     hp: 300, atk: 25, atkInterval: 2000, speed: 30, range: 45,
     cost: 35, color: "#4cc9f0", radius: 22,
   },
+  shooter: {
+    type: "shooter", label: "遠距離ネコ",
+    hp: 70, atk: 22, atkInterval: 1800, speed: 38, range: 130,
+    cost: 30, color: "#c084fc", radius: 14,
+  },
+  bomber: {
+    type: "bomber", label: "火炎ネコ",
+    hp: 180, atk: 50, atkInterval: 3200, speed: 18, range: 60,
+    cost: 45, color: "#f97316", radius: 22,
+  },
 };
 
 let _unitId = 0;
@@ -61,21 +71,16 @@ export class Unit {
     const target = this._findTarget(enemies, enemyBaseX);
 
     if (target === "base") {
-      // 拠点が射程内 → 停止して攻撃（GameEngineで処理）
       return;
     }
     if (target === null) {
-      // 敵なし・拠点も射程外 → 前進
       this.x += (this.def.speed * dt) / 1000;
       return;
     }
-    // 敵がいる
     const dist = target.x - this.x;
     if (dist <= this.def.range) {
-      // 射程内 → 停止して攻撃（GameEngineで処理）
       return;
     }
-    // 射程外 → 前進
     this.x += (this.def.speed * dt) / 1000;
   }
 
@@ -83,7 +88,6 @@ export class Unit {
     enemies: import("./Enemy").Enemy[],
     enemyBaseX: number
   ): import("./Enemy").Enemy | "base" | null {
-    // 方向を問わず最も近い敵を探す（城に侵入した敵も検知）
     let nearest: import("./Enemy").Enemy | null = null;
     let nearestDist = Infinity;
     for (const e of enemies) {
@@ -92,7 +96,6 @@ export class Unit {
       if (d < nearestDist) { nearestDist = d; nearest = e; }
     }
     if (nearest) return nearest;
-    // 敵がいなければ拠点を狙う
     const baseDist = enemyBaseX - this.x;
     if (baseDist <= this.def.range) return "base";
     return null;

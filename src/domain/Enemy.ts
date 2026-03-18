@@ -15,18 +15,23 @@ export interface EnemyDef {
 export const ENEMY_DEFS: Record<EnemyType, EnemyDef> = {
   weak: {
     type: "weak", label: "ザコ犬",
-    hp: 80,  atk: 10, atkInterval: 1500, speed: 50, range: 38,
-    color: "#e63946", radius: 15,
+    hp: 80,  atk: 10, atkInterval: 1500, speed: 50,  range: 38, color: "#e63946", radius: 15,
   },
   fast: {
     type: "fast", label: "速攻犬",
-    hp: 40,  atk: 8,  atkInterval: 900,  speed: 110, range: 32,
-    color: "#ff6b6b", radius: 12,
+    hp: 40,  atk: 8,  atkInterval: 900,  speed: 110, range: 32, color: "#ff6b6b", radius: 12,
   },
   tank: {
     type: "tank", label: "重装犬",
-    hp: 250, atk: 20, atkInterval: 2200, speed: 25, range: 45,
-    color: "#c1121f", radius: 22,
+    hp: 250, atk: 20, atkInterval: 2200, speed: 25,  range: 45, color: "#c1121f", radius: 22,
+  },
+  speedy: {
+    type: "speedy", label: "すばやい犬",
+    hp: 28,  atk: 5,  atkInterval: 500,  speed: 200, range: 26, color: "#fb923c", radius: 9,
+  },
+  boss: {
+    type: "boss", label: "ボス犬",
+    hp: 450, atk: 35, atkInterval: 2800, speed: 12,  range: 65, color: "#7c3aed", radius: 30,
   },
 };
 
@@ -40,11 +45,17 @@ export class Enemy {
   maxHp: number;
   lastAtkTime: number = 0;
 
-  constructor(type: EnemyType, startX: number) {
+  constructor(type: EnemyType, startX: number, scale: number = 1) {
     this.id = _enemyId++;
-    this.def = ENEMY_DEFS[type];
-    this.x = startX;
-    this.hp = this.def.hp;
+    const base = ENEMY_DEFS[type];
+    // スケールに応じてHP・ATKを調整（難易度）
+    this.def = {
+      ...base,
+      hp:  Math.max(1, Math.round(base.hp  * scale)),
+      atk: Math.max(1, Math.round(base.atk * scale)),
+    };
+    this.x    = startX;
+    this.hp   = this.def.hp;
     this.maxHp = this.def.hp;
   }
 
@@ -55,21 +66,16 @@ export class Enemy {
     const target = this._findTarget(units, playerBaseX);
 
     if (target === "base") {
-      // 拠点が射程内 → 停止して攻撃（GameEngineで処理）
       return;
     }
     if (target === null) {
-      // ユニットなし・拠点も射程外 → 左へ前進
       this.x -= (this.def.speed * dt) / 1000;
       return;
     }
-    // ユニットがいる
     const dist = this.x - target.x;
     if (dist <= this.def.range) {
-      // 射程内 → 停止して攻撃（GameEngineで処理）
       return;
     }
-    // 射程外 → 左へ前進
     this.x -= (this.def.speed * dt) / 1000;
   }
 
@@ -77,7 +83,6 @@ export class Enemy {
     units: import("./Unit").Unit[],
     playerBaseX: number
   ): import("./Unit").Unit | "base" | null {
-    // 方向を問わず最も近いユニットを探す（出撃直後のユニットも検知）
     let nearest: import("./Unit").Unit | null = null;
     let nearestDist = Infinity;
     for (const u of units) {
