@@ -487,4 +487,146 @@ export const questions: Question[] = [
   { id: "jg26", main: "プログラミング", sub: "Java Gold", level: 10, question: "Java の instanceof パターンマッチが正式導入されたバージョンは？", choices: ["Java 14","Java 15","Java 17","Java 16"],                            answer: "Java 16" },
   { id: "jg27", main: "プログラミング", sub: "Java Gold", level: 9, question: "Collectors.toUnmodifiableList() の特徴は？",             choices: ["nullを除外する","ソートされる","重複を除く","変更不可なListを返す"],       answer: "変更不可なListを返す" },
   { id: "jg28", main: "プログラミング", sub: "Java Gold", level: 10, question: "Java の ForkJoinPool が採用するアルゴリズムは？",        choices: ["ラウンドロビン","FIFO","バックグラウンド実行","ワークスティーリング"],      answer: "ワークスティーリング" },
+
+  // ════════ 算数 / 四則計算（小1 Lv.1 追加 m026〜m035）════════
+  { id: "m026", main: "算数", sub: "四則計算", level: 1, question: "1 + 1 = ?",         choices: ["1","2","3","4"],          answer: "2" },
+  { id: "m027", main: "算数", sub: "四則計算", level: 1, question: "3 + 2 = ?",         choices: ["4","5","6","7"],          answer: "5" },
+  { id: "m028", main: "算数", sub: "四則計算", level: 1, question: "8 - 5 = ?",         choices: ["1","2","3","4"],          answer: "3" },
+  { id: "m029", main: "算数", sub: "四則計算", level: 1, question: "10 - 3 = ?",        choices: ["6","7","8","9"],          answer: "7" },
+  { id: "m030", main: "算数", sub: "四則計算", level: 1, question: "5 + 4 = ?",         choices: ["7","8","9","10"],         answer: "9" },
+  { id: "m031", main: "算数", sub: "四則計算", level: 1, question: "2 + 2 + 2 = ?",     choices: ["4","5","6","7"],          answer: "6" },
+  { id: "m032", main: "算数", sub: "四則計算", level: 1, question: "10 - 6 = ?",        choices: ["3","4","5","6"],          answer: "4" },
+  { id: "m033", main: "算数", sub: "四則計算", level: 1, question: "4 + 3 = ?",         choices: ["6","7","8","9"],          answer: "7" },
+  { id: "m034", main: "算数", sub: "四則計算", level: 1, question: "9 - 9 = ?",         choices: ["0","1","9","18"],         answer: "0" },
+  { id: "m035", main: "算数", sub: "四則計算", level: 1, question: "6 + 4 = ?",         choices: ["8","9","10","11"],        answer: "10" },
+
+  // ════════ 算数 / 四則計算（小2 Lv.2 追加 m036〜m045）════════
+  { id: "m036", main: "算数", sub: "四則計算", level: 2, question: "2 × 5 = ?",         choices: ["8","10","12","15"],       answer: "10" },
+  { id: "m037", main: "算数", sub: "四則計算", level: 2, question: "3 × 4 = ?",         choices: ["10","12","14","16"],      answer: "12" },
+  { id: "m038", main: "算数", sub: "四則計算", level: 2, question: "8 × 8 = ?",         choices: ["56","60","64","72"],      answer: "64" },
+  { id: "m039", main: "算数", sub: "四則計算", level: 2, question: "9 × 7 = ?",         choices: ["56","63","64","72"],      answer: "63" },
+  { id: "m040", main: "算数", sub: "四則計算", level: 2, question: "20 + 35 = ?",       choices: ["45","50","55","60"],      answer: "55" },
+  { id: "m041", main: "算数", sub: "四則計算", level: 2, question: "100 - 37 = ?",      choices: ["57","63","67","73"],      answer: "63" },
+  { id: "m042", main: "算数", sub: "四則計算", level: 2, question: "45 + 28 = ?",       choices: ["63","70","73","77"],      answer: "73" },
+  { id: "m043", main: "算数", sub: "四則計算", level: 2, question: "80 ÷ 4 = ?",        choices: ["15","20","22","25"],      answer: "20" },
+  { id: "m044", main: "算数", sub: "四則計算", level: 2, question: "5 × 6 = ?",         choices: ["25","28","30","36"],      answer: "30" },
+  { id: "m045", main: "算数", sub: "四則計算", level: 2, question: "7 × 3 = ?",         choices: ["18","21","24","28"],      answer: "21" },
+
+  // ════════ 算数 / 図形・面積（小1 Lv.1 追加 m126〜m130）════════
+  { id: "m126", main: "算数", sub: "図形・面積", level: 1, question: "三角形の角の数は？",                choices: ["2","3","4","5"],                                      answer: "3" },
+  { id: "m127", main: "算数", sub: "図形・面積", level: 1, question: "四角形の辺の数は？",                choices: ["3","4","5","6"],                                      answer: "4" },
+  { id: "m128", main: "算数", sub: "図形・面積", level: 1, question: "まるい形を何という？",              choices: ["三角形","四角形","円","菱形"],                         answer: "円" },
+  { id: "m129", main: "算数", sub: "図形・面積", level: 1, question: "正方形の4つの辺の長さは？",         choices: ["全部違う","2辺だけ同じ","向かい合う辺のみ同じ","全部同じ"], answer: "全部同じ" },
+  { id: "m130", main: "算数", sub: "図形・面積", level: 1, question: "三角形と四角形で辺が多いのは？",    choices: ["三角形","四角形","同じ","五角形"],                     answer: "四角形" },
+
+  // ════════ 算数 / 図形・面積（小2 Lv.2 追加 m131〜m135）════════
+  { id: "m131", main: "算数", sub: "図形・面積", level: 2, question: "箱（直方体）の面の数は？",          choices: ["4","5","6","8"],                                      answer: "6" },
+  { id: "m132", main: "算数", sub: "図形・面積", level: 2, question: "三角形の辺は何本？",               choices: ["2","3","4","5"],                                      answer: "3" },
+  { id: "m133", main: "算数", sub: "図形・面積", level: 2, question: "長方形の向かい合う辺の長さは？",   choices: ["全部違う","どれも同じ","向かい合う辺だけ同じ","隣り合う辺だけ同じ"], answer: "向かい合う辺だけ同じ" },
+  { id: "m134", main: "算数", sub: "図形・面積", level: 2, question: "正三角形の3つの辺の長さは？",       choices: ["全部違う","2辺だけ同じ","3辺とも同じ","1辺だけ長い"],  answer: "3辺とも同じ" },
+  { id: "m135", main: "算数", sub: "図形・面積", level: 2, question: "さいころ（立方体）の面の数は？",   choices: ["4","5","6","8"],                                      answer: "6" },
+
+  // ════════ 国語 / 漢字・読み（小1 Lv.1 追加 k026〜k040）════════
+  { id: "k026", main: "国語", sub: "漢字・読み", level: 1, question: "「山」の読み方は？",                    choices: ["かわ","うみ","やま","もり"],             answer: "やま" },
+  { id: "k027", main: "国語", sub: "漢字・読み", level: 1, question: "「川」の読み方は？",                    choices: ["うみ","かわ","やま","いけ"],             answer: "かわ" },
+  { id: "k028", main: "国語", sub: "漢字・読み", level: 1, question: "「火」の読み方は？",                    choices: ["みず","かぜ","ひ","つち"],               answer: "ひ" },
+  { id: "k029", main: "国語", sub: "漢字・読み", level: 1, question: "「水」の読み方は？",                    choices: ["ひ","かぜ","みず","つち"],               answer: "みず" },
+  { id: "k030", main: "国語", sub: "漢字・読み", level: 1, question: "「木」の読み方は？",                    choices: ["くさ","はな","き","いし"],               answer: "き" },
+  { id: "k031", main: "国語", sub: "漢字・読み", level: 1, question: "「日」の読み方は（太陽の意味で）？",    choices: ["つき","ほし","ひ","かぜ"],               answer: "ひ" },
+  { id: "k032", main: "国語", sub: "漢字・読み", level: 1, question: "「月」の読み方は（夜空に見える）？",    choices: ["ほし","ひ","くも","つき"],               answer: "つき" },
+  { id: "k033", main: "国語", sub: "漢字・読み", level: 1, question: "「人」の読み方は？",                    choices: ["こ","おとな","ひと","おや"],             answer: "ひと" },
+  { id: "k034", main: "国語", sub: "漢字・読み", level: 1, question: "「子」の読み方は？",                    choices: ["おや","ひと","こ","め"],                 answer: "こ" },
+  { id: "k035", main: "国語", sub: "漢字・読み", level: 1, question: "「花」の読み方は？",                    choices: ["くさ","き","はな","たね"],               answer: "はな" },
+  { id: "k036", main: "国語", sub: "漢字・読み", level: 1, question: "「虫」の読み方は？",                    choices: ["とり","さかな","むし","けもの"],         answer: "むし" },
+  { id: "k037", main: "国語", sub: "漢字・読み", level: 1, question: "「石」の読み方は？",                    choices: ["つち","すな","いし","いわ"],             answer: "いし" },
+  { id: "k038", main: "国語", sub: "漢字・読み", level: 1, question: "「土」の読み方は？",                    choices: ["いし","すな","つち","かわ"],             answer: "つち" },
+  { id: "k039", main: "国語", sub: "漢字・読み", level: 1, question: "「空」の読み方は？",                    choices: ["くも","うみ","そら","かぜ"],             answer: "そら" },
+  { id: "k040", main: "国語", sub: "漢字・読み", level: 1, question: "「雨」の読み方は？",                    choices: ["ゆき","かぜ","あめ","くも"],             answer: "あめ" },
+
+  // ════════ 国語 / 漢字・読み（小2 Lv.2 追加 k041〜k050）════════
+  { id: "k041", main: "国語", sub: "漢字・読み", level: 2, question: "「朝」の読み方は？",   choices: ["ひる","よる","あさ","ゆう"],             answer: "あさ" },
+  { id: "k042", main: "国語", sub: "漢字・読み", level: 2, question: "「夜」の読み方は？",   choices: ["あさ","ひる","ゆう","よる"],             answer: "よる" },
+  { id: "k043", main: "国語", sub: "漢字・読み", level: 2, question: "「海」の読み方は？",   choices: ["かわ","やま","いけ","うみ"],             answer: "うみ" },
+  { id: "k044", main: "国語", sub: "漢字・読み", level: 2, question: "「歌」の読み方は？",   choices: ["はなし","おどり","えんそう","うた"],     answer: "うた" },
+  { id: "k045", main: "国語", sub: "漢字・読み", level: 2, question: "「読む」の読み方は？", choices: ["かく","きく","みる","よむ"],             answer: "よむ" },
+  { id: "k046", main: "国語", sub: "漢字・読み", level: 2, question: "「書く」の読み方は？", choices: ["よむ","きく","かく","みる"],             answer: "かく" },
+  { id: "k047", main: "国語", sub: "漢字・読み", level: 2, question: "「友」の読み方は？",   choices: ["おや","こ","ひと","とも"],               answer: "とも" },
+  { id: "k048", main: "国語", sub: "漢字・読み", level: 2, question: "「走る」の読み方は？", choices: ["あるく","とぶ","およぐ","はしる"],       answer: "はしる" },
+  { id: "k049", main: "国語", sub: "漢字・読み", level: 2, question: "「親」の読み方は？",   choices: ["こ","ひと","とも","おや"],               answer: "おや" },
+  { id: "k050", main: "国語", sub: "漢字・読み", level: 2, question: "「話す」の読み方は？", choices: ["よむ","かく","きく","はなす"],           answer: "はなす" },
+
+  // ════════ 理科 / 物理・化学（小1 Lv.1 追加 s026〜s030）════════
+  { id: "s026", main: "理科", sub: "物理・化学", level: 1, question: "氷を温めると何になる？",         choices: ["空気","水蒸気","水","砂"],                     answer: "水" },
+  { id: "s027", main: "理科", sub: "物理・化学", level: 1, question: "水を冷やすと何になる？",         choices: ["水蒸気","氷","空気","砂糖"],                   answer: "氷" },
+  { id: "s028", main: "理科", sub: "物理・化学", level: 1, question: "鉄は磁石にくっつく？",           choices: ["くっつかない","くっつく","溶ける","燃える"],   answer: "くっつく" },
+  { id: "s029", main: "理科", sub: "物理・化学", level: 1, question: "太陽はどの方向から昇る？",       choices: ["西","南","北","東"],                           answer: "東" },
+  { id: "s030", main: "理科", sub: "物理・化学", level: 1, question: "水は何℃で氷になる？",           choices: ["-10℃","0℃","10℃","100℃"],                   answer: "0℃" },
+
+  // ════════ 理科 / 物理・化学（小2 Lv.2 追加 s031〜s035）════════
+  { id: "s031", main: "理科", sub: "物理・化学", level: 2, question: "N極とN極を近づけると？",                  choices: ["引き合う","くっつく","変化なし","しりぞけ合う"],             answer: "しりぞけ合う" },
+  { id: "s032", main: "理科", sub: "物理・化学", level: 2, question: "電池に豆電球をつなぐと何が流れる？",      choices: ["熱","光","電流","水"],                                       answer: "電流" },
+  { id: "s033", main: "理科", sub: "物理・化学", level: 2, question: "水が100℃で沸騰すると何になる？",          choices: ["氷","水素","砂糖","水蒸気"],                                 answer: "水蒸気" },
+  { id: "s034", main: "理科", sub: "物理・化学", level: 2, question: "砂糖と食塩はどちらも水に溶ける？",        choices: ["食塩のみ","砂糖のみ","どちらも溶けない","どちらも溶ける"],   answer: "どちらも溶ける" },
+  { id: "s035", main: "理科", sub: "物理・化学", level: 2, question: "電池2個を直列につなぐと豆電球は？",       choices: ["消える","暗くなる","変わらない","明るくなる"],               answer: "明るくなる" },
+
+  // ════════ 理科 / 生物・地学（小1 Lv.1 追加 s126〜s132）════════
+  { id: "s126", main: "理科", sub: "生物・地学", level: 1, question: "アリの足は何本？",               choices: ["4本","6本","8本","10本"],                      answer: "6本" },
+  { id: "s127", main: "理科", sub: "生物・地学", level: 1, question: "たまごを産む動物はどれ？",       choices: ["犬","猫","にわとり","ウサギ"],                  answer: "にわとり" },
+  { id: "s128", main: "理科", sub: "生物・地学", level: 1, question: "チョウはどこから生まれる？",     choices: ["土の中","花の中","たまご","木の実"],            answer: "たまご" },
+  { id: "s129", main: "理科", sub: "生物・地学", level: 1, question: "サクラの花は何色？",             choices: ["青","黄","赤","ピンク・白"],                    answer: "ピンク・白" },
+  { id: "s130", main: "理科", sub: "生物・地学", level: 1, question: "春に咲く代表的な花は？",         choices: ["ひまわり","コスモス","朝顔","桜（さくら）"],    answer: "桜（さくら）" },
+  { id: "s131", main: "理科", sub: "生物・地学", level: 1, question: "植物が育つのに必要なものは？",   choices: ["音楽","砂糖","電気","光と水"],                  answer: "光と水" },
+  { id: "s132", main: "理科", sub: "生物・地学", level: 1, question: "魚は何で呼吸する？",             choices: ["肺","鼻","皮膚","えら"],                        answer: "えら" },
+
+  // ════════ 理科 / 生物・地学（小2 Lv.2 追加 s133〜s139）════════
+  { id: "s133", main: "理科", sub: "生物・地学", level: 2, question: "昆虫の体は何つの部分に分かれる？",       choices: ["1つ","2つ","3つ","4つ"],                                     answer: "3つ" },
+  { id: "s134", main: "理科", sub: "生物・地学", level: 2, question: "カブトムシの育つ順番は？",               choices: ["たまご→さなぎ→成虫","たまご→成虫","たまご→幼虫→さなぎ→成虫","幼虫→たまご→成虫"], answer: "たまご→幼虫→さなぎ→成虫" },
+  { id: "s135", main: "理科", sub: "生物・地学", level: 2, question: "植物はどこで光合成を行う？",             choices: ["根","茎","種","葉"],                                         answer: "葉" },
+  { id: "s136", main: "理科", sub: "生物・地学", level: 2, question: "夏と冬で昼間が長いのはどちら？",         choices: ["冬","同じ","春","夏"],                                       answer: "夏" },
+  { id: "s137", main: "理科", sub: "生物・地学", level: 2, question: "種が発芽するのに必要なものは？",         choices: ["肥料と光","砂糖と光","音と水","水・適温・空気"],             answer: "水・適温・空気" },
+  { id: "s138", main: "理科", sub: "生物・地学", level: 2, question: "植物の茎の主な働きは？",               choices: ["光合成","水の吸収","種を作る","水と養分の通り道"],           answer: "水と養分の通り道" },
+  { id: "s139", main: "理科", sub: "生物・地学", level: 2, question: "冬に葉を落とす木を何という？",           choices: ["常緑樹","針葉樹","広葉樹","落葉樹"],                         answer: "落葉樹" },
+
+  // ════════ 社会 / 地理（小1 Lv.1 追加 c026〜c030）════════
+  { id: "c026", main: "社会", sub: "地理", level: 1, question: "日本の都道府県は全部でいくつ？",         choices: ["43","45","47","50"],                          answer: "47" },
+  { id: "c027", main: "社会", sub: "地理", level: 1, question: "日本で一番北にある都道府県は？",         choices: ["青森県","岩手県","秋田県","北海道"],           answer: "北海道" },
+  { id: "c028", main: "社会", sub: "地理", level: 1, question: "日本で一番南にある都道府県は？",         choices: ["鹿児島県","宮崎県","長崎県","沖縄県"],         answer: "沖縄県" },
+  { id: "c029", main: "社会", sub: "地理", level: 1, question: "日本の国旗に描かれているものは？",       choices: ["星","富士山","桜","赤い丸（太陽）"],           answer: "赤い丸（太陽）" },
+  { id: "c030", main: "社会", sub: "地理", level: 1, question: "丸い地球の形をした地図を何という？",     choices: ["絵地図","世界地図","断面図","地球儀"],         answer: "地球儀" },
+
+  // ════════ 社会 / 地理（小2 Lv.2 追加 c031〜c035）════════
+  { id: "c031", main: "社会", sub: "地理", level: 2, question: "日本で最も人口が多い都市は？",     choices: ["大阪市","名古屋市","横浜市","東京"],           answer: "東京" },
+  { id: "c032", main: "社会", sub: "地理", level: 2, question: "富士山は何県にある？",           choices: ["長野県","神奈川県","岐阜県","山梨・静岡県"],   answer: "山梨・静岡県" },
+  { id: "c033", main: "社会", sub: "地理", level: 2, question: "大阪府があるのはどの地方？",     choices: ["関東地方","中部地方","中国地方","近畿地方"],   answer: "近畿地方" },
+  { id: "c034", main: "社会", sub: "地理", level: 2, question: "北海道の道庁所在地は？",         choices: ["旭川市","函館市","帯広市","札幌市"],           answer: "札幌市" },
+  { id: "c035", main: "社会", sub: "地理", level: 2, question: "東京都の東にある県は？",         choices: ["神奈川県","埼玉県","栃木県","千葉県"],         answer: "千葉県" },
+
+  // ════════ 英語 / 英単語（小1 Lv.1 追加 e026〜e040）════════
+  { id: "e026", main: "英語", sub: "英単語", level: 1, question: '"dog" の日本語は？',    choices: ["ねこ","とり","さかな","いぬ"],     answer: "いぬ" },
+  { id: "e027", main: "英語", sub: "英単語", level: 1, question: '"cat" の日本語は？',    choices: ["いぬ","とり","うさぎ","ねこ"],     answer: "ねこ" },
+  { id: "e028", main: "英語", sub: "英単語", level: 1, question: '"red" の日本語は？',    choices: ["青","白","黒","赤"],               answer: "赤" },
+  { id: "e029", main: "英語", sub: "英単語", level: 1, question: '"blue" の日本語は？',   choices: ["赤","白","緑","青"],               answer: "青" },
+  { id: "e030", main: "英語", sub: "英単語", level: 1, question: '"one" の日本語は？',    choices: ["2","3","0","1"],                   answer: "1" },
+  { id: "e031", main: "英語", sub: "英単語", level: 1, question: '"two" の日本語は？',    choices: ["1","3","4","2"],                   answer: "2" },
+  { id: "e032", main: "英語", sub: "英単語", level: 1, question: '"yes" の日本語は？',    choices: ["いいえ","たぶん","もちろん","はい"], answer: "はい" },
+  { id: "e033", main: "英語", sub: "英単語", level: 1, question: '"no" の日本語は？',     choices: ["はい","わからない","そうです","いいえ"], answer: "いいえ" },
+  { id: "e034", main: "英語", sub: "英単語", level: 1, question: '"big" の日本語は？',    choices: ["小さい","同じ","軽い","大きい"],   answer: "大きい" },
+  { id: "e035", main: "英語", sub: "英単語", level: 1, question: '"small" の日本語は？',  choices: ["大きい","重い","速い","小さい"],   answer: "小さい" },
+  { id: "e036", main: "英語", sub: "英単語", level: 1, question: '"good" の日本語は？',   choices: ["悪い","ふつう","つまらない","よい"], answer: "よい" },
+  { id: "e037", main: "英語", sub: "英単語", level: 1, question: '"white" の日本語は？',  choices: ["黒","赤","青","白"],               answer: "白" },
+  { id: "e038", main: "英語", sub: "英単語", level: 1, question: '"black" の日本語は？',  choices: ["白","灰色","青","黒"],             answer: "黒" },
+  { id: "e039", main: "英語", sub: "英単語", level: 1, question: '"sun" の日本語は？',    choices: ["月","星","雲","太陽"],             answer: "太陽" },
+  { id: "e040", main: "英語", sub: "英単語", level: 1, question: '"new" の日本語は？',    choices: ["古い","大きい","速い","新しい"],   answer: "新しい" },
+
+  // ════════ 英語 / 英単語（小2 Lv.2 追加 e041〜e050）════════
+  { id: "e041", main: "英語", sub: "英単語", level: 2, question: '"book" の日本語は？',    choices: ["ノート","えんぴつ","消しゴム","本"],    answer: "本" },
+  { id: "e042", main: "英語", sub: "英単語", level: 2, question: '"friend" の日本語は？',  choices: ["家族","先生","となり","友達"],          answer: "友達" },
+  { id: "e043", main: "英語", sub: "英単語", level: 2, question: '"happy" の日本語は？',   choices: ["悲しい","怒っている","眠い","うれしい"], answer: "うれしい" },
+  { id: "e044", main: "英語", sub: "英単語", level: 2, question: '"run" の日本語は？',     choices: ["歩く","泳ぐ","飛ぶ","走る"],            answer: "走る" },
+  { id: "e045", main: "英語", sub: "英単語", level: 2, question: '"eat" の日本語は？',     choices: ["飲む","遊ぶ","買う","食べる"],          answer: "食べる" },
+  { id: "e046", main: "英語", sub: "英単語", level: 2, question: '"play" の日本語は？',    choices: ["勉強する","働く","休む","遊ぶ"],        answer: "遊ぶ" },
+  { id: "e047", main: "英語", sub: "英単語", level: 2, question: '"fast" の日本語は？',    choices: ["遅い","重い","軽い","速い"],            answer: "速い" },
+  { id: "e048", main: "英語", sub: "英単語", level: 2, question: '"long" の日本語は？',    choices: ["短い","軽い","薄い","長い"],            answer: "長い" },
+  { id: "e049", main: "英語", sub: "英単語", level: 2, question: '"mother" の日本語は？',  choices: ["お父さん","おじいさん","妹","お母さん"], answer: "お母さん" },
+  { id: "e050", main: "英語", sub: "英単語", level: 2, question: '"father" の日本語は？',  choices: ["お母さん","おばあさん","兄","お父さん"], answer: "お父さん" },
 ];
