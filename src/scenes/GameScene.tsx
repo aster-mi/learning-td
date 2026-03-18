@@ -9,6 +9,7 @@ import type { StageData } from "../data/stages";
 interface Props {
   stage: StageData;
   subCategories: string[];
+  selectedLevels: number[];
   onBack: () => void;
   onClear: (stageId: number) => void;
 }
@@ -17,7 +18,7 @@ const MAX_ENERGY       = 100;
 const ENERGY_PER_CORRECT = 10;
 const ACTIVE_DURATION_SEC = 10;
 
-export function GameScene({ stage, subCategories, onBack, onClear }: Props) {
+export function GameScene({ stage, subCategories, selectedLevels, onBack, onClear }: Props) {
   const { isMobile } = useWindowSize();
   const engineRef    = useRef<GameEngine>(new GameEngine(stage));
   const lastTickRef  = useRef<number>(Date.now());
@@ -192,6 +193,7 @@ export function GameScene({ stage, subCategories, onBack, onClear }: Props) {
         maxEnergy={MAX_ENERGY}
         combo={combo}
         subCategories={subCategories}
+        selectedLevels={selectedLevels}
         onCorrect={handleCorrect}
         onWrong={handleWrong}
         disabled={isDone}

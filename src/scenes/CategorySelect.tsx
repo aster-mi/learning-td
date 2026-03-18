@@ -1,24 +1,39 @@
 import { useState } from "react";
 import { useWindowSize } from "../hooks/useWindowSize";
-import { MAIN_CATEGORY_META, SUB_CATEGORIES, type MainCategory } from "../data/questions";
+import { LEVEL_DEFS, MAIN_CATEGORY_META, SUB_CATEGORIES, type MainCategory } from "../data/questions";
 
 interface Props {
   initialSelected: string[];       // sub名のリスト
-  onConfirm: (selected: string[]) => void;
+  initialLevels: number[];         // 選択中の難易度レベル
+  onConfirm: (selected: string[], levels: number[]) => void;
 }
 
 // メインカテゴリの順序
 const MAIN_ORDER: MainCategory[] = ["算数", "国語", "理科", "社会", "英語", "プログラミング"];
 
-export function CategorySelect({ initialSelected, onConfirm }: Props) {
+export function CategorySelect({ initialSelected, initialLevels, onConfirm }: Props) {
   const { isMobile } = useWindowSize();
   const allSubs = SUB_CATEGORIES.map(s => s.name);
+  const allLevels = LEVEL_DEFS.map(l => l.level);
 
   const [selected, setSelected] = useState<Set<string>>(
     () => new Set(initialSelected.length > 0 ? initialSelected : allSubs)
   );
+  const [levels, setLevels] = useState<Set<number>>(
+    () => new Set(initialLevels.length > 0 ? initialLevels : allLevels)
+  );
   // どのメインカテゴリが開いているか（デフォルト閉じ）
   const [openMain, setOpenMain] = useState<Set<MainCategory>>(() => new Set());
+
+  // レベルトグル（最低1つ）
+  const toggleLevel = (lv: number) => {
+    setLevels(prev => {
+      if (prev.size <= 1 && prev.has(lv)) return prev;
+      const next = new Set(prev);
+      next.has(lv) ? next.delete(lv) : next.add(lv);
+      return next;
+    });
+  };
 
   // サブカテゴリ単体トグル
   const toggleSub = (subName: string) => {
@@ -81,13 +96,56 @@ export function CategorySelect({ initialSelected, onConfirm }: Props) {
         </div>
       )}
       <h1 style={{ margin: "0 0 6px", fontSize: isMobile ? 20 : 24, fontWeight: "bold" }}>
-        📚 問題カテゴリ選択
+        📚 問題設定
       </h1>
       <p style={{ color: "#94a3b8", marginBottom: isMobile ? 14 : 20, textAlign: "center", lineHeight: 1.6, maxWidth: 440, fontSize: isMobile ? 13 : 14 }}>
-        カテゴリをタップして展開し、サブカテゴリを選択してください。
+        難易度とカテゴリを選んでください。
       </p>
 
       <div style={{ width: "100%", maxWidth: 500 }}>
+
+        {/* ── 難易度選択 ── */}
+        <div style={{
+          marginBottom: 18, padding: isMobile ? "12px" : "14px 16px",
+          background: "#0d1a2a", borderRadius: 10, border: "1px solid #1e293b",
+        }}>
+          <div style={{ fontSize: 13, fontWeight: "bold", color: "#94a3b8", marginBottom: 10, letterSpacing: 1 }}>
+            🎯 難易度
+          </div>
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+            {LEVEL_DEFS.map(ld => {
+              const on = levels.has(ld.level);
+              return (
+                <button
+                  key={ld.level}
+                  onClick={() => toggleLevel(ld.level)}
+                  style={{
+                    flex: 1, minWidth: isMobile ? 52 : 80,
+                    padding: isMobile ? "8px 4px" : "10px 8px",
+                    background: on ? `${ld.color}22` : "#1e293b",
+                    border: `2px solid ${on ? ld.color : "#334155"}`,
+                    borderRadius: 8, cursor: "pointer",
+                    display: "flex", flexDirection: "column", alignItems: "center", gap: 3,
+                    transition: "all 0.15s",
+                  }}
+                >
+                  <span style={{ fontSize: isMobile ? 18 : 22 }}>{ld.emoji}</span>
+                  <span style={{ fontSize: isMobile ? 10 : 11, fontWeight: "bold", color: on ? ld.color : "#64748b", whiteSpace: "nowrap" }}>
+                    {ld.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+          <div style={{ marginTop: 8, fontSize: 11, color: "#475569", textAlign: "right" }}>
+            {levels.size === allLevels.length ? "すべての難易度" : `${[...levels].sort().map(l => LEVEL_DEFS.find(d => d.level === l)?.label).join(" / ")}`}を出題
+          </div>
+        </div>
+
+        {/* ── カテゴリ選択 ── */}
+        <div style={{ fontSize: 13, fontWeight: "bold", color: "#94a3b8", marginBottom: 8, letterSpacing: 1 }}>
+          📂 カテゴリ
+        </div>
         {/* 全選択トグル */}
         <button
           onClick={toggleAll}
@@ -205,9 +263,24 @@ export function CategorySelect({ initialSelected, onConfirm }: Props) {
                           </div>
                           <div style={{ fontSize: 11, color: "#475569" }}>{sub.desc}</div>
                         </div>
-                        <span style={{ marginLeft: "auto", fontSize: 11, color: "#475569" }}>
-                          {questions_count(sub.name)}問
-                        </span>
+                        <div style={{ marginLeft: "auto", display: "flex", flexDirection: "column", alignItems: "flex-end", gap: 3 }}>
+                          {(() => {
+                            const ld = LEVEL_DEFS.find(d => d.level === sub.level);
+                            return ld ? (
+                              <span style={{
+                                fontSize: 10, padding: "1px 5px",
+                                background: `${ld.color}22`, color: ld.color,
+                                borderRadius: 4, border: `1px solid ${ld.color}55`,
+                                whiteSpace: "nowrap",
+                              }}>
+                                {ld.emoji} {ld.label}
+                              </span>
+                            ) : null;
+                          })()}
+                          <span style={{ fontSize: 11, color: "#475569" }}>
+                            {questions_count(sub.name)}問
+                          </span>
+                        </div>
                       </button>
                     );
                   })}
@@ -228,7 +301,7 @@ export function CategorySelect({ initialSelected, onConfirm }: Props) {
 
       {/* 決定ボタン */}
       <button
-        onClick={() => onConfirm([...selected])}
+        onClick={() => onConfirm([...selected], [...levels].sort() as number[])}
         style={{
           marginTop: 20, padding: "14px 48px",
           background: "#3b82f6", color: "#fff",

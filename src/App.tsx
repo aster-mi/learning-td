@@ -3,10 +3,11 @@ import { CategorySelect } from "./scenes/CategorySelect";
 import { StageSelect } from "./scenes/StageSelect";
 import { GameScene } from "./scenes/GameScene";
 import { stages } from "./data/stages";
-import { SUB_CATEGORIES } from "./data/questions";
+import { LEVEL_DEFS, SUB_CATEGORIES } from "./data/questions";
 
-const STORAGE_KEY      = "learning_td_cleared";
-const STORAGE_SUBS_KEY = "learning_td_subcategories";
+const STORAGE_KEY        = "learning_td_cleared";
+const STORAGE_SUBS_KEY   = "learning_td_subcategories";
+const STORAGE_LEVELS_KEY = "learning_td_levels";
 
 function loadCleared(): Set<number> {
   try {
@@ -26,17 +27,29 @@ function loadSubCategories(): string[] {
 function saveSubCategories(subs: string[]) {
   localStorage.setItem(STORAGE_SUBS_KEY, JSON.stringify(subs));
 }
+function loadLevels(): number[] {
+  try {
+    const raw = localStorage.getItem(STORAGE_LEVELS_KEY);
+    return raw ? (JSON.parse(raw) as number[]) : LEVEL_DEFS.map(l => l.level);
+  } catch { return LEVEL_DEFS.map(l => l.level); }
+}
+function saveLevels(levels: number[]) {
+  localStorage.setItem(STORAGE_LEVELS_KEY, JSON.stringify(levels));
+}
 
 export default function App() {
   const [scene, setScene]                 = useState<"category" | "select" | "game">("category");
   const [activeStageId, setActiveStageId] = useState<number>(1);
   const [clearedStages, setClearedStages] = useState<Set<number>>(loadCleared);
   const [subCategories, setSubCategories] = useState<string[]>(loadSubCategories);
+  const [selectedLevels, setSelectedLevels] = useState<number[]>(loadLevels);
   const gameKeyRef = useRef<number>(0);
 
-  const handleCategoryConfirm = (selected: string[]) => {
+  const handleCategoryConfirm = (selected: string[], levels: number[]) => {
     setSubCategories(selected);
     saveSubCategories(selected);
+    setSelectedLevels(levels);
+    saveLevels(levels);
     setScene("select");
   };
 
@@ -67,6 +80,7 @@ export default function App() {
       {scene === "category" && (
         <CategorySelect
           initialSelected={subCategories}
+          initialLevels={selectedLevels}
           onConfirm={handleCategoryConfirm}
         />
       )}
@@ -82,6 +96,7 @@ export default function App() {
           key={gameKeyRef.current}
           stage={activeStage}
           subCategories={effectiveSubs}
+          selectedLevels={selectedLevels}
           onBack={() => setScene("select")}
           onClear={handleClear}
         />

@@ -8,6 +8,8 @@ interface Props {
   combo: number;
   /** 選択中のサブカテゴリ名リスト */
   subCategories: string[];
+  /** 選択中の難易度レベル (1-5) */
+  selectedLevels: number[];
   onCorrect: () => void;
   onWrong: () => void;
   disabled?: boolean;
@@ -22,9 +24,19 @@ function pickRandom(pool: Question[], excludeId?: string): Question {
   return { ...q, choices };
 }
 
-export function QuizPanel({ energy, maxEnergy, combo, subCategories, onCorrect, onWrong, disabled, isPaused }: Props) {
+export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLevels, onCorrect, onWrong, disabled, isPaused }: Props) {
   const { isMobile } = useWindowSize();
-  const pool = questions.filter(q => subCategories.includes(q.sub));
+
+  // サブカテゴリの level を引くヘルパー
+  const subLevelMap = Object.fromEntries(SUB_CATEGORIES.map(s => [s.name, s.level]));
+
+  // カテゴリ × 難易度でフィルタ。0件の場合はカテゴリのみでフォールバック
+  const filteredPool = questions.filter(
+    q => subCategories.includes(q.sub) && selectedLevels.includes(subLevelMap[q.sub] ?? 1)
+  );
+  const pool = filteredPool.length > 0
+    ? filteredPool
+    : questions.filter(q => subCategories.includes(q.sub));
   const [current, setCurrent] = useState<Question>(() => pickRandom(pool));
   const [feedback, setFeedback] = useState<"correct" | "wrong" | null>(null);
   // このフィールド中で正解した問題IDを管理（全問正解したらリセット）

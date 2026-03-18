@@ -1,6 +1,17 @@
 // ── メインカテゴリ ──────────────────────────────────────────
 export type MainCategory = "算数" | "国語" | "理科" | "社会" | "英語" | "プログラミング";
 
+// ── 難易度レベル定義 ────────────────────────────────────────
+export type Level = 1 | 2 | 3 | 4 | 5;
+
+export const LEVEL_DEFS: { level: Level; label: string; emoji: string; color: string; desc: string }[] = [
+  { level: 1, label: "小学生",     emoji: "🌱", color: "#22c55e", desc: "小学校レベル" },
+  { level: 2, label: "中学生",     emoji: "📘", color: "#3b82f6", desc: "中学校レベル" },
+  { level: 3, label: "高校生",     emoji: "📗", color: "#f59e0b", desc: "高校レベル" },
+  { level: 4, label: "大学・一般", emoji: "🎓", color: "#f97316", desc: "大学・社会人" },
+  { level: 5, label: "専門知識",   emoji: "🔬", color: "#ef4444", desc: "資格・専門分野" },
+];
+
 // ── サブカテゴリ定義 ────────────────────────────────────────
 export interface SubCategoryDef {
   main: MainCategory;
@@ -8,6 +19,7 @@ export interface SubCategoryDef {
   emoji: string;
   color: string;
   desc: string;
+  level: Level;   // このサブカテゴリの難易度
 }
 
 export const MAIN_CATEGORY_META: Record<MainCategory, { emoji: string; color: string }> = {
@@ -21,25 +33,25 @@ export const MAIN_CATEGORY_META: Record<MainCategory, { emoji: string; color: st
 
 export const SUB_CATEGORIES: SubCategoryDef[] = [
   // 算数
-  { main: "算数",         name: "四則計算",     emoji: "➕", color: "#3b82f6", desc: "足し算・引き算・掛け算・割り算" },
-  { main: "算数",         name: "図形・面積",   emoji: "📐", color: "#60a5fa", desc: "面積・体積・図形の性質" },
+  { main: "算数",         name: "四則計算",     emoji: "➕", color: "#3b82f6", desc: "足し算・引き算・掛け算・割り算", level: 1 },
+  { main: "算数",         name: "図形・面積",   emoji: "📐", color: "#60a5fa", desc: "面積・体積・図形の性質",         level: 2 },
   // 国語
-  { main: "国語",         name: "漢字・読み",   emoji: "漢", color: "#a855f7", desc: "漢字の読み書き" },
-  { main: "国語",         name: "熟語・慣用句", emoji: "📝", color: "#c084fc", desc: "四字熟語・慣用句・ことわざ" },
+  { main: "国語",         name: "漢字・読み",   emoji: "漢", color: "#a855f7", desc: "漢字の読み書き",                 level: 2 },
+  { main: "国語",         name: "熟語・慣用句", emoji: "📝", color: "#c084fc", desc: "四字熟語・慣用句・ことわざ",     level: 3 },
   // 理科
-  { main: "理科",         name: "物理・化学",   emoji: "⚗️", color: "#10b981", desc: "光・音・電気・化学式" },
-  { main: "理科",         name: "生物・地学",   emoji: "🌿", color: "#34d399", desc: "動植物・地球・宇宙" },
+  { main: "理科",         name: "物理・化学",   emoji: "⚗️", color: "#10b981", desc: "光・音・電気・化学式",           level: 3 },
+  { main: "理科",         name: "生物・地学",   emoji: "🌿", color: "#34d399", desc: "動植物・地球・宇宙",             level: 2 },
   // 社会
-  { main: "社会",         name: "地理",         emoji: "🗾", color: "#f59e0b", desc: "日本と世界の地理" },
-  { main: "社会",         name: "歴史",         emoji: "🏯", color: "#fbbf24", desc: "日本史・世界史" },
+  { main: "社会",         name: "地理",         emoji: "🗾", color: "#f59e0b", desc: "日本と世界の地理",               level: 2 },
+  { main: "社会",         name: "歴史",         emoji: "🏯", color: "#fbbf24", desc: "日本史・世界史",                 level: 2 },
   // 英語
-  { main: "英語",         name: "英単語",       emoji: "🔤", color: "#ef4444", desc: "単語の意味・用法" },
-  { main: "英語",         name: "英文法",       emoji: "📏", color: "#f87171", desc: "文法・語形変化" },
+  { main: "英語",         name: "英単語",       emoji: "🔤", color: "#ef4444", desc: "単語の意味・用法",               level: 2 },
+  { main: "英語",         name: "英文法",       emoji: "📏", color: "#f87171", desc: "文法・語形変化",                 level: 3 },
   // プログラミング
-  { main: "プログラミング", name: "Web基礎",     emoji: "🌐", color: "#06b6d4", desc: "HTML/CSS/JavaScript入門" },
-  { main: "プログラミング", name: "Java Bronze", emoji: "☕", color: "#f97316", desc: "Javaの基礎文法・オブジェクト指向入門" },
-  { main: "プログラミング", name: "Java Silver", emoji: "🥈", color: "#94a3b8", desc: "Java SE開発者向け中級" },
-  { main: "プログラミング", name: "Java Gold",   emoji: "🥇", color: "#fbbf24", desc: "Java SE開発者向け上級" },
+  { main: "プログラミング", name: "Web基礎",     emoji: "🌐", color: "#06b6d4", desc: "HTML/CSS/JavaScript入門",       level: 2 },
+  { main: "プログラミング", name: "Java Bronze", emoji: "☕", color: "#f97316", desc: "Javaの基礎文法・オブジェクト指向入門", level: 3 },
+  { main: "プログラミング", name: "Java Silver", emoji: "🥈", color: "#94a3b8", desc: "Java SE開発者向け中級",         level: 4 },
+  { main: "プログラミング", name: "Java Gold",   emoji: "🥇", color: "#fbbf24", desc: "Java SE開発者向け上級",         level: 5 },
 ];
 
 // ── 問題型 ────────────────────────────────────────────────
