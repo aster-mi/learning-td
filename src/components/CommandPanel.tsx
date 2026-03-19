@@ -5,6 +5,7 @@ interface Props {
   energy: number;
   onDeploy: (type: UnitType) => void;
   disabled?: boolean;
+  unlockedUnits?: string[];
 }
 
 const UNIT_TYPES: UnitType[] = ["basic", "fast", "tank", "shooter", "bomber"];
@@ -17,8 +18,9 @@ const UNIT_EMOJI: Record<UnitType, string> = {
   bomber:  "🔥",
 };
 
-export function CommandPanel({ energy, onDeploy, disabled }: Props) {
+export function CommandPanel({ energy, onDeploy, disabled, unlockedUnits }: Props) {
   const { isMobile } = useWindowSize();
+  const unlocked = unlockedUnits ? new Set(unlockedUnits) : null;
 
   return (
     <div style={{
@@ -49,7 +51,8 @@ export function CommandPanel({ energy, onDeploy, disabled }: Props) {
       {/* ユニットボタン */}
       {UNIT_TYPES.map(type => {
         const def = UNIT_DEFS[type];
-        const canAfford = energy >= def.cost && !disabled;
+        const isUnlocked = !unlocked || unlocked.has(type);
+        const canAfford = isUnlocked && energy >= def.cost && !disabled;
         const emoji = UNIT_EMOJI[type];
 
         return (
@@ -80,10 +83,10 @@ export function CommandPanel({ energy, onDeploy, disabled }: Props) {
               if (canAfford) (e.currentTarget as HTMLElement).style.background = "#1a3050";
             }}
           >
-            <div style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.2 }}>{emoji}</div>
-            <div style={{ fontSize: isMobile ? 10 : 11, marginTop: 1 }}>{def.label}</div>
+            <div style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.2 }}>{isUnlocked ? emoji : "🔒"}</div>
+            <div style={{ fontSize: isMobile ? 10 : 11, marginTop: 1 }}>{isUnlocked ? def.label : "???"}</div>
             <div style={{ fontSize: 11, marginTop: 1, color: canAfford ? "#fbbf24" : "#64748b", fontWeight: "bold" }}>
-              ⚡{def.cost}
+              {isUnlocked ? `⚡${def.cost}` : "🔒"}
             </div>
             {!isMobile && (
               <div style={{ fontSize: 9, color: canAfford ? "#94a3b8" : "#334155" }}>

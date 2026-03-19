@@ -9,6 +9,8 @@ interface Props {
   enemyBaseX: number;
   canvasWidth: number;
   isPaused?: boolean;
+  combo?: number;
+  comboFlashKey?: number;  // changes when combo milestone hit
 }
 
 const CANVAS_HEIGHT = 300;
@@ -773,7 +775,7 @@ function drawAngel(ctx: CanvasRenderingContext2D, a: Angel, now: number) {
 }
 
 // ── main component ─────────────────────────────────────────────────────────
-export function BattleCanvas({ state, playerBaseX, enemyBaseX, canvasWidth, isPaused }: Props) {
+export function BattleCanvas({ state, playerBaseX, enemyBaseX, canvasWidth, isPaused, combo = 0, comboFlashKey = 0 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const starsRef       = useRef<{ x:number; y:number; r:number }[]>([]);
@@ -784,6 +786,8 @@ export function BattleCanvas({ state, playerBaseX, enemyBaseX, canvasWidth, isPa
   const prevEnemyHpRef = useRef<Map<number,number>>(new Map());
   const prevEnemyPosRef = useRef<Map<number,{x:number;y:number;color:string}>>(new Map());
   const prevUnitPosRef  = useRef<Map<number,{x:number;y:number;color:string}>>(new Map());
+  const comboFlashRef   = useRef<{ t: number; level: number }>({ t: 0, level: 0 });
+  const prevComboFlashKey = useRef(0);
 
   // One-time star generation
   if (starsRef.current.length === 0) {
@@ -877,6 +881,72 @@ export function BattleCanvas({ state, playerBaseX, enemyBaseX, canvasWidth, isPa
     for (const ef of hitEffectsRef.current) drawHitEffect(ctx, ef, now);
     for (const p  of particlesRef.current)  drawParticle(ctx, p,  now);
     for (const a  of angelsRef.current)     drawAngel(ctx, a, now);
+
+    // ── combo flash & special attack ─────────────────────────────────────
+    if (comboFlashKey !== prevComboFlashKey.current && combo >= 5) {
+      prevComboFlashKey.current = comboFlashKey;
+      comboFlashRef.current = { t: now, level: combo >= 10 ? 2 : 1 };
+    }
+    {
+      const cf = comboFlashRef.current;
+      if (cf.t > 0) {
+        const elapsed = now - cf.t;
+        // Screen flash (0 ~ 400ms)
+        if (elapsed < 400) {
+          const p = elapsed / 400;
+          const flashAlpha = (1 - p) * (cf.level >= 2 ? 0.45 : 0.25);
+          ctx.save();
+          ctx.fillStyle = cf.level >= 2
+            ? `rgba(192,132,252,${flashAlpha})`   // purple for 10+ combo
+            : `rgba(251,191,36,${flashAlpha})`;    // gold for 5+ combo
+          ctx.fillRect(0, 0, canvasWidth, CANVAS_HEIGHT);
+          ctx.restore();
+        }
+        // 10+ combo: shockwave that damages all enemies (visual only - damage done in GameScene)
+        if (cf.level >= 2 && elapsed < 800) {
+          const p = elapsed / 800;
+          const radius = p * canvasWidth * 0.6;
+          ctx.save();
+          ctx.globalAlpha = (1 - p) * 0.6;
+          ctx.strokeStyle = "#c084fc";
+          ctx.lineWidth = 4 + (1 - p) * 8;
+          ctx.beginPath();
+          ctx.arc(playerBaseX + 30, GROUND_Y - 40, radius, 0, Math.PI * 2);
+          ctx.stroke();
+          // Inner glow
+          ctx.globalAlpha = (1 - p) * 0.3;
+          ctx.strokeStyle = "#e9d5ff";
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(playerBaseX + 30, GROUND_Y - 40, radius * 0.85, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.restore();
+        }
+        // Combo text display
+        if (elapsed < 1200) {
+          const p = elapsed / 1200;
+          const textAlpha = p < 0.2 ? p / 0.2 : p > 0.7 ? (1 - p) / 0.3 : 1;
+          const scale = p < 0.15 ? 0.5 + p / 0.15 * 0.5 : 1 + Math.sin(p * 4) * 0.05;
+          ctx.save();
+          ctx.globalAlpha = textAlpha;
+          ctx.translate(canvasWidth / 2, CANVAS_HEIGHT * 0.35);
+          ctx.scale(scale, scale);
+          ctx.font = `bold ${cf.level >= 2 ? 32 : 26}px sans-serif`;
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.shadowColor = cf.level >= 2 ? "#c084fc" : "#fbbf24";
+          ctx.shadowBlur = 20;
+          ctx.fillStyle = cf.level >= 2 ? "#e9d5ff" : "#fef3c7";
+          ctx.fillText(
+            cf.level >= 2 ? `💥 ${combo} COMBO! 必殺技発動！` : `🔥 ${combo} COMBO!`,
+            0, 0,
+          );
+          ctx.restore();
+        }
+        // Clean up
+        if (elapsed > 1200) comboFlashRef.current = { t: 0, level: 0 };
+      }
+    }
 
     if (state.status !== "playing") {
       ctx.fillStyle = "rgba(0,0,0,0.62)";

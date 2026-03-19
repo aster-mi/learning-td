@@ -147,6 +147,13 @@ export class GameEngine {
     }
   }
 
+  /** コンボ必殺技: 全敵にダメージ */
+  damageAllEnemies(dmg: number): void {
+    for (const e of this.enemies) {
+      if (e.alive) e.hp -= dmg;
+    }
+  }
+
   private _snapshot(): GameState {
     return {
       status: this.status,

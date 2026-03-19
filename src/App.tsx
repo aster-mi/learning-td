@@ -5,6 +5,7 @@ import { GameScene } from "./scenes/GameScene";
 import { stages } from "./data/stages";
 import { LEVEL_DEFS, SUB_CATEGORIES } from "./data/questions";
 import { getWrongCount } from "./data/wrongStore";
+import { loadSave } from "./data/saveData";
 
 const STORAGE_KEY        = "learning_td_cleared";
 const STORAGE_SUBS_KEY   = "learning_td_subcategories";
@@ -46,6 +47,7 @@ export default function App() {
   const [subCategories, setSubCategories] = useState<string[]>(loadSubCategories);
   const [selectedLevel, setSelectedLevel] = useState<number>(loadLevel);
   const [reviewMode, setReviewMode]       = useState(false);
+  const [saveData, setSaveData]           = useState(() => loadSave());
   const gameKeyRef = useRef<number>(0);
 
   const handleCategoryConfirm = (selected: string[], level: number) => {
@@ -60,7 +62,7 @@ export default function App() {
   const handleReviewStart = () => {
     setReviewMode(true);
     gameKeyRef.current += 1;
-    setActiveStageId(1);  // ステージ1を使う（復習モードではステージ自体は重要でない）
+    setActiveStageId(1);
     setScene("game");
   };
 
@@ -77,11 +79,24 @@ export default function App() {
       saveCleared(next);
       return next;
     });
+    // セーブデータを再読込（GameSceneで保存済み）
+    setSaveData(loadSave());
+  };
+
+  const handleRetry = () => {
+    gameKeyRef.current += 1;
+    // force re-render of GameScene with same stageId
+    setScene("game");
+  };
+
+  const handleBack = () => {
+    setReviewMode(false);
+    setSaveData(loadSave());
+    setScene(reviewMode ? "category" : "select");
   };
 
   const activeStage = stages.find(s => s.id === activeStageId)!;
 
-  // subCategories が空の場合は全サブカテゴリを使う（初回起動時）
   const effectiveSubs = subCategories.length > 0
     ? subCategories
     : SUB_CATEGORIES.map(s => s.name);
@@ -100,8 +115,10 @@ export default function App() {
       {scene === "select" && (
         <StageSelect
           clearedStages={clearedStages}
+          stageStars={saveData.stageStars}
+          coins={saveData.coins}
           onSelect={handleStageSelect}
-          onBack={() => setScene("category")}
+          onBack={() => { setSaveData(loadSave()); setScene("category"); }}
         />
       )}
       {scene === "game" && (
@@ -110,9 +127,11 @@ export default function App() {
           stage={activeStage}
           subCategories={effectiveSubs}
           selectedLevel={selectedLevel}
-          onBack={() => { setReviewMode(false); setScene(reviewMode ? "category" : "select"); }}
+          onBack={handleBack}
           onClear={handleClear}
+          onRetry={handleRetry}
           reviewMode={reviewMode}
+          unlockedUnits={saveData.unlockedUnits}
         />
       )}
     </>

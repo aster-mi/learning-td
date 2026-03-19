@@ -3,6 +3,8 @@ import { useWindowSize } from "../hooks/useWindowSize";
 
 interface Props {
   clearedStages: Set<number>;
+  stageStars: Record<number, number>;
+  coins: number;
   onSelect: (stageId: number) => void;
   onBack: () => void;
 }
@@ -10,7 +12,17 @@ interface Props {
 const STAGE_BG = ["#1e3a5f", "#3b1f2b", "#1a2e1a"];
 const STAGE_ACCENT = ["#3b82f6", "#ef4444", "#22c55e"];
 
-export function StageSelect({ clearedStages, onSelect, onBack }: Props) {
+function StarDisplay({ count, max = 3 }: { count: number; max?: number }) {
+  return (
+    <span>
+      {Array.from({ length: max }, (_, i) => (
+        <span key={i} style={{ opacity: i < count ? 1 : 0.25, fontSize: 18 }}>⭐</span>
+      ))}
+    </span>
+  );
+}
+
+export function StageSelect({ clearedStages, stageStars, coins, onSelect, onBack }: Props) {
   const { isMobile } = useWindowSize();
   return (
     <div style={{
@@ -20,8 +32,8 @@ export function StageSelect({ clearedStages, onSelect, onBack }: Props) {
       padding: isMobile ? "20px 12px" : "40px 16px",
       color: "#fff",
     }}>
-      {/* 戻るボタン */}
-      <div style={{ width: "100%", maxWidth: 420, marginBottom: 16 }}>
+      {/* 戻るボタン + コイン */}
+      <div style={{ width: "100%", maxWidth: 420, marginBottom: 16, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <button
           onClick={onBack}
           style={{
@@ -31,6 +43,14 @@ export function StageSelect({ clearedStages, onSelect, onBack }: Props) {
         >
           ← カテゴリ選択に戻る
         </button>
+        <div style={{
+          background: "rgba(251,191,36,0.15)",
+          border: "1px solid rgba(251,191,36,0.3)",
+          borderRadius: 8, padding: "4px 12px",
+          fontSize: 14, fontWeight: "bold", color: "#fbbf24",
+        }}>
+          💰 {coins}
+        </div>
       </div>
       {/* タイトル */}
       <div style={{ marginBottom: 8, fontSize: 13, color: "#94a3b8", letterSpacing: 2 }}>
@@ -49,6 +69,7 @@ export function StageSelect({ clearedStages, onSelect, onBack }: Props) {
         {stages.map((stage, idx) => {
           const unlocked = stage.id === 1 || clearedStages.has(stage.id - 1);
           const cleared  = clearedStages.has(stage.id);
+          const stars    = stageStars[stage.id] ?? 0;
           const accent   = STAGE_ACCENT[idx];
           const bg       = STAGE_BG[idx];
 
@@ -82,10 +103,10 @@ export function StageSelect({ clearedStages, onSelect, onBack }: Props) {
                   </div>
                 </div>
                 <div style={{ fontSize: 28 }}>
-                  {!unlocked ? "🔒" : cleared ? "⭐" : "▶️"}
+                  {!unlocked ? "🔒" : cleared ? <StarDisplay count={stars} /> : "▶️"}
                 </div>
               </div>
-              <div style={{ marginTop: 8, fontSize: 12, color: "#94a3b8", display: "flex", gap: 16 }}>
+              <div style={{ marginTop: 8, fontSize: 12, color: "#94a3b8", display: "flex", gap: 16, flexWrap: "wrap" }}>
                 <span>🏰 敵HP: {stage.enemyBaseHp}</span>
                 <span>👾 敵数: {stage.spawnTable.length}</span>
                 {cleared && <span style={{ color: "#fbbf24" }}>✅ クリア済み</span>}
@@ -106,7 +127,8 @@ export function StageSelect({ clearedStages, onSelect, onBack }: Props) {
         1. クイズに正解 → ⚡Energy +10<br />
         2. Energyを使って下のボタンからユニットを出撃<br />
         3. 敵の城のHPをゼロにしたらクリア！<br />
-        <span style={{ color: "#fbbf24" }}>ヒント: キーボード 1〜4 でクイズに素早く答えられます</span>
+        <span style={{ color: "#fbbf24" }}>⭐ 正答率80%以上 & 拠点HP50%以上で星3獲得！</span><br />
+        <span style={{ color: "#c084fc" }}>💰 コインでユニットを強化できます（準備中）</span>
       </div>
     </div>
   );

@@ -4,15 +4,20 @@ import { UNIT_DEFS, type UnitType } from "../domain/Unit";
 import { QuizPanel } from "../components/QuizPanel";
 import { BattleCanvas } from "../components/BattleCanvas";
 import { CommandPanel } from "../components/CommandPanel";
+import { ResultScreen } from "../components/ResultScreen";
 import { useWindowSize } from "../hooks/useWindowSize";
+import { calcStars, calcCoins, getNewUnlock, loadSave, saveSave } from "../data/saveData";
 import type { StageData } from "../data/stages";
+
 interface Props {
   stage: StageData;
   subCategories: string[];
   selectedLevel: number;
   onBack: () => void;
   onClear: (stageId: number) => void;
+  onRetry: () => void;
   reviewMode?: boolean;
+  unlockedUnits?: string[];
 }
 
 const MAX_ENERGY           = 100;
@@ -20,7 +25,7 @@ const ENERGY_PER_CORRECT   = 10;
 const ENERGY_PENALTY_WRONG = 5;
 const ACTIVE_DURATION_SEC  = 5;
 
-export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear, reviewMode }: Props) {
+export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear, onRetry, reviewMode, unlockedUnits }: Props) {
   const { isMobile } = useWindowSize();
   const engineRef    = useRef<GameEngine>(new GameEngine(stage, selectedLevel));
   const lastTickRef  = useRef<number>(Date.now());
@@ -31,6 +36,11 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
   const comboRef     = useRef(0);
   const activeRef    = useRef(0);   // 残り動作時間（秒）
   const clearedRef   = useRef(false);
+
+  // 統計トラッキング
+  const correctCountRef = useRef(0);
+  const wrongCountRef   = useRef(0);
+  const maxComboRef     = useRef(0);
 
   // 表示用 state（React レンダーに反映）
   const [gameState, setGameState] = useState<GameState>(() => ({
@@ -44,6 +54,14 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
   const [activeLeft, setActiveLeft] = useState(0);
   const [fieldFeedback, setFieldFeedback] = useState<{ type: "correct" | "wrong"; key: number; bonus: number } | null>(null);
   const feedbackKeyRef = useRef(0);
+  const [comboFlashKey, setComboFlashKey] = useState(0);
+
+  // リザルト画面用state
+  const [resultData, setResultData] = useState<{
+    stars: number; coins: number; accuracy: number;
+    maxCombo: number; correctCount: number; wrongCount: number;
+    elapsedSec: number; baseHpRatio: number; newUnlock: UnitType | null;
+  } | null>(null);
 
   // ゲームループ（依存なし＝マウント時に1回だけ登録）
   useEffect(() => {
@@ -66,11 +84,49 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
 
         if (snap.status === "win" && !clearedRef.current) {
           clearedRef.current = true;
-          // setState の外で呼ぶため setTimeout(0) で非同期に
+          // リザルト計算
+          const totalQ = correctCountRef.current + wrongCountRef.current;
+          const accuracy = totalQ > 0 ? correctCountRef.current / totalQ : 0;
+          const baseHpRatio = snap.playerBaseHp / snap.playerBaseMaxHp;
+          const stars = calcStars(accuracy, baseHpRatio);
+          const coins = calcCoins(stars, accuracy, maxComboRef.current);
+          const save = loadSave();
+          const newUnlock = getNewUnlock(stage.id, save.unlockedUnits);
+
+          // セーブデータ更新
+          save.coins += coins;
+          save.totalCorrect += correctCountRef.current;
+          save.totalWrong += wrongCountRef.current;
+          if (maxComboRef.current > save.maxCombo) save.maxCombo = maxComboRef.current;
+          const prevStars = save.stageStars[stage.id] ?? 0;
+          if (stars > prevStars) save.stageStars[stage.id] = stars;
+          if (newUnlock && !save.unlockedUnits.includes(newUnlock)) {
+            save.unlockedUnits.push(newUnlock);
+          }
+          saveSave(save);
+
+          setResultData({
+            stars, coins, accuracy, maxCombo: maxComboRef.current,
+            correctCount: correctCountRef.current, wrongCount: wrongCountRef.current,
+            elapsedSec: snap.elapsedSec, baseHpRatio, newUnlock,
+          });
+
           setTimeout(() => onClear(stage.id), 0);
           return; // ループ停止
         }
-        if (snap.status !== "playing") return; // ループ停止
+        if (snap.status === "lose" && !clearedRef.current) {
+          clearedRef.current = true;
+          const totalQ = correctCountRef.current + wrongCountRef.current;
+          const accuracy = totalQ > 0 ? correctCountRef.current / totalQ : 0;
+          const baseHpRatio = 0;
+          setResultData({
+            stars: 0, coins: 0, accuracy, maxCombo: maxComboRef.current,
+            correctCount: correctCountRef.current, wrongCount: wrongCountRef.current,
+            elapsedSec: snap.elapsedSec, baseHpRatio, newUnlock: null,
+          });
+          return;
+        }
+        if (snap.status !== "playing") return;
       }
 
       rafRef.current = requestAnimationFrame(loop);
@@ -81,8 +137,9 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCorrect = useCallback(() => {
-    // コンボボーナス: 3連続→+15, 5連続→+20
+    correctCountRef.current += 1;
     comboRef.current += 1;
+    if (comboRef.current > maxComboRef.current) maxComboRef.current = comboRef.current;
     setCombo(comboRef.current);
     const bonus = comboRef.current >= 5 ? 20
                 : comboRef.current >= 3 ? 15
@@ -96,9 +153,19 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
     feedbackKeyRef.current += 1;
     setFieldFeedback({ type: "correct", key: feedbackKeyRef.current, bonus });
     setTimeout(() => setFieldFeedback(null), 1200);
+
+    // コンボ演出トリガー (5, 10, 15, ...)
+    if (comboRef.current >= 5 && comboRef.current % 5 === 0) {
+      setComboFlashKey(prev => prev + 1);
+      // 10コンボ以上: 必殺技 - 全敵にダメージ
+      if (comboRef.current >= 10) {
+        engineRef.current.damageAllEnemies(30);
+      }
+    }
   }, []);
 
   const handleWrong = useCallback(() => {
+    wrongCountRef.current += 1;
     comboRef.current = 0;
     setCombo(0);
     // ペナルティ: エネルギー -5
@@ -131,7 +198,6 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
       display: "flex", flexDirection: "column",
       height: "100dvh",
       background: "#0f172a", color: "#fff",
-      /* iOS ホームインジケーター分の余白 */
       paddingBottom: "env(safe-area-inset-bottom, 0px)",
     }}>
       {/* ── ヘッダー ── */}
@@ -163,7 +229,6 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
 
       {/* ── 戦場（上） ── */}
       <div style={{
-        /* モバイルでは固定高さ（キャンバスのアスペクト比で決まる）、PCは flex:1 で広げる */
         ...(isMobile ? { flexShrink: 0 } : { flex: 1 }),
         display: "flex", flexDirection: "column",
         background: "#0f172a", overflow: "hidden", position: "relative",
@@ -186,6 +251,8 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
           enemyBaseX={engineRef.current.enemyBaseX}
           canvasWidth={engineRef.current.canvasWidth}
           isPaused={isPaused}
+          combo={combo}
+          comboFlashKey={comboFlashKey}
         />
         {isPaused && (
           <div style={{
@@ -254,7 +321,12 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
       </div>
 
       {/* ── 操作パネル（中） ── */}
-      <CommandPanel energy={energy} onDeploy={handleDeploy} disabled={isDone} />
+      <CommandPanel
+        energy={energy}
+        onDeploy={handleDeploy}
+        disabled={isDone}
+        unlockedUnits={unlockedUnits}
+      />
 
       {/* ── クイズ（下）：モバイルでは残り全部を使う ── */}
       <QuizPanel
@@ -270,31 +342,23 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
         reviewMode={reviewMode}
       />
 
-      {/* ── 結果オーバーレイ ── */}
-      {isDone && (
-        <div style={{
-          position: "fixed", inset: 0, background: "rgba(0,0,0,0.7)",
-          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
-          gap: 20, zIndex: 100,
-        }}>
-          <div style={{ fontSize: 48, fontWeight: "bold", color: gameState.status === "win" ? "#2ecc71" : "#e74c3c" }}>
-            {gameState.status === "win" ? "🎉 VICTORY!" : "💀 DEFEAT"}
-          </div>
-          <div style={{ fontSize: 18, color: "#cbd5e1" }}>
-            {gameState.status === "win"
-              ? `コンボ最高 ${combo}！ よくできました！`
-              : "次は正解してエネルギーを貯めよう！"}
-          </div>
-          <button
-            onClick={onBack}
-            style={{
-              padding: "12px 28px", background: "#3b82f6", color: "#fff",
-              border: "none", borderRadius: 8, cursor: "pointer", fontWeight: "bold", fontSize: 16,
-            }}
-          >
-            ステージ選択へ
-          </button>
-        </div>
+      {/* ── リザルト画面 ── */}
+      {isDone && resultData && (
+        <ResultScreen
+          isWin={gameState.status === "win"}
+          stars={resultData.stars}
+          coins={resultData.coins}
+          accuracy={resultData.accuracy}
+          maxCombo={resultData.maxCombo}
+          correctCount={resultData.correctCount}
+          wrongCount={resultData.wrongCount}
+          elapsedSec={resultData.elapsedSec}
+          baseHpRatio={resultData.baseHpRatio}
+          newUnlock={resultData.newUnlock}
+          onRetry={onRetry}
+          onBack={onBack}
+          isMobile={isMobile}
+        />
       )}
 
       <style>{`
