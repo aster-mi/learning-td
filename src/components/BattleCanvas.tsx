@@ -34,6 +34,7 @@ function lighter(hex: string, n: number) {
 // ── effect structs ─────────────────────────────────────────────────────────
 interface HitEffect { x:number; y:number; t:number; dur:number; color:string; }
 interface Particle  { x:number; y:number; vx:number; vy:number; t:number; dur:number; color:string; r:number; }
+interface Angel     { x:number; y:number; t:number; dur:number; color:string; facingLeft:boolean; }
 
 // ── HP bar ─────────────────────────────────────────────────────────────────
 function drawHpBar(ctx: CanvasRenderingContext2D, cx:number, y:number, w:number, hp:number, maxHp:number) {
@@ -248,13 +249,22 @@ function drawEnemyCastle(ctx: CanvasRenderingContext2D, bx:number, hp:number, ma
 
 // ── cat (unit) ─────────────────────────────────────────────────────────────
 function drawCat(ctx: CanvasRenderingContext2D, u: Unit, t: number) {
-  const cx = u.x;
   const r  = u.def.radius;
   const freq = u.def.speed / 50;
   const ph  = t * freq * 5.5 + u.id * 1.73;
   const bob = Math.abs(Math.sin(ph * 2)) * 1.8;
-  const cy  = GROUND_Y - r * 0.92 - bob;
   const col = u.def.color;
+
+  // 攻撃モーション: lastAtkTimeから250ms以内なら前方にランジ
+  const atkElapsed = t * 1000 - u.lastAtkTime;
+  const isAttacking = atkElapsed >= 0 && atkElapsed < 250;
+  const atkProgress = isAttacking ? atkElapsed / 250 : 0;
+  // 前に突き出して戻る (sin curve)
+  const lungeX = isAttacking ? Math.sin(atkProgress * Math.PI) * r * 0.6 : 0;
+  const lungeY = isAttacking ? -Math.sin(atkProgress * Math.PI) * r * 0.3 : 0;
+
+  const cx = u.x + lungeX;
+  const cy  = GROUND_Y - r * 0.92 - bob + lungeY;
 
   // Shadow
   ctx.fillStyle = "rgba(0,0,0,0.32)";
@@ -372,12 +382,21 @@ function drawCat(ctx: CanvasRenderingContext2D, u: Unit, t: number) {
 
 // ── enemy ──────────────────────────────────────────────────────────────────
 function drawEnemy(ctx: CanvasRenderingContext2D, e: Enemy, t: number) {
-  const cx = e.x, r = e.def.radius;
+  const r = e.def.radius;
   const freq = e.def.speed / 50;
   const ph = t * freq * 5.5 + e.id * 2.11;
   const bob = Math.abs(Math.sin(ph * 2)) * 1.8;
-  const cy = GROUND_Y - r * 0.92 - bob;
   const col = e.def.color;
+
+  // 攻撃モーション: 敵は左向きなのでランジは-X方向
+  const atkElapsed = t * 1000 - e.lastAtkTime;
+  const isAttacking = atkElapsed >= 0 && atkElapsed < 250;
+  const atkProgress = isAttacking ? atkElapsed / 250 : 0;
+  const lungeX = isAttacking ? -Math.sin(atkProgress * Math.PI) * r * 0.6 : 0;
+  const lungeY = isAttacking ? -Math.sin(atkProgress * Math.PI) * r * 0.3 : 0;
+
+  const cx = e.x + lungeX;
+  const cy = GROUND_Y - r * 0.92 - bob + lungeY;
 
   ctx.fillStyle = "rgba(0,0,0,0.32)";
   ctx.beginPath(); ctx.ellipse(cx, GROUND_Y + 2, r * 1.05, 4, 0, 0, Math.PI * 2); ctx.fill();
@@ -665,6 +684,94 @@ function drawParticle(ctx: CanvasRenderingContext2D, p: Particle, now: number) {
   ctx.restore();
 }
 
+// ── angel (death) ───────────────────────────────────────────────────────────
+function drawAngel(ctx: CanvasRenderingContext2D, a: Angel, now: number) {
+  const dt  = (now - a.t) / 1000;
+  const prg = (now - a.t) / a.dur;
+  if (prg >= 1) return;
+
+  const x = a.x;
+  const y = a.y - dt * 55;   // float upward
+  const alpha = prg < 0.7 ? 1 : 1 - (prg - 0.7) / 0.3;  // fade out last 30%
+  const scale = 0.6 + Math.sin(prg * Math.PI) * 0.2;      // scale pulse
+
+  ctx.save();
+  ctx.globalAlpha = alpha * 0.9;
+  ctx.translate(x, y);
+  ctx.scale(a.facingLeft ? -scale : scale, scale);
+
+  // Halo (golden ring)
+  ctx.strokeStyle = "#fbbf24";
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.ellipse(0, -16, 8, 3, 0, 0, Math.PI * 2);
+  ctx.stroke();
+  // Halo glow
+  ctx.globalAlpha = alpha * 0.4;
+  ctx.strokeStyle = "#fde68a";
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.ellipse(0, -16, 8, 3, 0, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.globalAlpha = alpha * 0.9;
+
+  // Body (small ghost shape)
+  ctx.fillStyle = "rgba(255,255,255,0.85)";
+  ctx.beginPath();
+  ctx.arc(0, -4, 10, Math.PI, 0);  // round top
+  // Wavy bottom
+  ctx.lineTo(10, 8);
+  ctx.quadraticCurveTo(7, 4, 5, 8);
+  ctx.quadraticCurveTo(2.5, 12, 0, 8);
+  ctx.quadraticCurveTo(-2.5, 12, -5, 8);
+  ctx.quadraticCurveTo(-7, 4, -10, 8);
+  ctx.lineTo(-10, -4);
+  ctx.fill();
+
+  // Eyes (closed peacefully — two curved lines)
+  ctx.strokeStyle = "#94a3b8";
+  ctx.lineWidth = 1.2;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.arc(-3.5, -4, 2.5, Math.PI * 0.15, Math.PI * 0.85);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.arc(3.5, -4, 2.5, Math.PI * 0.15, Math.PI * 0.85);
+  ctx.stroke();
+
+  // Wings (flapping)
+  const wingFlap = Math.sin(prg * Math.PI * 8) * 0.3;
+  ctx.fillStyle = "rgba(255,255,255,0.5)";
+  // Left wing
+  ctx.beginPath();
+  ctx.moveTo(-8, -2);
+  ctx.quadraticCurveTo(-20, -12 + wingFlap * 10, -16, -2 + wingFlap * 5);
+  ctx.quadraticCurveTo(-12, 2, -8, 0);
+  ctx.fill();
+  // Right wing
+  ctx.beginPath();
+  ctx.moveTo(8, -2);
+  ctx.quadraticCurveTo(20, -12 + wingFlap * 10, 16, -2 + wingFlap * 5);
+  ctx.quadraticCurveTo(12, 2, 8, 0);
+  ctx.fill();
+
+  // Sparkles around angel
+  ctx.fillStyle = "#fde68a";
+  const sparkleTime = prg * 6;
+  for (let i = 0; i < 3; i++) {
+    const sa = sparkleTime + i * 2.1;
+    const sx = Math.sin(sa * 1.7) * 18;
+    const sy = Math.cos(sa * 1.3) * 10 - 6;
+    const sr = 1 + Math.sin(sa * 3) * 0.5;
+    ctx.globalAlpha = alpha * (0.4 + Math.sin(sa * 4) * 0.3);
+    ctx.beginPath();
+    ctx.arc(sx, sy, sr, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  ctx.restore();
+}
+
 // ── main component ─────────────────────────────────────────────────────────
 export function BattleCanvas({ state, playerBaseX, enemyBaseX, canvasWidth, isPaused }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -672,6 +779,7 @@ export function BattleCanvas({ state, playerBaseX, enemyBaseX, canvasWidth, isPa
   const starsRef       = useRef<{ x:number; y:number; r:number }[]>([]);
   const hitEffectsRef  = useRef<HitEffect[]>([]);
   const particlesRef   = useRef<Particle[]>([]);
+  const angelsRef      = useRef<Angel[]>([]);
   const prevUnitHpRef  = useRef<Map<number,number>>(new Map());
   const prevEnemyHpRef = useRef<Map<number,number>>(new Map());
   const prevEnemyPosRef = useRef<Map<number,{x:number;y:number;color:string}>>(new Map());
@@ -708,32 +816,41 @@ export function BattleCanvas({ state, playerBaseX, enemyBaseX, canvasWidth, isPa
       if (prev !== undefined && e.hp < prev)
         hitEffectsRef.current.push({ x: e.x, y: GROUND_Y - e.def.radius * 2 - 6, t: now, dur: 340, color: "#fbbf24" });
     }
-    // Enemy death → particles
+    // Enemy death → angel + small particles
     for (const [id, pos] of prevEnemyPosRef.current) {
       if (!currentEnemyIds.has(id)) {
-        for (let i = 0; i < 9; i++) {
-          const angle = (i / 9) * Math.PI * 2;
-          const spd   = 45 + Math.random() * 65;
+        angelsRef.current.push({
+          x: pos.x, y: pos.y, t: now, dur: 1400,
+          color: pos.color, facingLeft: true,
+        });
+        // Small puff particles
+        for (let i = 0; i < 5; i++) {
+          const angle = (i / 5) * Math.PI * 2;
+          const spd   = 25 + Math.random() * 35;
           particlesRef.current.push({
             x: pos.x, y: pos.y,
-            vx: Math.cos(angle) * spd, vy: Math.sin(angle) * spd - 60,
-            t: now, dur: 550 + Math.random() * 350,
-            color: pos.color, r: 3.5 + Math.random() * 2.5,
+            vx: Math.cos(angle) * spd, vy: Math.sin(angle) * spd - 40,
+            t: now, dur: 350 + Math.random() * 200,
+            color: "#ffffff", r: 2 + Math.random() * 1.5,
           });
         }
       }
     }
-    // Unit death → particles
+    // Unit death → angel + small particles
     for (const [id, pos] of prevUnitPosRef.current) {
       if (!currentUnitIds.has(id)) {
-        for (let i = 0; i < 7; i++) {
-          const angle = (i / 7) * Math.PI * 2;
-          const spd   = 35 + Math.random() * 50;
+        angelsRef.current.push({
+          x: pos.x, y: pos.y, t: now, dur: 1400,
+          color: pos.color, facingLeft: false,
+        });
+        for (let i = 0; i < 5; i++) {
+          const angle = (i / 5) * Math.PI * 2;
+          const spd   = 20 + Math.random() * 30;
           particlesRef.current.push({
             x: pos.x, y: pos.y,
-            vx: Math.cos(angle) * spd, vy: Math.sin(angle) * spd - 50,
-            t: now, dur: 450 + Math.random() * 300,
-            color: pos.color, r: 3 + Math.random() * 2,
+            vx: Math.cos(angle) * spd, vy: Math.sin(angle) * spd - 35,
+            t: now, dur: 300 + Math.random() * 200,
+            color: "#ffffff", r: 2 + Math.random() * 1.5,
           });
         }
       }
@@ -748,6 +865,7 @@ export function BattleCanvas({ state, playerBaseX, enemyBaseX, canvasWidth, isPa
     // Prune dead effects
     hitEffectsRef.current = hitEffectsRef.current.filter(ef => now - ef.t < ef.dur);
     particlesRef.current  = particlesRef.current.filter(p  => now - p.t  < p.dur);
+    angelsRef.current     = angelsRef.current.filter(a  => now - a.t  < a.dur);
 
     // ── draw ──────────────────────────────────────────────────────────────
     ctx.clearRect(0, 0, canvasWidth, CANVAS_HEIGHT);
@@ -758,6 +876,7 @@ export function BattleCanvas({ state, playerBaseX, enemyBaseX, canvasWidth, isPa
     for (const e of state.enemies) drawEnemy(ctx, e, t);
     for (const ef of hitEffectsRef.current) drawHitEffect(ctx, ef, now);
     for (const p  of particlesRef.current)  drawParticle(ctx, p,  now);
+    for (const a  of angelsRef.current)     drawAngel(ctx, a, now);
 
     if (state.status !== "playing") {
       ctx.fillStyle = "rgba(0,0,0,0.62)";
