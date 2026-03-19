@@ -44,8 +44,6 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
   const [selected, setSelected]     = useState<string | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [wrongCount,   setWrongCount]   = useState(0);
-  // "float" key for re-triggering the +10 animation
-  const [floatKey, setFloatKey]     = useState(0);
   // 復習モードで全問正解した状態
   const [reviewCleared, setReviewCleared] = useState(false);
 
@@ -58,7 +56,6 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
       if (choice === current.answer) {
         setFeedback("correct");
         setCorrectCount(n => n + 1);
-        setFloatKey(k => k + 1);
         onCorrect();
         answeredCorrectRef.current.add(current.id);
         // 復習モードで正解 → 復習リストから除外
@@ -203,11 +200,6 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
           75%     { transform: translateX(5px); }
           90%     { transform: translateX(-2px); }
         }
-        @keyframes floatUp {
-          0%   { opacity: 1;   transform: translateY(0)    scale(1); }
-          60%  { opacity: 1;   transform: translateY(-22px) scale(1.15); }
-          100% { opacity: 0;   transform: translateY(-40px) scale(0.9); }
-        }
         @keyframes flashGreen {
           0%,100% { background: transparent; }
           30%     { background: #22c55e22; }
@@ -340,43 +332,7 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
             ))}
           </div>
 
-          {/* ── フィードバック行（+10⚡ アニメ or 不正解メッセージ） ── */}
-          <div style={{
-            height: isMobile ? 24 : 28, marginTop: 5, flexShrink: 0,
-            display: "flex", alignItems: "center", justifyContent: "center",
-            position: "relative", overflow: "visible",
-          }}>
-            {/* 正解：浮かび上がる +N⚡（コンボボーナス表示） */}
-            {feedback === "correct" && (
-              <span
-                key={floatKey}
-                style={{
-                  position: "absolute",
-                  fontWeight: "bold",
-                  fontSize: isMobile ? 18 : 20,
-                  color: "#22c55e",
-                  textShadow: "0 0 12px #22c55ecc",
-                  animation: "floatUp 0.9s ease forwards",
-                  pointerEvents: "none",
-                  whiteSpace: "nowrap",
-                }}
-              >
-                ✅ 正解！　⚡ +{combo >= 5 ? 20 : combo >= 3 ? 15 : 10}
-                {combo >= 3 && <span style={{ fontSize: isMobile ? 12 : 13, color: "#fbbf24" }}> 🔥combo!</span>}
-              </span>
-            )}
-            {/* 不正解：ペナルティ表示 */}
-            {feedback === "wrong" && (
-              <span style={{
-                fontWeight: "bold",
-                fontSize: isMobile ? 13 : 14,
-                color: "#ef4444",
-                textShadow: "0 0 8px #ef4444aa",
-              }}>
-                ❌ 不正解　⚡ -5　— 正解は緑のボタン
-              </span>
-            )}
-          </div>
+          {/* フィードバックはフィールド上部に表示（GameScene側） */}
 
         </div>
       </div>

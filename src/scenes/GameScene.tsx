@@ -42,6 +42,8 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
   const [energy, setEnergy]     = useState(30);
   const [combo, setCombo]       = useState(0);
   const [activeLeft, setActiveLeft] = useState(0);
+  const [fieldFeedback, setFieldFeedback] = useState<{ type: "correct" | "wrong"; key: number; bonus: number } | null>(null);
+  const feedbackKeyRef = useRef(0);
 
   // ゲームループ（依存なし＝マウント時に1回だけ登録）
   useEffect(() => {
@@ -90,6 +92,10 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
     setEnergy(next);
     activeRef.current = ACTIVE_DURATION_SEC;
     setActiveLeft(ACTIVE_DURATION_SEC);
+    // フィールド上にフィードバック表示
+    feedbackKeyRef.current += 1;
+    setFieldFeedback({ type: "correct", key: feedbackKeyRef.current, bonus });
+    setTimeout(() => setFieldFeedback(null), 1200);
   }, []);
 
   const handleWrong = useCallback(() => {
@@ -102,6 +108,10 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
     // 誤答でもアクティブ時間は付与（ゲームは動く）
     activeRef.current = ACTIVE_DURATION_SEC;
     setActiveLeft(ACTIVE_DURATION_SEC);
+    // フィールド上にフィードバック表示
+    feedbackKeyRef.current += 1;
+    setFieldFeedback({ type: "wrong", key: feedbackKeyRef.current, bonus: -ENERGY_PENALTY_WRONG });
+    setTimeout(() => setFieldFeedback(null), 1200);
   }, []);
 
   const handleDeploy = useCallback((type: UnitType) => {
@@ -192,6 +202,54 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
             </div>
           </div>
         )}
+        {/* ── 正解/不正解フィードバック（フィールド下部） ── */}
+        {fieldFeedback && (
+          <div
+            key={fieldFeedback.key}
+            style={{
+              position: "absolute",
+              bottom: 8, left: "50%", transform: "translateX(-50%)",
+              pointerEvents: "none",
+              zIndex: 10,
+              animation: "fieldFeedbackAnim 1.2s ease forwards",
+            }}
+          >
+            {fieldFeedback.type === "correct" ? (
+              <div style={{
+                background: "rgba(20,83,45,0.9)",
+                border: "2px solid #22c55e",
+                borderRadius: 10,
+                padding: isMobile ? "6px 16px" : "8px 24px",
+                boxShadow: "0 0 20px #22c55e66",
+                textAlign: "center",
+                whiteSpace: "nowrap",
+              }}>
+                <span style={{ fontSize: isMobile ? 16 : 20, fontWeight: "bold", color: "#22c55e" }}>
+                  ✅ 正解！　⚡ +{fieldFeedback.bonus}
+                </span>
+                {comboRef.current >= 3 && (
+                  <span style={{ fontSize: isMobile ? 12 : 14, color: "#fbbf24", marginLeft: 8 }}>
+                    🔥{comboRef.current}combo!
+                  </span>
+                )}
+              </div>
+            ) : (
+              <div style={{
+                background: "rgba(69,10,10,0.9)",
+                border: "2px solid #ef4444",
+                borderRadius: 10,
+                padding: isMobile ? "6px 16px" : "8px 24px",
+                boxShadow: "0 0 20px #ef444466",
+                textAlign: "center",
+                whiteSpace: "nowrap",
+              }}>
+                <span style={{ fontSize: isMobile ? 16 : 20, fontWeight: "bold", color: "#ef4444" }}>
+                  ❌ 不正解　⚡ {fieldFeedback.bonus}
+                </span>
+              </div>
+            )}
+          </div>
+        )}
         </div>
       </div>
 
@@ -241,6 +299,13 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
 
       <style>{`
         @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+        @keyframes fieldFeedbackAnim {
+          0%   { opacity: 0; transform: translateX(-50%) translateY(10px) scale(0.8); }
+          15%  { opacity: 1; transform: translateX(-50%) translateY(0)    scale(1.05); }
+          30%  { opacity: 1; transform: translateX(-50%) translateY(0)    scale(1); }
+          80%  { opacity: 1; transform: translateX(-50%) translateY(0)    scale(1); }
+          100% { opacity: 0; transform: translateX(-50%) translateY(-15px) scale(0.9); }
+        }
       `}</style>
     </div>
   );
