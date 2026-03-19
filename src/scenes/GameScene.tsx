@@ -15,9 +15,10 @@ interface Props {
   reviewMode?: boolean;
 }
 
-const MAX_ENERGY       = 100;
-const ENERGY_PER_CORRECT = 10;
-const ACTIVE_DURATION_SEC = 10;
+const MAX_ENERGY           = 100;
+const ENERGY_PER_CORRECT   = 10;
+const ENERGY_PENALTY_WRONG = 5;
+const ACTIVE_DURATION_SEC  = 10;
 
 export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear, reviewMode }: Props) {
   const { isMobile } = useWindowSize();
@@ -78,11 +79,15 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleCorrect = useCallback(() => {
-    const next = Math.min(MAX_ENERGY, energyRef.current + ENERGY_PER_CORRECT);
-    energyRef.current = next;
-    setEnergy(next);
+    // コンボボーナス: 3連続→+15, 5連続→+20
     comboRef.current += 1;
     setCombo(comboRef.current);
+    const bonus = comboRef.current >= 5 ? 20
+                : comboRef.current >= 3 ? 15
+                : ENERGY_PER_CORRECT;
+    const next = Math.min(MAX_ENERGY, energyRef.current + bonus);
+    energyRef.current = next;
+    setEnergy(next);
     activeRef.current = ACTIVE_DURATION_SEC;
     setActiveLeft(ACTIVE_DURATION_SEC);
   }, []);
@@ -90,6 +95,11 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
   const handleWrong = useCallback(() => {
     comboRef.current = 0;
     setCombo(0);
+    // ペナルティ: エネルギー -5
+    const next = Math.max(0, energyRef.current - ENERGY_PENALTY_WRONG);
+    energyRef.current = next;
+    setEnergy(next);
+    // 誤答でもアクティブ時間は付与（ゲームは動く）
     activeRef.current = ACTIVE_DURATION_SEC;
     setActiveLeft(ACTIVE_DURATION_SEC);
   }, []);

@@ -346,7 +346,7 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
             display: "flex", alignItems: "center", justifyContent: "center",
             position: "relative", overflow: "visible",
           }}>
-            {/* 正解：浮かび上がる +10⚡ */}
+            {/* 正解：浮かび上がる +N⚡（コンボボーナス表示） */}
             {feedback === "correct" && (
               <span
                 key={floatKey}
@@ -361,10 +361,11 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
                   whiteSpace: "nowrap",
                 }}
               >
-                ✅ 正解！　⚡ +10
+                ✅ 正解！　⚡ +{combo >= 5 ? 20 : combo >= 3 ? 15 : 10}
+                {combo >= 3 && <span style={{ fontSize: isMobile ? 12 : 13, color: "#fbbf24" }}> 🔥combo!</span>}
               </span>
             )}
-            {/* 不正解：固定メッセージ */}
+            {/* 不正解：ペナルティ表示 */}
             {feedback === "wrong" && (
               <span style={{
                 fontWeight: "bold",
@@ -372,7 +373,7 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
                 color: "#ef4444",
                 textShadow: "0 0 8px #ef4444aa",
               }}>
-                ❌ 不正解　— 正解は緑のボタン
+                ❌ 不正解　⚡ -5　— 正解は緑のボタン
               </span>
             )}
           </div>
