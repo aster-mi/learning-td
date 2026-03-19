@@ -6,6 +6,11 @@ export interface UnitUpgrade {
   atkLevel: number;  // 0 = no upgrade, max 5
 }
 
+export interface GachaItem {
+  type: string;
+  value: number;
+}
+
 export interface SaveData {
   coins: number;
   stageStars: Record<number, number>;        // stageId → 1|2|3
@@ -14,6 +19,8 @@ export interface SaveData {
   totalCorrect: number;
   totalWrong: number;
   maxCombo: number;
+  achievements: string[];                    // unlocked achievement IDs
+  gachaItems: GachaItem[];                   // stored gacha rewards for next game
 }
 
 const STORAGE_KEY = "learning_td_save";
@@ -26,6 +33,8 @@ const DEFAULT_SAVE: SaveData = {
   totalCorrect: 0,
   totalWrong: 0,
   maxCombo: 0,
+  achievements: [],
+  gachaItems: [],
 };
 
 // ── ロード / セーブ ────────────────────────────────────────
@@ -42,6 +51,8 @@ export function loadSave(): SaveData {
       totalCorrect: parsed.totalCorrect ?? 0,
       totalWrong: parsed.totalWrong ?? 0,
       maxCombo: parsed.maxCombo ?? 0,
+      achievements: parsed.achievements ?? [],
+      gachaItems: parsed.gachaItems ?? [],
     };
   } catch {
     return { ...DEFAULT_SAVE, unlockedUnits: [...DEFAULT_SAVE.unlockedUnits] };
@@ -70,9 +81,9 @@ export function calcCoins(stars: number, accuracy: number, maxCombo: number): nu
 
 // ── ユニット解放条件 ────────────────────────────────────────
 export const UNLOCK_TABLE: Record<number, UnitType> = {
-  1: "tank",
-  2: "shooter",
-  3: "bomber",
+  2: "tank",
+  4: "shooter",
+  5: "bomber",
 };
 
 export function getNewUnlock(stageId: number, currentUnlocks: string[]): UnitType | null {

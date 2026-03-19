@@ -7,6 +7,7 @@ import { CommandPanel } from "../components/CommandPanel";
 import { ResultScreen } from "../components/ResultScreen";
 import { useWindowSize } from "../hooks/useWindowSize";
 import { calcStars, calcCoins, getNewUnlock, loadSave, saveSave } from "../data/saveData";
+import { getTodayChallenge, completeDailyChallenge } from "../data/dailyChallenge";
 import type { StageData } from "../data/stages";
 
 interface Props {
@@ -18,6 +19,7 @@ interface Props {
   onRetry: () => void;
   reviewMode?: boolean;
   unlockedUnits?: string[];
+  isDailyChallenge?: boolean;
 }
 
 const MAX_ENERGY           = 100;
@@ -25,7 +27,7 @@ const ENERGY_PER_CORRECT   = 10;
 const ENERGY_PENALTY_WRONG = 5;
 const ACTIVE_DURATION_SEC  = 5;
 
-export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear, onRetry, reviewMode, unlockedUnits }: Props) {
+export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear, onRetry, reviewMode, unlockedUnits, isDailyChallenge }: Props) {
   const { isMobile } = useWindowSize();
   const engineRef    = useRef<GameEngine>(new GameEngine(stage, selectedLevel));
   const lastTickRef  = useRef<number>(Date.now());
@@ -102,6 +104,12 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
           if (stars > prevStars) save.stageStars[stage.id] = stars;
           if (newUnlock && !save.unlockedUnits.includes(newUnlock)) {
             save.unlockedUnits.push(newUnlock);
+          }
+          // デイリーチャレンジ完了
+          if (isDailyChallenge) {
+            const daily = getTodayChallenge();
+            completeDailyChallenge(daily.id);
+            save.coins += daily.bonusCoins;
           }
           saveSave(save);
 
@@ -218,7 +226,7 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
           ← {isMobile ? "戻る" : "ステージ選択"}
         </button>
         <span style={{ fontWeight: "bold", fontSize: isMobile ? 13 : 15, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-          {reviewMode ? "📝 復習モード" : `S${stage.id}：${stage.name}`}
+          {reviewMode ? "📝 復習モード" : isDailyChallenge ? "📅 デイリーチャレンジ" : `S${stage.id}：${stage.name}`}
         </span>
         <div style={{ marginLeft: "auto", flexShrink: 0 }}>
           <span style={{ fontSize: 12, color: "#475569" }}>
