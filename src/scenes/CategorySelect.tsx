@@ -6,12 +6,14 @@ interface Props {
   initialSelected: string[];   // sub名のリスト
   initialLevel: number;        // 選択中の最大難易度レベル
   onConfirm: (selected: string[], level: number) => void;
+  wrongCount: number;          // 間違えた問題数
+  onReview: () => void;        // 復習モード開始
 }
 
 // メインカテゴリの順序
 const MAIN_ORDER: MainCategory[] = ["算数", "国語", "理科", "社会", "英語", "プログラミング"];
 
-export function CategorySelect({ initialSelected, initialLevel, onConfirm }: Props) {
+export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrongCount, onReview }: Props) {
   const { isMobile } = useWindowSize();
   const allSubs = SUB_CATEGORIES.map(s => s.name);
   const maxLevel = Math.max(...LEVEL_DEFS.map(l => l.level));
@@ -297,11 +299,40 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm }: Pro
         }).join("  ")}
       </div>
 
+      {/* 復習ボタン */}
+      {wrongCount > 0 && (
+        <button
+          onClick={onReview}
+          style={{
+            marginTop: 20, padding: "12px 32px",
+            background: "linear-gradient(135deg, #f97316, #ef4444)",
+            color: "#fff",
+            border: "2px solid #f9731688",
+            borderRadius: 10,
+            fontWeight: "bold", fontSize: 16,
+            cursor: "pointer",
+            boxShadow: "0 4px 16px #ef444444",
+            transition: "transform 0.1s",
+            display: "flex", alignItems: "center", gap: 8,
+          }}
+          onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.04)")}
+          onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
+        >
+          📝 間違えた問題を復習
+          <span style={{
+            background: "#fff3", padding: "2px 8px",
+            borderRadius: 12, fontSize: 13,
+          }}>
+            {wrongCount}問
+          </span>
+        </button>
+      )}
+
       {/* 決定ボタン */}
       <button
         onClick={() => onConfirm([...selected], level)}
         style={{
-          marginTop: 20, padding: "14px 48px",
+          marginTop: wrongCount > 0 ? 10 : 20, padding: "14px 48px",
           background: "#3b82f6", color: "#fff",
           border: "none", borderRadius: 10,
           fontWeight: "bold", fontSize: 18,

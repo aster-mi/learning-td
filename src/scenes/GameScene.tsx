@@ -12,13 +12,14 @@ interface Props {
   selectedLevel: number;
   onBack: () => void;
   onClear: (stageId: number) => void;
+  reviewMode?: boolean;
 }
 
 const MAX_ENERGY       = 100;
 const ENERGY_PER_CORRECT = 10;
 const ACTIVE_DURATION_SEC = 10;
 
-export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear }: Props) {
+export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear, reviewMode }: Props) {
   const { isMobile } = useWindowSize();
   const engineRef    = useRef<GameEngine>(new GameEngine(stage, selectedLevel));
   const lastTickRef  = useRef<number>(Date.now());
@@ -131,7 +132,7 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
           ← {isMobile ? "戻る" : "ステージ選択"}
         </button>
         <span style={{ fontWeight: "bold", fontSize: isMobile ? 13 : 15, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-          S{stage.id}：{stage.name}
+          {reviewMode ? "📝 復習モード" : `S${stage.id}：${stage.name}`}
         </span>
         <div style={{ marginLeft: "auto", flexShrink: 0 }}>
           <span style={{ fontSize: 12, color: "#475569" }}>
@@ -198,6 +199,7 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
         onWrong={handleWrong}
         disabled={isDone}
         isPaused={isPaused}
+        reviewMode={reviewMode}
       />
 
       {/* ── 結果オーバーレイ ── */}

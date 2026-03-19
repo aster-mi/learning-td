@@ -4,6 +4,7 @@ import { StageSelect } from "./scenes/StageSelect";
 import { GameScene } from "./scenes/GameScene";
 import { stages } from "./data/stages";
 import { LEVEL_DEFS, SUB_CATEGORIES } from "./data/questions";
+import { getWrongCount } from "./data/wrongStore";
 
 const STORAGE_KEY        = "learning_td_cleared";
 const STORAGE_SUBS_KEY   = "learning_td_subcategories";
@@ -44,6 +45,7 @@ export default function App() {
   const [clearedStages, setClearedStages] = useState<Set<number>>(loadCleared);
   const [subCategories, setSubCategories] = useState<string[]>(loadSubCategories);
   const [selectedLevel, setSelectedLevel] = useState<number>(loadLevel);
+  const [reviewMode, setReviewMode]       = useState(false);
   const gameKeyRef = useRef<number>(0);
 
   const handleCategoryConfirm = (selected: string[], level: number) => {
@@ -51,7 +53,15 @@ export default function App() {
     saveSubCategories(selected);
     setSelectedLevel(level);
     saveLevel(level);
+    setReviewMode(false);
     setScene("select");
+  };
+
+  const handleReviewStart = () => {
+    setReviewMode(true);
+    gameKeyRef.current += 1;
+    setActiveStageId(1);  // ステージ1を使う（復習モードではステージ自体は重要でない）
+    setScene("game");
   };
 
   const handleStageSelect = (stageId: number) => {
@@ -83,6 +93,8 @@ export default function App() {
           initialSelected={subCategories}
           initialLevel={selectedLevel}
           onConfirm={handleCategoryConfirm}
+          wrongCount={getWrongCount()}
+          onReview={handleReviewStart}
         />
       )}
       {scene === "select" && (
@@ -98,8 +110,9 @@ export default function App() {
           stage={activeStage}
           subCategories={effectiveSubs}
           selectedLevel={selectedLevel}
-          onBack={() => setScene("select")}
+          onBack={() => { setReviewMode(false); setScene(reviewMode ? "category" : "select"); }}
           onClear={handleClear}
+          reviewMode={reviewMode}
         />
       )}
     </>

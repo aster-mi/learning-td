@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import { questions, SUB_CATEGORIES, LEVEL_DEFS, type Question } from "../data/questions";
 import { useWindowSize } from "../hooks/useWindowSize";
+import { recordWrong, removeWrong, getWrongIds } from "../data/wrongStore";
 
 interface Props {
   energy: number;
@@ -12,6 +13,7 @@ interface Props {
   onWrong: () => void;
   disabled?: boolean;
   isPaused?: boolean;
+  reviewMode?: boolean;
 }
 
 function pickRandom(pool: Question[], excludeId?: string): Question {
@@ -21,12 +23,18 @@ function pickRandom(pool: Question[], excludeId?: string): Question {
   return { ...q, choices };
 }
 
-export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLevel, onCorrect, onWrong, disabled, isPaused }: Props) {
+export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLevel, onCorrect, onWrong, disabled, isPaused, reviewMode }: Props) {
   const { isMobile } = useWindowSize();
 
-  const filteredPool = questions.filter(
-    q => subCategories.includes(q.sub) && q.level <= selectedLevel
-  );
+  // 復習モード時は間違えた問題IDでフィルタ
+  const wrongIds = reviewMode ? new Set(getWrongIds()) : null;
+
+  const filteredPool = questions.filter(q => {
+    if (reviewMode) {
+      return wrongIds!.has(q.id);
+    }
+    return subCategories.includes(q.sub) && q.level <= selectedLevel;
+  });
   const pool = filteredPool.length > 0
     ? filteredPool
     : questions.filter(q => subCategories.includes(q.sub));
@@ -38,6 +46,8 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
   const [wrongCount,   setWrongCount]   = useState(0);
   // "float" key for re-triggering the +10 animation
   const [floatKey, setFloatKey]     = useState(0);
+  // 復習モードで全問正解した状態
+  const [reviewCleared, setReviewCleared] = useState(false);
 
   const answeredCorrectRef = useRef(new Set<string>());
 
@@ -51,20 +61,36 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
         setFloatKey(k => k + 1);
         onCorrect();
         answeredCorrectRef.current.add(current.id);
+        // 復習モードで正解 → 復習リストから除外
+        if (reviewMode) removeWrong(current.id);
       } else {
         setFeedback("wrong");
         setWrongCount(n => n + 1);
         onWrong();
+        // 間違えた問題を記録
+        recordWrong(current.id);
       }
       setTimeout(() => {
         setFeedback(null);
         setSelected(null);
-        const remaining = pool.filter(
+
+        // 復習モード: 最新の間違いリストでプールを再構築
+        const latestPool = reviewMode
+          ? questions.filter(q => getWrongIds().includes(q.id))
+          : pool;
+
+        if (latestPool.length === 0) {
+          // 復習モードで全問正解 → 完了状態
+          setReviewCleared(true);
+          return;
+        }
+
+        const remaining = latestPool.filter(
           q => q.id !== current.id && !answeredCorrectRef.current.has(q.id)
         );
         if (remaining.length === 0) {
           answeredCorrectRef.current = new Set();
-          setCurrent(pickRandom(pool, current.id));
+          setCurrent(pickRandom(latestPool, current.id));
         } else {
           setCurrent(pickRandom(remaining));
         }
@@ -138,6 +164,27 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
       position: "relative",
     };
   };
+
+  // 復習モードで問題がない or 全問正解した場合
+  if (reviewMode && (filteredPool.length === 0 || reviewCleared)) {
+    return (
+      <div style={{
+        background: "#1c1028",
+        borderTop: "1px solid #2d1f40",
+        padding: isMobile ? "24px 16px" : "32px 24px",
+        textAlign: "center",
+        ...(isMobile ? { flex: 1, display: "flex", flexDirection: "column" as const, justifyContent: "center" } : {}),
+      }}>
+        <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
+        <div style={{ fontSize: 18, fontWeight: "bold", color: "#22c55e", marginBottom: 8 }}>
+          {filteredPool.length === 0 ? "間違えた問題はありません！" : "復習完了！全問正解しました！"}
+        </div>
+        <div style={{ fontSize: 13, color: "#94a3b8", marginBottom: 4 }}>
+          {reviewCleared && `✓${correctCount} / ✗${wrongCount}`}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
