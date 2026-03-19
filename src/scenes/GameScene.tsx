@@ -18,7 +18,7 @@ interface Props {
 const MAX_ENERGY           = 100;
 const ENERGY_PER_CORRECT   = 10;
 const ENERGY_PENALTY_WRONG = 5;
-const ACTIVE_DURATION_SEC  = 10;
+const ACTIVE_DURATION_SEC  = 5;
 
 export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear, reviewMode }: Props) {
   const { isMobile } = useWindowSize();
@@ -188,7 +188,7 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
               background: "rgba(0,0,0,0.7)", padding: "10px 24px",
               borderRadius: 10, border: "2px solid #fbbf24",
             }}>
-              ⏸ クイズに回答すると10秒動きます
+              ⏸ クイズに回答すると5秒動きます
             </div>
           </div>
         )}
