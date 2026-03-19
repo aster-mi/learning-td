@@ -207,6 +207,8 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
       height: "100dvh",
       background: "#0f172a", color: "#fff",
       paddingBottom: "env(safe-area-inset-bottom, 0px)",
+      overflow: "hidden",
+      position: "fixed", inset: 0,
     }}>
       {/* ── ヘッダー ── */}
       <div style={{

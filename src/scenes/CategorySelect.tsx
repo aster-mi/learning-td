@@ -75,11 +75,10 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
 
   return (
     <div style={{
-      height: "100%",
-      overflowY: "auto",
+      minHeight: "100vh",
       background: "linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%)",
       display: "flex", flexDirection: "column", alignItems: "center",
-      padding: isMobile ? "24px 12px" : "40px 16px", color: "#fff",
+      padding: isMobile ? "24px 12px 60px" : "40px 16px 60px", color: "#fff",
     }}>
       {!isMobile && (
         <div style={{ fontSize: 13, color: "#94a3b8", letterSpacing: 2, marginBottom: 8 }}>
