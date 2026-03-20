@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { GameEngine, type GameState } from "../domain/GameEngine";
-import { UNIT_DEFS, type UnitType } from "../domain/Unit";
+import { getUnitDef } from "../domain/Unit";
 import { QuizPanel } from "../components/QuizPanel";
 import { BattleCanvas } from "../components/BattleCanvas";
 import { CommandPanel } from "../components/CommandPanel";
@@ -18,7 +18,7 @@ interface Props {
   onClear: (stageId: number) => void;
   onRetry: () => void;
   reviewMode?: boolean;
-  unlockedUnits?: string[];
+  party?: string[];              // 出陣デッキ
   isDailyChallenge?: boolean;
 }
 
@@ -27,7 +27,8 @@ const ENERGY_PER_CORRECT   = 10;
 const ENERGY_PENALTY_WRONG = 5;
 const ACTIVE_DURATION_SEC  = 5;
 
-export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear, onRetry, reviewMode, unlockedUnits, isDailyChallenge }: Props) {
+export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear, onRetry, reviewMode, party, isDailyChallenge }: Props) {
+  const activeParty = party && party.length > 0 ? party : ["basic", "fast"];
   const { isMobile } = useWindowSize();
   const engineRef    = useRef<GameEngine>(new GameEngine(stage, selectedLevel));
   const lastTickRef  = useRef<number>(Date.now());
@@ -62,7 +63,7 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
   const [resultData, setResultData] = useState<{
     stars: number; coins: number; accuracy: number;
     maxCombo: number; correctCount: number; wrongCount: number;
-    elapsedSec: number; baseHpRatio: number; newUnlock: UnitType | null;
+    elapsedSec: number; baseHpRatio: number; newUnlock: string | null;
   } | null>(null);
 
   // ゲームループ（依存なし＝マウント時に1回だけ登録）
@@ -189,8 +190,9 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
     setTimeout(() => setFieldFeedback(null), 1200);
   }, []);
 
-  const handleDeploy = useCallback((type: UnitType) => {
-    const cost = UNIT_DEFS[type].cost;
+  const handleDeploy = useCallback((type: string) => {
+    const def = getUnitDef(type);
+    const cost = def.cost;
     if (energyRef.current < cost) return;
     const next = energyRef.current - cost;
     energyRef.current = next;
@@ -333,9 +335,9 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
       {/* ── 操作パネル（中） ── */}
       <CommandPanel
         energy={energy}
+        party={activeParty}
         onDeploy={handleDeploy}
         disabled={isDone}
-        unlockedUnits={unlockedUnits}
       />
 
       {/* ── クイズ（下）：モバイルでは残り全部を使う ── */}

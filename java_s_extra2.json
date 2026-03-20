@@ -1,0 +1,1304 @@
+{
+  "silver": [
+    {
+      "id": "S201",
+      "topic": "モジュールシステム",
+      "question": "module-info.java に記述できるディレクティブとして正しいものはどれか。",
+      "choices": [
+        "A. import, export, use, provide",
+        "B. requires, exports, opens, uses, provides",
+        "C. requires, imports, opens, uses, provides",
+        "D. module, requires, exports, package, uses"
+      ],
+      "answer": "B",
+      "explanation": "module-info.java で使えるディレクティブは requires（依存宣言）、exports（パッケージ公開）、opens（リフレクション用公開）、uses（サービス使用）、provides（サービス提供）の5種類です。"
+    },
+    {
+      "id": "S202",
+      "topic": "モジュールシステム",
+      "question": "次のコードの説明として正しいものはどれか。\nmodule com.example.app {\n    requires com.example.lib;\n    exports com.example.app.api;\n}",
+      "choices": [
+        "A. com.example.lib の全パッケージが com.example.app に公開される",
+        "B. com.example.app.api パッケージは他のすべてのモジュールから利用可能になる",
+        "C. com.example.app の全パッケージが外部に公開される",
+        "D. com.example.lib は com.example.app.api パッケージのみ使用できる"
+      ],
+      "answer": "B",
+      "explanation": "exports ディレクティブにより com.example.app.api パッケージはすべてのモジュールからアクセス可能になります。requires は依存モジュールの宣言であり、依存先の公開範囲を変えるものではありません。"
+    },
+    {
+      "id": "S203",
+      "topic": "モジュールシステム",
+      "question": "exports X to Y の説明として正しいものはどれか。",
+      "choices": [
+        "A. X パッケージを Y モジュールのサブモジュールにのみ公開する",
+        "B. X パッケージを Y モジュールにのみ限定公開する",
+        "C. X モジュールから Y パッケージを取り込む",
+        "D. Y パッケージを X モジュールに提供する"
+      ],
+      "answer": "B",
+      "explanation": "exports X to Y は限定公開（qualified export）といい、X パッケージを特定の Y モジュールにのみ公開します。複数モジュールにはカンマ区切りで指定できます。"
+    },
+    {
+      "id": "S204",
+      "topic": "モジュールシステム",
+      "question": "opens ディレクティブの主な目的はどれか。",
+      "choices": [
+        "A. パッケージを他のモジュールのコンパイル時に公開する",
+        "B. パッケージを実行時のリフレクションでアクセス可能にする",
+        "C. パッケージをすべてのモジュールに自動的に追加する",
+        "D. モジュール間の循環依存を解決する"
+      ],
+      "answer": "B",
+      "explanation": "opens ディレクティブは実行時（ランタイム）のリフレクションアクセスを許可するためのものです。exports はコンパイル時・実行時の型アクセスを公開しますが、opens はリフレクション経由のアクセスを追加で許可します。"
+    },
+    {
+      "id": "S205",
+      "topic": "モジュールシステム",
+      "question": "名前なしモジュール（unnamed module）の説明として正しいものはどれか。",
+      "choices": [
+        "A. module-info.java を持つが名前が空のモジュール",
+        "B. クラスパスに置かれたコードが属するモジュールで、すべての名前付きモジュールを requires できる",
+        "C. 他のモジュールから requires できるが exports はできない",
+        "D. JDK 自体が提供する特殊なモジュール"
+      ],
+      "answer": "B",
+      "explanation": "名前なしモジュールはクラスパスに配置されたコードが属する特殊なモジュールです。すべての名前付きモジュールに自動的にアクセスできますが、名前付きモジュールから名前なしモジュールを requires することはできません。"
+    },
+    {
+      "id": "S206",
+      "topic": "モジュールシステム",
+      "question": "uses ディレクティブの説明として正しいものはどれか。",
+      "choices": [
+        "A. 外部ライブラリのクラスを直接インポートする",
+        "B. ServiceLoader を通じて使用するサービスインターフェースを宣言する",
+        "C. モジュール内で使用する全クラスを列挙する",
+        "D. 他のモジュールのリソースファイルを使用することを宣言する"
+      ],
+      "answer": "B",
+      "explanation": "uses ディレクティブは ServiceLoader を使ってサービスを動的に取得することを宣言します。対になる provides ディレクティブでサービスの実装を提供します。"
+    },
+    {
+      "id": "S207",
+      "topic": "モジュールシステム",
+      "question": "provides com.example.Service with com.example.impl.ServiceImpl の説明として正しいものはどれか。",
+      "choices": [
+        "A. com.example.Service インターフェースの実装として com.example.impl.ServiceImpl を登録する",
+        "B. com.example.Service クラスを com.example.impl.ServiceImpl に委譲する",
+        "C. com.example.impl.ServiceImpl の依存として com.example.Service を宣言する",
+        "D. com.example.Service を com.example.impl モジュールに公開する"
+      ],
+      "answer": "A",
+      "explanation": "provides ... with ... は ServiceLoader の仕組みで使用するサービスの実装クラスを登録します。ServiceLoader.load(Service.class) で ServiceImpl インスタンスを取得できるようになります。"
+    },
+    {
+      "id": "S208",
+      "topic": "モジュールシステム",
+      "question": "transitive キーワードを使った requires transitive A; の効果はどれか。",
+      "choices": [
+        "A. A モジュールの全パッケージを自動的に開く",
+        "B. このモジュールを requires するモジュールが A も自動的に requires したことになる",
+        "C. A モジュールをオプション依存として宣言する",
+        "D. A モジュールとの双方向依存を宣言する"
+      ],
+      "answer": "B",
+      "explanation": "requires transitive（推移的依存）により、このモジュールを使うモジュールは A モジュールも自動的に依存します。API を再公開する場合（例: java.se が各モジュールを transitive requires）に使います。"
+    },
+    {
+      "id": "S209",
+      "topic": "モジュールシステム",
+      "question": "自動モジュール（automatic module）の説明として正しいものはどれか。",
+      "choices": [
+        "A. module-info.java を持たない JAR をモジュールパスに置いたもの",
+        "B. JVM が自動生成した module-info.class を持つモジュール",
+        "C. module-info.java は持つが exports が記述されていないモジュール",
+        "D. Java 標準ライブラリのモジュール"
+      ],
+      "answer": "A",
+      "explanation": "自動モジュールは module-info.java を持たない既存の JAR をモジュールパスに配置したものです。JAR ファイル名からモジュール名が自動導出され、全パッケージを exports し、名前なしモジュールを含むすべてにアクセスできます。"
+    },
+    {
+      "id": "S210",
+      "topic": "モジュールシステム",
+      "question": "module-info.java において、同一モジュール内の複数パッケージを1つの exports 文で公開することはできるか。",
+      "choices": [
+        "A. できる。カンマ区切りで exports com.a, com.b; と書ける",
+        "B. できない。exports は1文につき1パッケージのみ指定できる",
+        "C. できる。ワイルドカードで exports com.*; と書ける",
+        "D. できる。exports { com.a, com.b }; と書ける"
+      ],
+      "answer": "B",
+      "explanation": "exports ディレクティブは1文で1パッケージのみ指定できます。複数のパッケージを公開するには exports 文を複数記述する必要があります。ワイルドカードは使えません。"
+    },
+    {
+      "id": "S211",
+      "topic": "レコード・シールドクラス",
+      "question": "次のレコード宣言について正しいものはどれか。\nrecord Point(int x, int y) {}",
+      "choices": [
+        "A. Point は abstract クラスとして生成される",
+        "B. x と y の getter は getX()、getY() という名前で自動生成される",
+        "C. x と y の accessor メソッドは x()、y() という名前で自動生成される",
+        "D. Point は Cloneable を自動的に実装する"
+      ],
+      "answer": "C",
+      "explanation": "レコードのコンポーネントのアクセサメソッドはコンポーネント名と同じ名前（get プレフィックスなし）で自動生成されます。Point p = new Point(1, 2); p.x(); p.y(); のように呼び出します。"
+    },
+    {
+      "id": "S212",
+      "topic": "レコード・シールドクラス",
+      "question": "レコードに関する説明として誤っているものはどれか。",
+      "choices": [
+        "A. レコードは暗黙的に final である",
+        "B. レコードは他のクラスを extends できない",
+        "C. レコードはインターフェースを implements できる",
+        "D. レコードはフィールドを追加宣言できるが、そのフィールドはインスタンスフィールドでなければならない"
+      ],
+      "answer": "D",
+      "explanation": "レコードにはコンポーネント以外のインスタンスフィールドを追加することはできません。追加できるフィールドは static フィールドのみです。レコードは暗黙的に final で、java.lang.Record を extends しているため他クラスを継承できませんが、インターフェースの実装は可能です。"
+    },
+    {
+      "id": "S213",
+      "topic": "レコード・シールドクラス",
+      "question": "レコードのコンパクトコンストラクタの説明として正しいものはどれか。",
+      "choices": [
+        "A. パラメータリストと {} だけを書くコンストラクタで、フィールドへの代入は自動で行われる",
+        "B. パラメータなしのデフォルトコンストラクタ",
+        "C. super() の呼び出しを省略できる通常のコンストラクタ",
+        "D. private アクセス修飾子を持つコンストラクタ"
+      ],
+      "answer": "A",
+      "explanation": "コンパクトコンストラクタはパラメータリスト（括弧）を省略し、バリデーションや正規化のロジックだけを記述します。コンポーネントフィールドへの代入は自動的に行われます。例: record Point(int x, int y) { Point { if(x<0) throw new IllegalArgumentException(); } }"
+    },
+    {
+      "id": "S214",
+      "topic": "レコード・シールドクラス",
+      "question": "sealed class Shape permits Circle, Rectangle {} において、Rectangle クラスの宣言として正しいものはどれか。",
+      "choices": [
+        "A. class Rectangle extends Shape {}",
+        "B. final class Rectangle extends Shape {}",
+        "C. abstract class Rectangle extends Shape {}",
+        "D. BとCのどちらでも正しいが、AとDは誤り"
+      ],
+      "answer": "D",
+      "explanation": "sealed クラスを extends するクラスは final、sealed、non-sealed のいずれかで修飾しなければなりません。abstract は許可されていますが、abstract かつ sealed または non-sealed である必要があります。単純な class（修飾子なし）は不正です。正確には final または sealed または non-sealed が必要です。"
+    },
+    {
+      "id": "S215",
+      "topic": "レコード・シールドクラス",
+      "question": "non-sealed クラスの説明として正しいものはどれか。",
+      "choices": [
+        "A. sealed クラスの継承チェーンを閉じて、それ以上の継承を禁止する",
+        "B. sealed クラスを継承しつつ、自分自身はさらに自由に継承できるクラス",
+        "C. sealed インターフェースの実装クラスとして使用できない",
+        "D. final クラスの別名"
+      ],
+      "answer": "B",
+      "explanation": "non-sealed は sealed クラスの permits に列挙されたクラスが、その継承制限を開放するための修飾子です。non-sealed クラス自体はどのクラスでも自由に継承できます。"
+    },
+    {
+      "id": "S216",
+      "topic": "レコード・シールドクラス",
+      "question": "sealed interface の説明として正しいものはどれか。",
+      "choices": [
+        "A. sealed インターフェースは implements できないため、extends のみ可能",
+        "B. sealed インターフェースを実装するクラスは final、sealed、non-sealed のいずれかでなければならない",
+        "C. sealed インターフェースは同一ファイル内のクラスしか permits できない",
+        "D. record は sealed インターフェースを implements できない"
+      ],
+      "answer": "B",
+      "explanation": "sealed インターフェースを実装するクラスまたは extends するインターフェースは、final、sealed、non-sealed のいずれかで宣言する必要があります。record は暗黙的に final なので sealed インターフェースを implements できます。"
+    },
+    {
+      "id": "S217",
+      "topic": "レコード・シールドクラス",
+      "question": "次のコードの出力はどれか。\nrecord Person(String name, int age) {}\nPerson p1 = new Person(\"Alice\", 30);\nPerson p2 = new Person(\"Alice\", 30);\nSystem.out.println(p1.equals(p2));",
+      "choices": [
+        "A. false（異なるオブジェクトのため）",
+        "B. true（レコードの equals はコンポーネントの値で比較するため）",
+        "C. コンパイルエラー",
+        "D. NullPointerException"
+      ],
+      "answer": "B",
+      "explanation": "レコードは equals メソッドを自動実装し、すべてのコンポーネントの値が等しければ true を返します。同様に hashCode と toString も自動実装されます。"
+    },
+    {
+      "id": "S218",
+      "topic": "レコード・シールドクラス",
+      "question": "sealed class と switch 式（パターンマッチング）の組み合わせについて正しいものはどれか。",
+      "choices": [
+        "A. sealed class に対する switch は常にデフォルトケースが必要",
+        "B. sealed class の全サブタイプを網羅した switch ではデフォルトケースが不要になる",
+        "C. sealed class は switch 式で使用できない",
+        "D. sealed class の switch は instanceof でのみ実現できる"
+      ],
+      "answer": "B",
+      "explanation": "sealed クラスの全 permits クラスを switch のパターンで網羅した場合、コンパイラがすべてのケースをカバーしていると認識するためデフォルトケースが不要になります。これが sealed クラスの主な利点の一つです。"
+    },
+    {
+      "id": "S219",
+      "topic": "レコード・シールドクラス",
+      "question": "レコードの標準コンストラクタをカスタマイズした場合の説明として正しいものはどれか。",
+      "choices": [
+        "A. this(...) で別コンストラクタを呼び出す必要がある",
+        "B. 標準コンストラクタでは必ず super() を明示的に呼ぶ必要がある",
+        "C. パラメータに対して検証やコピーを行い、最終的にコンポーネントへの代入を行う",
+        "D. 標準コンストラクタはオーバーロードできない"
+      ],
+      "answer": "C",
+      "explanation": "レコードの標準コンストラクタ（コンポーネントと同じシグネチャを持つコンストラクタ）はカスタマイズ可能で、検証やディフェンシブコピーを行えます。コンパクトコンストラクタと異なり、明示的な代入（this.x = x; 等）が必要です。"
+    },
+    {
+      "id": "S220",
+      "topic": "レコード・シールドクラス",
+      "question": "次のコードはコンパイルできるか。\nrecord Range(int min, int max) {\n    Range {\n        if (min > max) throw new IllegalArgumentException();\n    }\n}",
+      "choices": [
+        "A. コンパイルエラー：レコード内に例外をスローするコードは書けない",
+        "B. コンパイルエラー：コンパクトコンストラクタの名前は record にできない",
+        "C. コンパイルできる。これはコンパクトコンストラクタの正しい使用例",
+        "D. コンパイルできるが、実行時に常に例外がスローされる"
+      ],
+      "answer": "C",
+      "explanation": "コンパクトコンストラクタはレコード名と同じ名前でパラメータリストを省略して記述します。バリデーションロジックを書くことができ、コンポーネントへの代入はブロック終了後に自動的に行われます。"
+    },
+    {
+      "id": "S221",
+      "topic": "テキストブロック",
+      "question": "テキストブロックの開始 \"\"\" の直後に改行がない場合どうなるか。",
+      "choices": [
+        "A. コンパイルエラーになる",
+        "B. 最初の \"\"\" の後のコンテンツが無視される",
+        "C. 空文字列として扱われる",
+        "D. 実行時例外が発生する"
+      ],
+      "answer": "A",
+      "explanation": "テキストブロックの開始の \"\"\" は同じ行にコンテンツを書くことができません。\"\"\" の直後には改行が必須で、これがなければコンパイルエラーになります。"
+    },
+    {
+      "id": "S222",
+      "topic": "テキストブロック",
+      "question": "次のテキストブロックの内容はどれか。\nString s = \"\"\"\n        Hello\n        World\n        \"\"\";",
+      "choices": [
+        "A. \"        Hello\\n        World\\n        \"",
+        "B. \"Hello\\nWorld\\n\"",
+        "C. \"Hello\\nWorld\"",
+        "D. \"        Hello        World        \""
+      ],
+      "answer": "B",
+      "explanation": "テキストブロックは終端 \"\"\" の位置を基準に共通インデントを除去します。この例では終端 \"\"\" が8スペースインデントなので、各行から8スペースが除去されます。最後の行は \"\"\" の前に改行があるため \\n が付きます。"
+    },
+    {
+      "id": "S223",
+      "topic": "テキストブロック",
+      "question": "テキストブロック内の \\s エスケープシーケンスの意味はどれか。",
+      "choices": [
+        "A. タブ文字",
+        "B. 行末の空白を保持するためのスペース",
+        "C. 改行なしで次の行に続く",
+        "D. Unicode エスケープの開始"
+      ],
+      "answer": "B",
+      "explanation": "\\s は明示的なスペース文字を表し、テキストブロックで行末の空白が自動的に除去されるのを防ぐために使います。行末に \\s を付けることでその位置までの空白が保持されます。"
+    },
+    {
+      "id": "S224",
+      "topic": "テキストブロック",
+      "question": "テキストブロック内の \\ （バックスラッシュ＋改行）の意味はどれか。",
+      "choices": [
+        "A. 行を継続し、出力に改行を含めない",
+        "B. エスケープシーケンスの開始",
+        "C. コメント行として扱われる",
+        "D. コンパイルエラーになる"
+      ],
+      "answer": "A",
+      "explanation": "テキストブロック内の \\ （行末のバックスラッシュ）は行継続を意味し、実際の文字列には改行が含まれません。長い1行の文字列をコード上で複数行に分けて書くために使います。（Java 14+）"
+    },
+    {
+      "id": "S225",
+      "topic": "テキストブロック",
+      "question": "テキストブロックを使って JSON 文字列を記述する利点はどれか。",
+      "choices": [
+        "A. JSON の構文チェックが自動的に行われる",
+        "B. ダブルクォートのエスケープが不要で、可読性が高い文字列リテラルを書ける",
+        "C. テキストブロックは自動的に JSON オブジェクトに変換される",
+        "D. コンパイル時に外部ファイルとして保存される"
+      ],
+      "answer": "B",
+      "explanation": "テキストブロックでは \" をエスケープせずに記述できる（\"\"\" を除く）ため、JSON のような \" を多用する文字列の記述が格段に読みやすくなります。型は通常の String で、JSON への自動変換は行われません。"
+    },
+    {
+      "id": "S226",
+      "topic": "instanceofパターンマッチング",
+      "question": "次のコードでパターン変数 s のスコープはどこか。\nObject obj = \"Hello\";\nif (obj instanceof String s) {\n    System.out.println(s.length());\n}",
+      "choices": [
+        "A. if ブロック内のみ",
+        "B. if 文全体（条件式を含む）",
+        "C. if ブロックとそれ以降のコード",
+        "D. メソッド全体"
+      ],
+      "answer": "A",
+      "explanation": "instanceof パターンマッチングのパターン変数 s は、パターンが真の場合に有効なスコープ（then ブロック）内でのみ使用できます。条件式自体では使えますが（&&で結合した右辺）、else ブロックや if 文の外では使えません。"
+    },
+    {
+      "id": "S227",
+      "topic": "instanceofパターンマッチング",
+      "question": "次のコードの出力はどれか。\nObject obj = 42;\nif (obj instanceof Integer i && i > 10) {\n    System.out.println(\"big: \" + i);\n} else {\n    System.out.println(\"other\");\n}",
+      "choices": [
+        "A. big: 42",
+        "B. other",
+        "C. コンパイルエラー：パターン変数 i は条件式内で使えない",
+        "D. コンパイルエラー：&& は instanceof と組み合わせられない"
+      ],
+      "answer": "A",
+      "explanation": "instanceof パターンマッチングではパターン変数は && の右辺で使用できます。obj が Integer で i > 10 も真なので \"big: 42\" が出力されます。"
+    },
+    {
+      "id": "S228",
+      "topic": "instanceofパターンマッチング",
+      "question": "パターンマッチングを使った instanceof の利点はどれか。",
+      "choices": [
+        "A. キャストが不要になり、型チェックとキャストを1行で書ける",
+        "B. null チェックが自動的に行われる",
+        "C. 実行速度が通常の instanceof より速い",
+        "D. AとBの両方"
+      ],
+      "answer": "D",
+      "explanation": "instanceof パターンマッチングでは型チェックとキャストを1行で書けるだけでなく、null の場合は false を返すため自動的に null チェックも行われます。null instanceof String s は false となりパターン変数は束縛されません。"
+    },
+    {
+      "id": "S229",
+      "topic": "instanceofパターンマッチング",
+      "question": "次のコードはコンパイルできるか。\nif (obj instanceof String s || s.isEmpty()) {}",
+      "choices": [
+        "A. コンパイルできる",
+        "B. コンパイルエラー：|| の右辺でパターン変数は使えない",
+        "C. コンパイルエラー：obj が未定義",
+        "D. 実行時例外が発生する可能性がある"
+      ],
+      "answer": "B",
+      "explanation": "パターン変数は && の右辺では使用できますが、|| の右辺では使えません。|| の場合、左辺が false でも右辺が評価されることがあり、その場合パターン変数が束縛されていないためです。"
+    },
+    {
+      "id": "S230",
+      "topic": "instanceofパターンマッチング",
+      "question": "次のコードの出力はどれか。\nObject obj = null;\nSystem.out.println(obj instanceof String s);",
+      "choices": [
+        "A. true",
+        "B. false",
+        "C. NullPointerException",
+        "D. コンパイルエラー"
+      ],
+      "answer": "B",
+      "explanation": "null instanceof <型> は常に false を返します。パターンマッチングの instanceof でも同様で、null の場合は false となりパターン変数は束縛されません。"
+    },
+    {
+      "id": "S231",
+      "topic": "Collections応用",
+      "question": "EnumSet の特徴として正しいものはどれか。",
+      "choices": [
+        "A. HashMap を基にした実装で、null 要素を許可する",
+        "B. ビットベクトルを使った高速実装で、null 要素は許可しない",
+        "C. TreeSet を基にした実装で、自然順にソートされる",
+        "D. スレッドセーフな実装で、ConcurrentHashMap を使用する"
+      ],
+      "answer": "B",
+      "explanation": "EnumSet は内部的にビットベクトル（long 値）を使用した非常に効率的な Set 実装です。null 要素は NullPointerException をスローして拒否します。要素は Enum の宣言順に格納されます。"
+    },
+    {
+      "id": "S232",
+      "topic": "Collections応用",
+      "question": "EnumMap の特徴として正しいものはどれか。",
+      "choices": [
+        "A. キーに任意のオブジェクトを使える Map",
+        "B. Enum 型をキーとする Map で、配列ベースの高速実装",
+        "C. EnumSet と EnumMap を組み合わせたデータ構造",
+        "D. キーが自動的に Enum 型にキャストされる Map"
+      ],
+      "answer": "B",
+      "explanation": "EnumMap は Enum 型をキーとする Map の特殊実装で、内部的に配列を使います。HashMap より高速で、キーは Enum の宣言順に格納されます。null キーは許可しません。"
+    },
+    {
+      "id": "S233",
+      "topic": "Collections応用",
+      "question": "PriorityQueue から要素を取り出すと、どの順序で取り出されるか。",
+      "choices": [
+        "A. 追加した順（FIFO）",
+        "B. 追加した逆順（LIFO）",
+        "C. 自然順（または指定した Comparator の順）の最小値から",
+        "D. ランダムな順序"
+      ],
+      "answer": "C",
+      "explanation": "PriorityQueue は優先度キューで、poll() は最小値（Comparator 未指定の場合は自然順での最小）を返します。降順にしたい場合は Comparator.reverseOrder() を渡します。"
+    },
+    {
+      "id": "S234",
+      "topic": "Collections応用",
+      "question": "ArrayDeque と LinkedList を Deque として使う場合の主な違いはどれか。",
+      "choices": [
+        "A. ArrayDeque は null 要素を許可するが、LinkedList は許可しない",
+        "B. ArrayDeque は一般に高速だが null 要素を許可せず、LinkedList は null を許可する",
+        "C. LinkedList は一般に高速で、メモリ効率も良い",
+        "D. 両者は完全に同等で違いはない"
+      ],
+      "answer": "B",
+      "explanation": "ArrayDeque は動的配列ベースで一般的に LinkedList より高速でメモリ効率も良いですが、null 要素を許可しません。LinkedList は null を許可します。Deque として使う場合は ArrayDeque が推奨されます。"
+    },
+    {
+      "id": "S235",
+      "topic": "Collections応用",
+      "question": "Iterable と Iterator の関係として正しいものはどれか。",
+      "choices": [
+        "A. Iterable は Iterator を extends する",
+        "B. Iterable は iterator() メソッドを持ち、Iterator オブジェクトを返す",
+        "C. Iterator は Iterable を implements する",
+        "D. 両者は独立したインターフェースで関係はない"
+      ],
+      "answer": "B",
+      "explanation": "Iterable インターフェースは iterator() メソッドを定義し、Iterator を返します。for-each ループは Iterable を実装したオブジェクトに使えます。Iterator 自体は hasNext()、next()、remove() メソッドを持ちます。"
+    },
+    {
+      "id": "S236",
+      "topic": "Collections応用",
+      "question": "ListIterator が通常の Iterator と異なる点はどれか。",
+      "choices": [
+        "A. ListIterator は双方向（前後）に走査でき、要素の追加・変更もできる",
+        "B. ListIterator はスレッドセーフな Iterator",
+        "C. ListIterator は Set にも使える",
+        "D. ListIterator は削除操作ができない"
+      ],
+      "answer": "A",
+      "explanation": "ListIterator は List 専用の Iterator で、hasPrevious()/previous() で逆方向への走査が可能です。また add() で要素追加、set() で要素変更もできます。nextIndex()/previousIndex() でインデックスも取得できます。"
+    },
+    {
+      "id": "S237",
+      "topic": "Collections応用",
+      "question": "Map.Entry を使う主な理由はどれか。",
+      "choices": [
+        "A. Map を並列処理するため",
+        "B. Map のキーと値のペアを同時に取得しながらイテレートするため",
+        "C. Map の要素をソートするため",
+        "D. Map をシリアライズするため"
+      ],
+      "answer": "B",
+      "explanation": "entrySet() で Map.Entry のセットを取得し、キーと値を同時にイテレートできます。keySet() でキーのみ取得してから get() で値を取得するより効率的です。"
+    },
+    {
+      "id": "S238",
+      "topic": "Collections応用",
+      "question": "Collections.unmodifiableList(list) と List.of(...) の主な違いはどれか。",
+      "choices": [
+        "A. unmodifiableList は元のリストへの変更が反映されるビューだが、List.of は独立した不変リスト",
+        "B. List.of は null を許可するが、unmodifiableList は許可しない",
+        "C. unmodifiableList は完全に不変だが、List.of は要素の変更は許可する",
+        "D. 両者は同じ動作をする"
+      ],
+      "answer": "A",
+      "explanation": "unmodifiableList は元のリストのビューで、元リストを変更するとビューにも反映されます（ただしビュー経由の変更は不可）。List.of は不変のリストを新規作成し、null を許可しません。List.copyOf は元リストとは独立したコピーを作成します。"
+    },
+    {
+      "id": "S239",
+      "topic": "Collections応用",
+      "question": "次のコードの出力はどれか。\nPriorityQueue<Integer> pq = new PriorityQueue<>(Comparator.reverseOrder());\npq.add(3); pq.add(1); pq.add(4); pq.add(1); pq.add(5);\nSystem.out.println(pq.poll());",
+      "choices": [
+        "A. 1",
+        "B. 3",
+        "C. 5",
+        "D. 4"
+      ],
+      "answer": "C",
+      "explanation": "Comparator.reverseOrder() を指定した PriorityQueue は最大優先度キューになります。最大値（5）が最初に poll() されます。"
+    },
+    {
+      "id": "S240",
+      "topic": "Collections応用",
+      "question": "List.of() で作成したリストに対して add() を呼び出すとどうなるか。",
+      "choices": [
+        "A. 要素が追加される",
+        "B. UnsupportedOperationException がスローされる",
+        "C. NullPointerException がスローされる",
+        "D. 静かに無視される"
+      ],
+      "answer": "B",
+      "explanation": "List.of() は不変リストを返します。add()、set()、remove() などの変更操作を呼び出すと UnsupportedOperationException がスローされます。"
+    },
+    {
+      "id": "S241",
+      "topic": "Collections応用",
+      "question": "Set.of() で重複要素を指定した場合どうなるか。\nSet.of(\"a\", \"b\", \"a\");",
+      "choices": [
+        "A. 重複が無視されて {\"a\", \"b\"} の Set が作成される",
+        "B. コンパイルエラー",
+        "C. 実行時に IllegalArgumentException がスローされる",
+        "D. 実行時に UnsupportedOperationException がスローされる"
+      ],
+      "answer": "C",
+      "explanation": "Set.of() は重複要素を指定すると実行時に IllegalArgumentException をスローします。また null 要素を指定すると NullPointerException をスローします。"
+    },
+    {
+      "id": "S242",
+      "topic": "Collections応用",
+      "question": "EnumSet.allOf(Day.class) の説明として正しいものはどれか（Day は enum）。",
+      "choices": [
+        "A. Day 型の全 Enum 定数を含む EnumSet を返す",
+        "B. Day 型の空の EnumSet を返す",
+        "C. Day 型の最初の定数のみを含む EnumSet を返す",
+        "D. コンパイルエラー：allOf メソッドは存在しない"
+      ],
+      "answer": "A",
+      "explanation": "EnumSet.allOf(EnumType.class) は指定した Enum 型のすべての定数を含む EnumSet を返します。反対に EnumSet.noneOf(EnumType.class) は空の EnumSet を返します。"
+    },
+    {
+      "id": "S243",
+      "topic": "Collections応用",
+      "question": "Iterator の remove() メソッドの説明として正しいものはどれか。",
+      "choices": [
+        "A. 次の要素を削除する",
+        "B. next() で返した最後の要素を基となるコレクションから削除する",
+        "C. イテレータ全体をリセットする",
+        "D. 現在位置の前の要素を削除する"
+      ],
+      "answer": "B",
+      "explanation": "Iterator.remove() は直前の next() で返した要素を基となるコレクションから削除します。next() を呼ぶ前に remove() を呼ぶと IllegalStateException がスローされます。ConcurrentModificationException を避けながらコレクションを変更する安全な方法です。"
+    },
+    {
+      "id": "S244",
+      "topic": "Collections応用",
+      "question": "Map.getOrDefault(key, defaultValue) の説明として正しいものはどれか。",
+      "choices": [
+        "A. キーが存在すれば値を、存在しなければ defaultValue を返し、Mapに追加する",
+        "B. キーが存在すれば値を、存在しなければ defaultValue を返す（Map は変更しない）",
+        "C. キーが null の場合のみ defaultValue を返す",
+        "D. キーが存在しない場合は例外をスローする"
+      ],
+      "answer": "B",
+      "explanation": "getOrDefault() はキーが存在すればその値を、存在しなければ指定したデフォルト値を返します。Map 自体は変更されません。putIfAbsent() は存在しない場合に Map に追加します。"
+    },
+    {
+      "id": "S245",
+      "topic": "Collections応用",
+      "question": "LinkedHashMap の特徴はどれか。",
+      "choices": [
+        "A. キーをソート順で保持する",
+        "B. 挿入順またはアクセス順を保持する HashMap",
+        "C. スレッドセーフな HashMap",
+        "D. null キーを許可しない HashMap"
+      ],
+      "answer": "B",
+      "explanation": "LinkedHashMap は HashMap に加えて挿入順（デフォルト）またはアクセス順（コンストラクタで accessOrder=true 指定）を保持します。LRU キャッシュの実装に使えます。"
+    },
+    {
+      "id": "S246",
+      "topic": "Collections応用",
+      "question": "TreeMap と HashMap の主な違いはどれか。",
+      "choices": [
+        "A. TreeMap は null キーを許可するが、HashMap は許可しない",
+        "B. TreeMap はキーを自然順またはカスタム順でソートして保持する",
+        "C. HashMap はスレッドセーフだが、TreeMap はスレッドセーフでない",
+        "D. TreeMap は値の重複を許可しない"
+      ],
+      "answer": "B",
+      "explanation": "TreeMap は RedBlack ツリーベースで、キーを常にソート順に保持します。firstKey()/lastKey()、headMap()/tailMap() などのナビゲーション操作が可能です。null キーは NullPointerException をスローします。"
+    },
+    {
+      "id": "S247",
+      "topic": "Collections応用",
+      "question": "Collections.frequency(list, element) の説明として正しいものはどれか。",
+      "choices": [
+        "A. list 内で element が出現する頻度（回数）を返す",
+        "B. list の要素をソートする",
+        "C. list 内の一意な要素数を返す",
+        "D. element が list の最大値かどうかを返す"
+      ],
+      "answer": "A",
+      "explanation": "Collections.frequency(collection, object) は equals で等しい要素の個数を返します。Collections クラスにはこのほか sort、shuffle、reverse、min、max、binarySearch などのユーティリティメソッドがあります。"
+    },
+    {
+      "id": "S248",
+      "topic": "Collections応用",
+      "question": "Map.computeIfAbsent(key, mappingFunction) の説明として正しいものはどれか。",
+      "choices": [
+        "A. キーが存在するかどうかに関わらず値を計算して上書きする",
+        "B. キーが存在しない場合（または値が null の場合）に関数を実行して値を設定する",
+        "C. キーが存在する場合のみ関数を実行して値を更新する",
+        "D. キーと値のペアを削除する"
+      ],
+      "answer": "B",
+      "explanation": "computeIfAbsent はキーが存在しない（または null 値の）場合に mappingFunction でキーから値を計算して Map に追加します。グループ化（map.computeIfAbsent(k, k->new ArrayList<>()).add(v)）によく使われます。"
+    },
+    {
+      "id": "S249",
+      "topic": "Collections応用",
+      "question": "Deque インターフェースをスタックとして使う場合に使用するメソッドの組み合わせはどれか。",
+      "choices": [
+        "A. push(e) と pop()",
+        "B. offer(e) と poll()",
+        "C. add(e) と remove()",
+        "D. put(e) と take()"
+      ],
+      "answer": "A",
+      "explanation": "Deque をスタックとして使う場合は push(e)（先頭追加）と pop()（先頭取り出し）を使います。offer/poll はキューとしての使用、put/take は BlockingQueue のメソッドです。"
+    },
+    {
+      "id": "S250",
+      "topic": "Collections応用",
+      "question": "Collections.synchronizedList(list) で返されるリストを複合操作（イテレーション等）でスレッドセーフに使うには？",
+      "choices": [
+        "A. 追加のロックは不要で完全にスレッドセーフ",
+        "B. イテレーション時はリスト自体を synchronized ブロックで同期する必要がある",
+        "C. CopyOnWriteArrayList に変換する必要がある",
+        "D. synchronized キーワードをメソッドに付けるだけで十分"
+      ],
+      "answer": "B",
+      "explanation": "synchronizedList は個々のメソッド呼び出しはスレッドセーフですが、イテレーションなどの複合操作はリストオブジェクト自体を synchronized ブロックで囲む必要があります。synchronized(list) { for (E e : list) { ... } }"
+    },
+    {
+      "id": "S251",
+      "topic": "Optional",
+      "question": "Optional.of(null) を呼び出すとどうなるか。",
+      "choices": [
+        "A. 空の Optional が返される",
+        "B. NullPointerException がスローされる",
+        "C. Optional.empty() と同じ結果",
+        "D. コンパイルエラー"
+      ],
+      "answer": "B",
+      "explanation": "Optional.of() は null を受け付けません。null の可能性がある場合は Optional.ofNullable() を使います。ofNullable(null) は Optional.empty() を返します。"
+    },
+    {
+      "id": "S252",
+      "topic": "Optional",
+      "question": "空の Optional に対して get() を呼び出すとどうなるか。",
+      "choices": [
+        "A. null が返される",
+        "B. NoSuchElementException がスローされる",
+        "C. Optional.empty() が返される",
+        "D. NullPointerException がスローされる"
+      ],
+      "answer": "B",
+      "explanation": "空の Optional に get() を呼び出すと NoSuchElementException がスローされます。Java 10 以降では orElseThrow() が推奨されます（セマンティクスが明確なため）。"
+    },
+    {
+      "id": "S253",
+      "topic": "Optional",
+      "question": "orElse(defaultValue) と orElseGet(() -> defaultValue) の違いはどれか。",
+      "choices": [
+        "A. 違いはない。同じ動作をする",
+        "B. orElse はコンパイル時評価、orElseGet は実行時評価",
+        "C. orElse は常にデフォルト値を評価するが、orElseGet は Optional が空の時のみ Supplier を実行する",
+        "D. orElseGet は null を許可するが、orElse は許可しない"
+      ],
+      "answer": "C",
+      "explanation": "orElse(value) は Optional の状態に関わらず value を評価します。orElseGet(supplier) は Optional が空の場合のみ Supplier を実行します。デフォルト値の生成がコストのかかる処理の場合は orElseGet で遅延評価することが重要です。"
+    },
+    {
+      "id": "S254",
+      "topic": "Optional",
+      "question": "Optional.map() と Optional.flatMap() の違いはどれか。",
+      "choices": [
+        "A. map は Function<T,R>、flatMap は Function<T,Optional<R>> を受け取る",
+        "B. map は Optional を受け取り、flatMap は値を直接受け取る",
+        "C. flatMap は並列処理用、map は逐次処理用",
+        "D. 違いはない"
+      ],
+      "answer": "A",
+      "explanation": "map は T -> R の関数を受け取り Optional<R> を返します。flatMap は T -> Optional<R> の関数を受け取り、Optional が二重にならないよう Optional<R> を返します。Optional を返すメソッドをチェーンする場合は flatMap を使います。"
+    },
+    {
+      "id": "S255",
+      "topic": "Optional",
+      "question": "Optional.filter(predicate) の動作はどれか。",
+      "choices": [
+        "A. 述語が true の場合は元の Optional を、false の場合は空の Optional を返す",
+        "B. 述語が false の場合は例外をスローする",
+        "C. 述語を満たす全要素を含む List を返す",
+        "D. 述語が true の場合は空の Optional を返す"
+      ],
+      "answer": "A",
+      "explanation": "Optional.filter(predicate) は Optional が値を持ち、述語が true の場合は元の Optional をそのまま返します。空の場合または述語が false の場合は Optional.empty() を返します。"
+    },
+    {
+      "id": "S256",
+      "topic": "Optional",
+      "question": "ifPresent() と ifPresentOrElse() の違いはどれか。",
+      "choices": [
+        "A. ifPresent は値が存在する場合の処理を行い、ifPresentOrElse は存在しない場合の処理も指定できる",
+        "B. ifPresentOrElse は戻り値を返す",
+        "C. ifPresent は Java 11、ifPresentOrElse は Java 8 から使える",
+        "D. 違いはない"
+      ],
+      "answer": "A",
+      "explanation": "ifPresent(consumer) は値がある場合のみ Consumer を実行します。ifPresentOrElse(consumer, runnable) は値がある場合は Consumer を、ない場合は Runnable を実行します（Java 9+）。"
+    },
+    {
+      "id": "S257",
+      "topic": "Optional",
+      "question": "Optional.stream() の説明として正しいものはどれか（Java 9+）。",
+      "choices": [
+        "A. Optional を Stream<Optional<T>> に変換する",
+        "B. 値がある場合は1要素のストリーム、ない場合は空のストリームを返す",
+        "C. Optional を IntStream に変換する",
+        "D. コンパイルエラー：Optional に stream() メソッドはない"
+      ],
+      "answer": "B",
+      "explanation": "Optional.stream() は Java 9 で追加されました。値がある場合は1要素のストリームを、ない場合は空のストリームを返します。Stream<Optional<T>> を flatMap で平坦化するのに便利です。"
+    },
+    {
+      "id": "S258",
+      "topic": "Optional",
+      "question": "次のコードの出力はどれか。\nOptional<String> opt = Optional.of(\"Hello\");\nString result = opt.map(String::toUpperCase)\n                   .filter(s -> s.length() > 3)\n                   .orElse(\"DEFAULT\");\nSystem.out.println(result);",
+      "choices": [
+        "A. Hello",
+        "B. HELLO",
+        "C. DEFAULT",
+        "D. NullPointerException"
+      ],
+      "answer": "B",
+      "explanation": "\"Hello\" が \"HELLO\" にマップされ、長さが 5 > 3 なので filter を通過し、orElse の DEFAULT は使われずに \"HELLO\" が返されます。"
+    },
+    {
+      "id": "S259",
+      "topic": "Optional",
+      "question": "orElseThrow() の説明として正しいものはどれか。",
+      "choices": [
+        "A. 値がある場合に例外をスローする",
+        "B. 値がない場合に NoSuchElementException をスローする（引数なしバージョン）",
+        "C. 値がない場合に NullPointerException をスローする",
+        "D. 常に例外をスローする"
+      ],
+      "answer": "B",
+      "explanation": "orElseThrow() は引数なしの場合 NoSuchElementException をスローします。orElseThrow(Supplier) で任意の例外を指定できます。Java 10 以降では get() より orElseThrow() が推奨されます。"
+    },
+    {
+      "id": "S260",
+      "topic": "Optional",
+      "question": "Optional<Optional<String>> のような入れ子を避けるには何を使うべきか。",
+      "choices": [
+        "A. map()",
+        "B. flatMap()",
+        "C. filter()",
+        "D. ifPresent()"
+      ],
+      "answer": "B",
+      "explanation": "Optional を返すメソッドを map() でチェーンすると Optional<Optional<T>> になります。flatMap() を使うと関数の戻り値の Optional をそのまま返すため、入れ子になりません。"
+    },
+    {
+      "id": "S261",
+      "topic": "Optional",
+      "question": "Optional.empty() について正しいものはどれか。",
+      "choices": [
+        "A. 毎回新しい Optional インスタンスを生成する",
+        "B. シングルトンインスタンスを返す",
+        "C. null を Optional でラップしたもので、内部的には null を保持する",
+        "D. Optional.ofNullable(null) とは動作が異なる"
+      ],
+      "answer": "B",
+      "explanation": "Optional.empty() は同一のシングルトンインスタンスを返します。Optional.ofNullable(null) も Optional.empty() と同等のオブジェクトを返します（等値です）。"
+    },
+    {
+      "id": "S262",
+      "topic": "Optional",
+      "question": "Optional の isPresent() と isEmpty() の関係はどれか（Java 11+）。",
+      "choices": [
+        "A. isPresent() == isEmpty()",
+        "B. isPresent() == !isEmpty()",
+        "C. isPresent() はインスタンスの有無、isEmpty() は値が空文字かを返す",
+        "D. isEmpty() は Java 11 では削除された"
+      ],
+      "answer": "B",
+      "explanation": "isEmpty() は Java 11 で追加された !isPresent() の等価メソッドです。isPresent() が true なら isEmpty() は false を返し、その逆も然りです。"
+    },
+    {
+      "id": "S263",
+      "topic": "Optional",
+      "question": "次のコードの出力はどれか。\nOptional<String> opt = Optional.empty();\nString s = opt.orElse(\"default\");\nSystem.out.println(s);",
+      "choices": [
+        "A. null",
+        "B. \"\"（空文字）",
+        "C. default",
+        "D. NoSuchElementException"
+      ],
+      "answer": "C",
+      "explanation": "opt は空なので orElse の引数 \"default\" が返されます。"
+    },
+    {
+      "id": "S264",
+      "topic": "Optional",
+      "question": "次のコードの動作について正しいものはどれか。\nString expensive = computeExpensiveValue();\nOptional<String> opt = Optional.of(\"value\");\nString result = opt.orElse(expensive);",
+      "choices": [
+        "A. opt が空でないので computeExpensiveValue() は呼ばれない",
+        "B. computeExpensiveValue() は orElse の引数評価時に呼ばれる（opt の状態に関わらず）",
+        "C. computeExpensiveValue() は result を使う時点で呼ばれる",
+        "D. コンパイルエラー"
+      ],
+      "answer": "B",
+      "explanation": "orElse(expensive) ではすでに expensive 変数に値が格納されているため、computeExpensiveValue() は orElse の引数評価前（代入文）に実行されています。コストのかかる処理は orElseGet(() -> computeExpensiveValue()) で遅延評価すべきです。"
+    },
+    {
+      "id": "S265",
+      "topic": "Optional",
+      "question": "Optional を使う場合のアンチパターンはどれか。",
+      "choices": [
+        "A. メソッドの戻り値型として Optional<T> を使う",
+        "B. Optional をフィールドの型として使う",
+        "C. Optional.ofNullable() で null の可能性がある値をラップする",
+        "D. flatMap でメソッドチェーンを構築する"
+      ],
+      "answer": "B",
+      "explanation": "Optional はメソッドの戻り値型として設計されており、フィールドの型やコレクションの要素型、メソッドのパラメータ型としての使用はアンチパターンとされています。Serializable でもないため直列化問題も生じます。"
+    },
+    {
+      "id": "S266",
+      "topic": "Comparator応用",
+      "question": "Comparator.comparing(Person::getName).reversed() の説明として正しいものはどれか。",
+      "choices": [
+        "A. 名前の逆アルファベット順（Z→A）で比較する Comparator を返す",
+        "B. 名前でソートした後に逆順にする Comparator を返す",
+        "C. コンパイルエラー：reversed() は Comparator にない",
+        "D. null 名前を先に並べる"
+      ],
+      "answer": "A",
+      "explanation": "reversed() は Comparator の順序を逆にします。comparing(Person::getName) はアルファベット昇順なので、それを reversed() することで降順（Z→A）になります。"
+    },
+    {
+      "id": "S267",
+      "topic": "Comparator応用",
+      "question": "thenComparing を使った複合ソートのコードはどれか（姓でソートし、同じ姓は名でソート）。",
+      "choices": [
+        "A. Comparator.comparing(p -> p.getLastName() + p.getFirstName())",
+        "B. Comparator.comparing(Person::getLastName).thenComparing(Person::getFirstName)",
+        "C. Comparator.comparing(Person::getLastName, Person::getFirstName)",
+        "D. Comparator.thenComparing(Person::getLastName, Person::getFirstName)"
+      ],
+      "answer": "B",
+      "explanation": "thenComparing() は最初の比較が同値（0）の場合に使う二次ソートキーを追加します。複数のキーを連鎖させることで多段ソートができます。"
+    },
+    {
+      "id": "S268",
+      "topic": "Comparator応用",
+      "question": "Comparator.naturalOrder() の説明として正しいものはどれか。",
+      "choices": [
+        "A. Comparable を実装したオブジェクトの自然順（compareTo）で比較する Comparator を返す",
+        "B. HashCode の順に比較する Comparator を返す",
+        "C. 挿入順を維持する Comparator を返す",
+        "D. null を先に並べる Comparator を返す"
+      ],
+      "answer": "A",
+      "explanation": "Comparator.naturalOrder() は Comparable を実装した型の自然順（String なら辞書順、数値なら昇順）で比較する Comparator を返します。Comparator.reverseOrder() はその逆順です。"
+    },
+    {
+      "id": "S269",
+      "topic": "Comparator応用",
+      "question": "Comparator.nullsFirst(comparator) の説明として正しいものはどれか。",
+      "choices": [
+        "A. 比較対象に null がある場合 NullPointerException をスローする",
+        "B. null 値を非 null 値より前（小さい）として扱う Comparator を返す",
+        "C. null 値を非 null 値より後（大きい）として扱う Comparator を返す",
+        "D. null 値を無視してソートする"
+      ],
+      "answer": "B",
+      "explanation": "nullsFirst(comparator) は null を最小値として扱い、リストの先頭に並べます。nullsLast(comparator) は null を最大値として末尾に並べます。いずれも null 間の比較では 0 を返します。"
+    },
+    {
+      "id": "S270",
+      "topic": "Comparator応用",
+      "question": "次のコードで list をソートするとどうなるか。\nList<String> list = Arrays.asList(\"banana\", \"apple\", null, \"cherry\");\nlist.sort(Comparator.nullsLast(Comparator.naturalOrder()));",
+      "choices": [
+        "A. [\"apple\", \"banana\", \"cherry\", null]",
+        "B. [null, \"apple\", \"banana\", \"cherry\"]",
+        "C. NullPointerException",
+        "D. [\"banana\", \"apple\", null, \"cherry\"]（変更なし）"
+      ],
+      "answer": "A",
+      "explanation": "nullsLast は null を末尾に置き、残りの要素は naturalOrder（辞書順昇順）でソートします。結果は [\"apple\", \"banana\", \"cherry\", null] になります。"
+    },
+    {
+      "id": "S271",
+      "topic": "Comparator応用",
+      "question": "Comparator.comparingInt(keyExtractor) の利点はどれか。",
+      "choices": [
+        "A. int を自動ボクシングしないため comparing より効率的",
+        "B. 負の値のみを比較できる",
+        "C. 複数の int フィールドを同時に比較できる",
+        "D. null セーフな比較を行う"
+      ],
+      "answer": "A",
+      "explanation": "comparingInt は ToIntFunction を受け取り、int のボクシング（Integer への変換）を避けて効率的な比較を行います。同様に comparingLong、comparingDouble もあります。"
+    },
+    {
+      "id": "S272",
+      "topic": "Comparator応用",
+      "question": "Comparator を lambda で書いた (a, b) -> a.getName().compareTo(b.getName()) と Comparator.comparing(Person::getName) は同等か。",
+      "choices": [
+        "A. 同等ではない。lambda 版は reversed() などのメソッドが使えない",
+        "B. 同等。同じ動作をする",
+        "C. lambda 版は null セーフだが comparing 版はそうでない",
+        "D. comparing 版は型安全だが lambda 版は型安全でない"
+      ],
+      "answer": "B",
+      "explanation": "両者は同等の動作をします。ただし実際には lambda で作成した場合も Comparator インターフェースを実装しているため reversed() 等のデフォルトメソッドは使えます。comparing を使うほうが読みやすいとされています。"
+    },
+    {
+      "id": "S273",
+      "topic": "Comparator応用",
+      "question": "次のコードで persons を年齢の降順でソートし、同じ年齢は名前の昇順でソートするには？",
+      "choices": [
+        "A. Comparator.comparingInt(Person::getAge).reversed().thenComparing(Person::getName)",
+        "B. Comparator.comparingInt(Person::getAge).thenComparing(Person::getName).reversed()",
+        "C. Comparator.comparingInt(Person::getAge, Person::getName).reversed()",
+        "D. Comparator.reversed(Person::getAge).thenComparing(Person::getName)"
+      ],
+      "answer": "A",
+      "explanation": "comparingInt(Person::getAge) で年齢昇順 Comparator を作り、reversed() で降順にします。その後 thenComparing(Person::getName) で同一年齢の場合の名前昇順を追加します。Bは全体を reversed() するため名前も降順になります。"
+    },
+    {
+      "id": "S274",
+      "topic": "Comparator応用",
+      "question": "Comparable と Comparator の違いとして正しいものはどれか。",
+      "choices": [
+        "A. Comparable はクラス自体に自然順を定義し、Comparator は外部から順序を定義する",
+        "B. Comparable は複数の比較基準を持てるが、Comparator は1つのみ",
+        "C. Comparator は java.lang パッケージ、Comparable は java.util パッケージ",
+        "D. Comparable は static メソッド、Comparator はインスタンスメソッド"
+      ],
+      "answer": "A",
+      "explanation": "Comparable<T> はクラスに compareTo(T) を実装することで自然順を定義します。Comparator<T> は外部から compare(T,T) を提供するため、複数の異なるソート基準を持てます。Comparable は java.lang、Comparator は java.util パッケージです。"
+    },
+    {
+      "id": "S275",
+      "topic": "Comparator応用",
+      "question": "Comparator.comparing() に null を返すキー抽出関数を使うとどうなるか。",
+      "choices": [
+        "A. 自動的に null は末尾に並べられる",
+        "B. NullPointerException が発生する可能性がある",
+        "C. コンパイルエラーになる",
+        "D. null を返した要素は比較から除外される"
+      ],
+      "answer": "B",
+      "explanation": "Comparator.comparing() はキーが null の場合 NullPointerException をスローします。null を扱う場合は Comparator.comparing(keyExtractor, Comparator.nullsFirst(naturalOrder())) のように null セーフな Comparator を組み合わせる必要があります。"
+    },
+    {
+      "id": "S276",
+      "topic": "Comparator応用",
+      "question": "List.sort(null) を呼び出すとどうなるか。",
+      "choices": [
+        "A. NullPointerException",
+        "B. UnsupportedOperationException",
+        "C. 要素の自然順（Comparable）でソートされる",
+        "D. ソートが行われない"
+      ],
+      "answer": "C",
+      "explanation": "List.sort(null) は null を Comparator として渡した場合、要素の自然順（Comparable による compareTo）でソートします。要素が Comparable を実装していない場合は ClassCastException が発生します。"
+    },
+    {
+      "id": "S277",
+      "topic": "Comparator応用",
+      "question": "Stream.sorted() と Stream.sorted(comparator) の違いはどれか。",
+      "choices": [
+        "A. sorted() は安定ソート、sorted(comparator) は不安定ソート",
+        "B. sorted() は自然順、sorted(comparator) は指定した順でソートされたストリームを返す",
+        "C. sorted() は並列、sorted(comparator) は逐次処理",
+        "D. 違いはない"
+      ],
+      "answer": "B",
+      "explanation": "引数なしの sorted() は Comparable の自然順でソートします。sorted(Comparator) は指定した Comparator でソートします。どちらも中間操作で新しいストリームを返します。"
+    },
+    {
+      "id": "S278",
+      "topic": "Comparator応用",
+      "question": "Comparator.comparing(Person::getAge).thenComparing(Comparator.naturalOrder()) はどのような比較をするか（Person は Comparable を実装していないと仮定）。",
+      "choices": [
+        "A. 年齢でソートし、同じ年齢は Person の equals で比較する",
+        "B. コンパイルエラー：Person が Comparable を実装していないため naturalOrder は使えない",
+        "C. 年齢でソートし、同じ年齢は挿入順を維持する",
+        "D. 実行時に ClassCastException が発生する可能性がある"
+      ],
+      "answer": "D",
+      "explanation": "naturalOrder() は要素が Comparable であることを前提とします。Person が Comparable<Person> を実装していない場合、実行時に ClassCastException が発生します。コンパイル時にはジェネリクスの型推論で警告が出る場合もあります。"
+    },
+    {
+      "id": "S279",
+      "topic": "Comparator応用",
+      "question": "次のコードの出力はどれか。\nList<Integer> nums = Arrays.asList(3, 1, 4, 1, 5, 9, 2, 6);\nnums.sort(Comparator.reverseOrder());\nSystem.out.println(nums.get(0));",
+      "choices": [
+        "A. 1",
+        "B. 9",
+        "C. 3",
+        "D. 6"
+      ],
+      "answer": "B",
+      "explanation": "reverseOrder() で降順ソートすると [9, 6, 5, 4, 3, 2, 1, 1] になります。インデックス 0 の要素は 9 です。"
+    },
+    {
+      "id": "S280",
+      "topic": "Comparator応用",
+      "question": "Comparator.comparing() と Collections.sort() を組み合わせる場合、どちらが型安全か。",
+      "choices": [
+        "A. Collections.sort() のみ型安全",
+        "B. Comparator.comparing() のみ型安全",
+        "C. 両者とも型安全",
+        "D. どちらも型安全でない"
+      ],
+      "answer": "C",
+      "explanation": "Collections.sort(List<T>, Comparator<? super T>) も Comparator.comparing() も Java のジェネリクスにより型安全です。どちらも型推論でコンパイル時に型チェックが行われます。"
+    },
+    {
+      "id": "S281",
+      "topic": "I/O基礎",
+      "question": "try-with-resources 文の説明として正しいものはどれか。",
+      "choices": [
+        "A. リソースは try ブロックの後に手動でクローズする必要がある",
+        "B. AutoCloseable を実装したリソースを try ブロック終了時に自動的にクローズする",
+        "C. finally ブロックの代替で、例外処理はできない",
+        "D. ファイル操作専用の構文"
+      ],
+      "answer": "B",
+      "explanation": "try-with-resources は AutoCloseable（または Closeable）を実装したリソースを宣言し、try ブロックの正常終了・例外発生にかかわらず自動的に close() を呼び出します。Java 9 以降は既存の変数も使えます。"
+    },
+    {
+      "id": "S282",
+      "topic": "I/O基礎",
+      "question": "try-with-resources で複数のリソースを宣言した場合、close() の呼び出し順序はどれか。",
+      "choices": [
+        "A. 宣言した順（FIFO）",
+        "B. 宣言と逆順（LIFO）",
+        "C. ランダムな順序",
+        "D. 並列にクローズされる"
+      ],
+      "answer": "B",
+      "explanation": "複数のリソースは宣言の逆順（後に宣言したものから先に）close() されます。これは依存関係のあるリソース（例：BufferedReader → FileReader の順）の正しいクローズ順序を保証するためです。"
+    },
+    {
+      "id": "S283",
+      "topic": "I/O基礎",
+      "question": "BufferedReader.readLine() がファイル末尾に達したとき何を返すか。",
+      "choices": [
+        "A. 空文字列 \"\"",
+        "B. EOF 例外をスロー",
+        "C. null",
+        "D. -1"
+      ],
+      "answer": "C",
+      "explanation": "readLine() はファイル末尾（EOF）に達すると null を返します。通常の読み込みループは while ((line = reader.readLine()) != null) と記述します。"
+    },
+    {
+      "id": "S284",
+      "topic": "I/O基礎",
+      "question": "Files.readAllLines(path) の説明として正しいものはどれか。",
+      "choices": [
+        "A. ファイルを1行ずつ読み込み Stream<String> を返す",
+        "B. ファイルの全行を List<String> として返す",
+        "C. ファイルを byte 配列として読み込む",
+        "D. ファイルを1文字ずつ読み込む"
+      ],
+      "answer": "B",
+      "explanation": "Files.readAllLines(Path, Charset) はファイルの全行を List<String> として返します。デフォルト文字コードは UTF-8（Java 11 以降）。大きなファイルには Files.lines(path) でストリームを使う方が効率的です。"
+    },
+    {
+      "id": "S285",
+      "topic": "I/O基礎",
+      "question": "Path と File の違いとして正しいものはどれか。",
+      "choices": [
+        "A. Path は java.io、File は java.nio.file パッケージ",
+        "B. Path は Java 7 以降の NIO.2 の型で、File より多機能",
+        "C. File は不変オブジェクトだが、Path は変更可能",
+        "D. Path はネットワークパスのみ、File はローカルパスのみ"
+      ],
+      "answer": "B",
+      "explanation": "Path は java.nio.file パッケージの Java 7 以降の型で、より豊富な機能を持ちます。File は java.io の古い型です。相互変換は file.toPath() や path.toFile() で可能です。"
+    },
+    {
+      "id": "S286",
+      "topic": "I/O基礎",
+      "question": "Files.write(path, lines) でファイルに書き込む場合のデフォルト動作はどれか。",
+      "choices": [
+        "A. 既存ファイルに追記する",
+        "B. 既存ファイルを上書きする（CREATE、TRUNCATE_EXISTING、WRITE）",
+        "C. 既存ファイルがある場合は IOException をスローする",
+        "D. 既存ファイルをバックアップして新規作成する"
+      ],
+      "answer": "B",
+      "explanation": "Files.write(path, lines) はデフォルトで CREATE、TRUNCATE_EXISTING、WRITE オプションが適用され、ファイルが存在すれば上書き、存在しなければ新規作成します。追記するには StandardOpenOption.APPEND を指定します。"
+    },
+    {
+      "id": "S287",
+      "topic": "I/O基礎",
+      "question": "Paths.get(\"C:/data\", \"file.txt\") の結果はどれか。",
+      "choices": [
+        "A. \"C:/data\" + \"file.txt\" = \"C:/datafile.txt\"",
+        "B. \"C:/data/file.txt\" に相当する Path",
+                "C. コンパイルエラー：Paths.get は引数を1つしか受け取れない",
+        "D. IOException がスローされる"
+      ],
+      "answer": "B",
+      "explanation": "Paths.get(String first, String... more) は可変長引数でパスのセグメントを連結します。Paths.get(\"C:/data\", \"file.txt\") は \"C:/data/file.txt\" に相当する Path を返します。Java 11 以降は Path.of() が推奨されます。"
+    },
+    {
+      "id": "S288",
+      "topic": "I/O基礎",
+      "question": "try-with-resources でリソースの close() が例外をスロー し、try ブロック内でも例外が発生した場合どうなるか。",
+      "choices": [
+        "A. try ブロックの例外が伝播し、close() の例外は抑制例外として addSuppressed で保持される",
+        "B. close() の例外のみが伝播し、try ブロックの例外は無視される",
+        "C. 両方の例外が同時にスローされる",
+        "D. ランタイムが最初の例外のみ伝播させ、2番目は無視する"
+      ],
+      "answer": "A",
+      "explanation": "try ブロック内の例外が優先して伝播し、close() でスローされた例外は Throwable.addSuppressed() で抑制例外として付加されます。e.getSuppressed() で取得できます。"
+    },
+    {
+      "id": "S289",
+      "topic": "I/O基礎",
+      "question": "Files.exists(path) と Files.isRegularFile(path) の違いはどれか。",
+      "choices": [
+        "A. exists() はファイルかディレクトリかを問わず存在を確認、isRegularFile() は通常ファイルか確認",
+        "B. exists() はディレクトリのみ確認、isRegularFile() はファイルのみ確認",
+        "C. 両者は同じ動作をする",
+        "D. isRegularFile() は Java 11 以降のみ使用可能"
+      ],
+      "answer": "A",
+      "explanation": "Files.exists(path) はパスが存在するかどうかを返し、ディレクトリでも true になります。Files.isRegularFile(path) は通常ファイル（ディレクトリ・シンボリックリンクでない）の場合のみ true を返します。"
+    },
+    {
+      "id": "S290",
+      "topic": "I/O基礎",
+      "question": "Closeable と AutoCloseable の違いはどれか。",
+      "choices": [
+        "A. Closeable の close() は IOException のみスロー可能、AutoCloseable の close() は Exception をスロー可能",
+        "B. AutoCloseable は java.io パッケージ、Closeable は java.lang パッケージ",
+        "C. Closeable は try-with-resources で使えないが、AutoCloseable は使える",
+        "D. 違いはない。同じインターフェース"
+      ],
+      "answer": "A",
+      "explanation": "Closeable.close() は IOException のみスローできます。AutoCloseable.close() は Exception をスローできます（より広い）。Closeable は AutoCloseable を extends しています。try-with-resources は両方使えます。"
+    },
+    {
+      "id": "S291",
+      "topic": "その他",
+      "question": "String.format(\"%05d\", 42) の出力はどれか。",
+      "choices": [
+        "A. \"42\"",
+        "B. \"00042\"",
+        "C. \"42000\"",
+        "D. \"  42 \""
+      ],
+      "answer": "B",
+      "explanation": "%05d は幅5でゼロパディングして整数を出力します。42 は3桁なので先頭に 000 が付いて \"00042\" になります。"
+    },
+    {
+      "id": "S292",
+      "topic": "その他",
+      "question": "\"Hello World\".matches(\"H.*d\") の結果はどれか。",
+      "choices": [
+        "A. true（正規表現が文字列全体にマッチ）",
+        "B. false（matches は部分一致）",
+        "C. true（H から始まる文字列にマッチ）",
+        "D. コンパイルエラー"
+      ],
+      "answer": "A",
+      "explanation": "String.matches() は文字列全体が正規表現にマッチするか確認します。\"H.*d\" は H で始まり d で終わるパターンで、\"Hello World\" 全体がマッチするため true です。"
+    },
+    {
+      "id": "S293",
+      "topic": "その他",
+      "question": "\"aabbcc\".replaceAll(\"(.)\\\\1\", \"$1\") の結果はどれか。",
+      "choices": [
+        "A. \"aabbcc\"（変更なし）",
+        "B. \"abc\"（重複文字を1文字に）",
+        "C. \"abc\"（各文字1回のみ）",
+        "D. コンパイルエラー"
+      ],
+      "answer": "B",
+      "explanation": "(.)\\\\1 は同じ文字の繰り返しにマッチする正規表現（後方参照）。$1 はグループ1（最初の文字）に置換します。\"aa\" -> \"a\"、\"bb\" -> \"b\"、\"cc\" -> \"c\" となり \"abc\" になります。"
+    },
+    {
+      "id": "S294",
+      "topic": "その他",
+      "question": "Scanner sc = new Scanner(System.in); で整数を読み取るメソッドはどれか。",
+      "choices": [
+        "A. sc.readInt()",
+        "B. sc.nextInt()",
+        "C. sc.getInt()",
+        "D. sc.parseInt()"
+      ],
+      "answer": "B",
+      "explanation": "Scanner のメソッドは nextInt()、nextDouble()、nextLine()、next() などです。readInt() や getInt() は存在しません。"
+    },
+    {
+      "id": "S295",
+      "topic": "その他",
+      "question": "LocalDate.now().isAfter(LocalDate.of(2020, 1, 1)) について正しいものはどれか。",
+      "choices": [
+        "A. 現在日時が 2020-01-01 より後なら true",
+        "B. 現在日時が 2020-01-01 より前なら true",
+        "C. 常に false",
+        "D. 常に true"
+      ],
+      "answer": "A",
+      "explanation": "isAfter() は比較対象より後（大きい）の場合 true を返します。isBefore() は前（小さい）の場合 true を返します。2026年現在の日付は 2020-01-01 より後なので true です。"
+    },
+    {
+      "id": "S296",
+      "topic": "その他",
+      "question": "\"Hello %s, you are %d years old.\".formatted(\"Alice\", 30) の結果はどれか。",
+      "choices": [
+        "A. コンパイルエラー：formatted メソッドは String にない",
+        "B. \"Hello Alice, you are 30 years old.\"",
+        "C. \"Hello %s, you are %d years old.\"",
+        "D. IllegalFormatException"
+      ],
+      "answer": "B",
+      "explanation": "String.formatted() は Java 15 で追加された String.format(this, args) の等価メソッドです。インスタンスメソッドとして呼べるためメソッドチェーンに便利です。"
+    },
+    {
+      "id": "S297",
+      "topic": "その他",
+      "question": "LocalDate の compareTo() メソッドの説明として正しいものはどれか。",
+      "choices": [
+        "A. 前なら負、同じなら 0、後なら正の値を返す",
+        "B. 前なら true、後なら false を返す",
+        "C. 常に 0 か 1 を返す",
+        "D. 月の差分を返す"
+      ],
+      "answer": "A",
+      "explanation": "compareTo() は Comparable の規約に従い、呼び出し元が引数より前なら負の値、同じなら 0、後なら正の値を返します。Comparator との組み合わせに使えます。"
+    },
+    {
+      "id": "S298",
+      "topic": "その他",
+      "question": "Scanner.hasNextInt() の説明として正しいものはどれか。",
+      "choices": [
+        "A. 次のトークンが int として解析できる場合 true を返す",
+        "B. 入力バッファが空でない場合 true を返す",
+        "C. 次の行に整数が含まれる場合 true を返す",
+        "D. 整数をスキャンして読み込む"
+      ],
+      "answer": "A",
+      "explanation": "hasNextInt() は次のトークンが int として解析可能な場合に true を返します。入力検証のループ（while (!sc.hasNextInt())）によく使われます。"
+    },
+    {
+      "id": "S299",
+      "topic": "その他",
+      "question": "LocalDate.of(2024, 2, 29).plusYears(1) の結果はどれか。",
+      "choices": [
+        "A. 2025-02-28（2025年は閏年でないため）",
+        "B. 2025-03-01（2月29日を繰り越し）",
+        "C. DateTimeException がスローされる",
+        "D. 2025-02-29（そのまま）"
+      ],
+      "answer": "A",
+      "explanation": "2024年2月29日に1年を加算すると、2025年は閏年でないため2月28日が返されます（月末調整）。これは Date/Time API の仕様で、月末を超える日付は自動的に調整されます。"
+    },
+    {
+      "id": "S300",
+      "topic": "その他",
+      "question": "String.format(\"%,.2f\", 1234567.89) の出力はどれか。",
+      "choices": [
+        "A. \"1234567.89\"",
+        "B. \"1,234,567.89\"",
+        "C. \"1234567.89\"（カンマは無効）",
+        "D. FormatException"
+      ],
+      "answer": "B",
+      "explanation": "フォーマット指定子 %,.2f のカンマ（,）は千区切り文字を挿入し、.2 は小数点以下2桁を指定します。結果は \"1,234,567.89\" です（ロケールによって区切り文字は変わる場合があります）。"
+    }
+  ]
+}

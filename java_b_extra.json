@@ -1,0 +1,734 @@
+{
+  "bronze": [
+    {
+      "id": "B083",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint i = 5;\nSystem.out.println(++i);\nSystem.out.println(i);",
+      "choices": ["A. 5\n6", "B. 6\n6", "C. 6\n7", "D. 5\n5"],
+      "answer": "B"
+    },
+    {
+      "id": "B084",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint i = 5;\nSystem.out.println(i++);\nSystem.out.println(i);",
+      "choices": ["A. 5\n5", "B. 6\n6", "C. 5\n6", "D. 6\n5"],
+      "answer": "C"
+    },
+    {
+      "id": "B085",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint a = 10;\nint b = a--;\nSystem.out.println(a + \" \" + b);",
+      "choices": ["A. 10 10", "B. 9 10", "C. 10 9", "D. 9 9"],
+      "answer": "B"
+    },
+    {
+      "id": "B086",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint x = 3;\nint y = --x + x;\nSystem.out.println(y);",
+      "choices": ["A. 5", "B. 6", "C. 4", "D. 3"],
+      "answer": "C"
+    },
+    {
+      "id": "B087",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint n = 7;\nn += 3;\nn -= 2;\nSystem.out.println(n);",
+      "choices": ["A. 7", "B. 8", "C. 10", "D. 12"],
+      "answer": "B"
+    },
+    {
+      "id": "B088",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint a = 10;\na *= 2;\na /= 4;\nSystem.out.println(a);",
+      "choices": ["A. 2", "B. 4", "C. 5", "D. 20"],
+      "answer": "C"
+    },
+    {
+      "id": "B089",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint x = 17;\nx %= 5;\nSystem.out.println(x);",
+      "choices": ["A. 3", "B. 2", "C. 5", "D. 1"],
+      "answer": "B"
+    },
+    {
+      "id": "B090",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint i = 2;\ni += i *= 3;\nSystem.out.println(i);",
+      "choices": ["A. 6", "B. 12", "C. 8", "D. 10"],
+      "answer": "B"
+    },
+    {
+      "id": "B091",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint x = 1;\nswitch (x) {\n  case 1:\n    System.out.println(\"one\");\n  case 2:\n    System.out.println(\"two\");\n  default:\n    System.out.println(\"other\");\n}",
+      "choices": ["A. one", "B. one\ntwo", "C. one\ntwo\nother", "D. other"],
+      "answer": "C"
+    },
+    {
+      "id": "B092",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint x = 2;\nswitch (x) {\n  case 1:\n    System.out.println(\"one\");\n    break;\n  case 2:\n    System.out.println(\"two\");\n    break;\n  default:\n    System.out.println(\"other\");\n}",
+      "choices": ["A. two\nother", "B. two", "C. other", "D. one\ntwo"],
+      "answer": "B"
+    },
+    {
+      "id": "B093",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint x = 5;\nswitch (x) {\n  case 1:\n    System.out.println(\"one\");\n    break;\n  case 2:\n    System.out.println(\"two\");\n    break;\n}",
+      "choices": ["A. other", "B. 5", "C. コンパイルエラー", "D. 何も出力されない"],
+      "answer": "D"
+    },
+    {
+      "id": "B094",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint x = 3;\nswitch (x) {\n  case 1:\n  case 2:\n  case 3:\n    System.out.println(\"1-3\");\n    break;\n  case 4:\n    System.out.println(\"4\");\n    break;\n}",
+      "choices": ["A. 1-3\n4", "B. コンパイルエラー", "C. 1-3", "D. 何も出力されない"],
+      "answer": "C"
+    },
+    {
+      "id": "B095",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint a = 10;\nif (a > 5) {\n  if (a > 8) {\n    System.out.println(\"A\");\n  } else {\n    System.out.println(\"B\");\n  }\n} else {\n  System.out.println(\"C\");\n}",
+      "choices": ["A. A", "B. B", "C. C", "D. A\nB"],
+      "answer": "A"
+    },
+    {
+      "id": "B096",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint a = 7;\nif (a > 10) {\n  System.out.println(\"X\");\n} else if (a > 5) {\n  System.out.println(\"Y\");\n} else {\n  System.out.println(\"Z\");\n}",
+      "choices": ["A. X", "B. Y", "C. Z", "D. Y\nZ"],
+      "answer": "B"
+    },
+    {
+      "id": "B097",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint count = 0;\nwhile (count < 3) {\n  System.out.println(count);\n  count++;\n}",
+      "choices": ["A. 0\n1\n2\n3", "B. 1\n2\n3", "C. 0\n1\n2", "D. 0\n1\n2\n3\n4"],
+      "answer": "C"
+    },
+    {
+      "id": "B098",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint i = 0;\ndo {\n  System.out.println(i);\n  i++;\n} while (i < 3);",
+      "choices": ["A. 0\n1\n2", "B. 1\n2\n3", "C. 0\n1\n2\n3", "D. 何も出力されない"],
+      "answer": "A"
+    },
+    {
+      "id": "B099",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint i = 5;\ndo {\n  System.out.println(i);\n  i++;\n} while (i < 3);",
+      "choices": ["A. 何も出力されない", "B. 5", "C. 5\n6\n7", "D. コンパイルエラー"],
+      "answer": "B"
+    },
+    {
+      "id": "B100",
+      "question": "次のコードを実行すると何が出力されますか？\n\nSystem.out.println(1 + 2 + \"3\");\nSystem.out.println(\"1\" + 2 + 3);",
+      "choices": ["A. 33\n123", "B. 123\n33", "C. 33\n15", "D. 6\n123"],
+      "answer": "A"
+    },
+    {
+      "id": "B101",
+      "question": "次のコードを実行すると何が出力されますか？\n\nSystem.out.println(\"Result: \" + 3 * 4);\nSystem.out.println(\"A\" + 1 + 2);",
+      "choices": ["A. Result: 12\nA12", "B. Result: 12\nA3", "C. Result: 34\nA12", "D. Result: 7\nA3"],
+      "answer": "A"
+    },
+    {
+      "id": "B102",
+      "question": "次のコードを実行すると何が出力されますか？\n\nString s1 = \"hello\";\nString s2 = \"hello\";\nString s3 = new String(\"hello\");\nSystem.out.println(s1 == s2);\nSystem.out.println(s1 == s3);",
+      "choices": ["A. true\ntrue", "B. false\nfalse", "C. true\nfalse", "D. false\ntrue"],
+      "answer": "C"
+    },
+    {
+      "id": "B103",
+      "question": "次のコードを実行すると何が出力されますか？\n\nString s1 = new String(\"abc\");\nString s2 = new String(\"abc\");\nSystem.out.println(s1 == s2);\nSystem.out.println(s1.equals(s2));",
+      "choices": ["A. true\ntrue", "B. false\nfalse", "C. true\nfalse", "D. false\ntrue"],
+      "answer": "D"
+    },
+    {
+      "id": "B104",
+      "question": "次のコードを実行すると何が出力されますか？\n\nclass Counter {\n  static int count = 0;\n  Counter() { count++; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Counter a = new Counter();\n    Counter b = new Counter();\n    Counter c = new Counter();\n    System.out.println(Counter.count);\n  }\n}",
+      "choices": ["A. 0", "B. 1", "C. 3", "D. コンパイルエラー"],
+      "answer": "C"
+    },
+    {
+      "id": "B105",
+      "question": "次のコードを実行すると何が出力されますか？\n\nclass MyClass {\n  int val;\n  MyClass() { this(10); }\n  MyClass(int v) { val = v; System.out.println(\"val=\" + val); }\n}\npublic class Main {\n  public static void main(String[] args) {\n    new MyClass();\n  }\n}",
+      "choices": ["A. val=0", "B. val=10", "C. コンパイルエラー", "D. 何も出力されない"],
+      "answer": "B"
+    },
+    {
+      "id": "B106",
+      "question": "次のコードを実行すると何が出力されますか？\n\nclass Parent {\n  Parent() { System.out.println(\"Parent\"); }\n}\nclass Child extends Parent {\n  Child() { System.out.println(\"Child\"); }\n}\npublic class Main {\n  public static void main(String[] args) {\n    new Child();\n  }\n}",
+      "choices": ["A. Child", "B. Parent", "C. Child\nParent", "D. Parent\nChild"],
+      "answer": "D"
+    },
+    {
+      "id": "B107",
+      "question": "次のコードを実行すると何が出力されますか？\n\npublic class Main {\n  static void change(int[] arr) {\n    arr[0] = 99;\n  }\n  public static void main(String[] args) {\n    int[] nums = {1, 2, 3};\n    change(nums);\n    System.out.println(nums[0]);\n  }\n}",
+      "choices": ["A. 1", "B. 99", "C. コンパイルエラー", "D. 0"],
+      "answer": "B"
+    },
+    {
+      "id": "B108",
+      "question": "次のコードを実行すると何が出力されますか？\n\npublic class Main {\n  public static void main(String[] args) {\n    int[] arr = {10, 20, 30};\n    for (int x : arr) {\n      x = 0;\n    }\n    System.out.println(arr[0]);\n  }\n}",
+      "choices": ["A. 0", "B. 10", "C. コンパイルエラー", "D. 30"],
+      "answer": "B"
+    },
+    {
+      "id": "B109",
+      "question": "次のコードを実行すると何が出力されますか？\n\nSystem.out.println(Math.round(2.5));\nSystem.out.println(Math.round(2.4));",
+      "choices": ["A. 2\n2", "B. 3\n2", "C. 3\n3", "D. 2\n3"],
+      "answer": "B"
+    },
+    {
+      "id": "B110",
+      "question": "次のコードを実行すると何が出力されますか？\n\nSystem.out.println(Math.floor(3.9));\nSystem.out.println(Math.ceil(3.1));",
+      "choices": ["A. 3.0\n4.0", "B. 4.0\n3.0", "C. 3\n4", "D. 3.9\n3.1"],
+      "answer": "A"
+    },
+    {
+      "id": "B111",
+      "question": "次のコードを実行すると何が出力されますか？\n\nSystem.out.println(Integer.parseInt(\"42\"));\nSystem.out.println(Integer.parseInt(\"FF\", 16));",
+      "choices": ["A. 42\n255", "B. 42\nFF", "C. 66\n255", "D. コンパイルエラー"],
+      "answer": "A"
+    },
+    {
+      "id": "B112",
+      "question": "次のコードを実行すると何が出力されますか？\n\ntry {\n  int x = Integer.parseInt(\"abc\");\n  System.out.println(x);\n} catch (NumberFormatException e) {\n  System.out.println(\"error\");\n}",
+      "choices": ["A. 0", "B. abc", "C. error", "D. コンパイルエラー"],
+      "answer": "C"
+    },
+    {
+      "id": "B113",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint a = 5;\nint b = 3;\nSystem.out.println(a > b ? \"big\" : \"small\");\nSystem.out.println(a == b ? \"equal\" : \"not equal\");",
+      "choices": ["A. big\nnot equal", "B. small\nequal", "C. big\nequal", "D. small\nnot equal"],
+      "answer": "A"
+    },
+    {
+      "id": "B114",
+      "question": "次のコードを実行すると何が出力されますか？\n\nfor (int i = 0; i < 5; i++) {\n  if (i == 3) break;\n  System.out.println(i);\n}",
+      "choices": ["A. 0\n1\n2\n3", "B. 0\n1\n2", "C. 1\n2\n3", "D. 0\n1\n2\n3\n4"],
+      "answer": "B"
+    },
+    {
+      "id": "B115",
+      "question": "次のコードを実行すると何が出力されますか？\n\nfor (int i = 0; i < 5; i++) {\n  if (i == 3) continue;\n  System.out.print(i + \" \");\n}",
+      "choices": ["A. 0 1 2 3 4", "B. 0 1 2 4", "C. 0 1 2", "D. 1 2 4 5"],
+      "answer": "B"
+    },
+    {
+      "id": "B116",
+      "question": "次のコードを実行すると何が出力されますか？\n\nclass Animal {\n  String name = \"Animal\";\n  void speak() { System.out.println(\"...\"); }\n}\nclass Dog extends Animal {\n  String name = \"Dog\";\n  void speak() { System.out.println(\"Woof\"); }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Animal a = new Dog();\n    a.speak();\n    System.out.println(a.name);\n  }\n}",
+      "choices": ["A. Woof\nDog", "B. ...\nAnimal", "C. Woof\nAnimal", "D. ...\nDog"],
+      "answer": "C"
+    },
+    {
+      "id": "B117",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint x = 10;\nint y = x / 3;\nSystem.out.println(y);",
+      "choices": ["A. 3.33", "B. 3", "C. 4", "D. 3.0"],
+      "answer": "B"
+    },
+    {
+      "id": "B118",
+      "question": "次のコードを実行すると何が出力されますか？\n\ndouble d = 10.0 / 3;\nSystem.out.printf(\"%.2f%n\", d);",
+      "choices": ["A. 3.00", "B. 3.33", "C. 3.34", "D. 3.3"],
+      "answer": "B"
+    },
+    {
+      "id": "B119",
+      "question": "次のコードを実行すると何が出力されますか？\n\nString s = \"Hello World\";\nSystem.out.println(s.length());\nSystem.out.println(s.substring(6));",
+      "choices": ["A. 11\nWorld", "B. 10\nWorld", "C. 11\n World", "D. 11\nworld"],
+      "answer": "A"
+    },
+    {
+      "id": "B120",
+      "question": "次のコードを実行すると何が出力されますか？\n\nString s = \"  hello  \";\nSystem.out.println(\"[\" + s.trim() + \"]\");",
+      "choices": ["A. [  hello  ]", "B. [hello]", "C. [ hello ]", "D. コンパイルエラー"],
+      "answer": "B"
+    },
+    {
+      "id": "B121",
+      "question": "次のコードを実行すると何が出力されますか？\n\nString s = \"banana\";\nSystem.out.println(s.replace(\"a\", \"o\"));\nSystem.out.println(s);",
+      "choices": ["A. bonono\nbanana", "B. bonono\nbonono", "C. banana\nbanana", "D. bAnAnA\nbanana"],
+      "answer": "A"
+    },
+    {
+      "id": "B122",
+      "question": "次のコードを実行すると何が出力されますか？\n\nSystem.out.println(Math.pow(2, 10));\nSystem.out.println(Math.sqrt(16));",
+      "choices": ["A. 1024\n4", "B. 1024.0\n4.0", "C. 20\n8", "D. 210\n4"],
+      "answer": "B"
+    },
+    {
+      "id": "B123",
+      "question": "次のコードを実行すると何が出力されますか？\n\nSystem.out.println(Math.abs(-7));\nSystem.out.println(Math.max(3, 8));\nSystem.out.println(Math.min(3, 8));",
+      "choices": ["A. -7\n8\n3", "B. 7\n3\n8", "C. 7\n8\n3", "D. 7\n8\n8"],
+      "answer": "C"
+    },
+    {
+      "id": "B124",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint[] a = {5, 3, 8, 1};\nint max = a[0];\nfor (int v : a) {\n  if (v > max) max = v;\n}\nSystem.out.println(max);",
+      "choices": ["A. 5", "B. 1", "C. 8", "D. 3"],
+      "answer": "C"
+    },
+    {
+      "id": "B125",
+      "question": "次のコードを実行すると何が出力されますか？\n\npublic class Main {\n  static int x = 0;\n  static { x = 10; System.out.println(\"static:\" + x); }\n  { x = 20; System.out.println(\"instance:\" + x); }\n  Main() { System.out.println(\"constructor:\" + x); }\n  public static void main(String[] args) { new Main(); }\n}",
+      "choices": [
+        "A. static:10\ninstance:20\nconstructor:20",
+        "B. instance:20\nstatic:10\nconstructor:20",
+        "C. constructor:20\nstatic:10\ninstance:20",
+        "D. static:10\nconstructor:20\ninstance:20"
+      ],
+      "answer": "A"
+    },
+    {
+      "id": "B126",
+      "question": "次のコードを実行すると何が出力されますか？\n\nString s = \"Java\";\nSystem.out.println(s.startsWith(\"Ja\"));\nSystem.out.println(s.endsWith(\"va\"));\nSystem.out.println(s.contains(\"av\"));",
+      "choices": ["A. true\ntrue\ntrue", "B. false\ntrue\ntrue", "C. true\nfalse\ntrue", "D. false\nfalse\nfalse"],
+      "answer": "A"
+    },
+    {
+      "id": "B127",
+      "question": "次のコードを実行すると何が出力されますか？\n\nString s = \"\";\nSystem.out.println(s.isEmpty());\nSystem.out.println(s.length());",
+      "choices": ["A. false\n0", "B. true\n0", "C. true\n1", "D. コンパイルエラー"],
+      "answer": "B"
+    },
+    {
+      "id": "B128",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint i = 0;\nwhile (i < 10) {\n  i += 3;\n}\nSystem.out.println(i);",
+      "choices": ["A. 9", "B. 10", "C. 12", "D. 3"],
+      "answer": "C"
+    },
+    {
+      "id": "B129",
+      "question": "次のコードを実行すると何が出力されますか？\n\nfor (int i = 1; i <= 3; i++) {\n  for (int j = 1; j <= 3; j++) {\n    if (i == j) System.out.print(i*j + \" \");\n  }\n}",
+      "choices": ["A. 1 4 9", "B. 1 2 3", "C. 1 1 4 4 9 9", "D. 1 2 3 4 5 6 7 8 9"],
+      "answer": "A"
+    },
+    {
+      "id": "B130",
+      "question": "次のコードを実行すると何が出力されますか？\n\npublic class Main {\n  static void swap(int a, int b) {\n    int tmp = a;\n    a = b;\n    b = tmp;\n  }\n  public static void main(String[] args) {\n    int x = 1, y = 2;\n    swap(x, y);\n    System.out.println(x + \" \" + y);\n  }\n}",
+      "choices": ["A. 2 1", "B. 1 1", "C. 1 2", "D. 2 2"],
+      "answer": "C"
+    },
+    {
+      "id": "B131",
+      "question": "次のコードを実行すると何が出力されますか？\n\nString s = \"Hello\";\ns.toUpperCase();\nSystem.out.println(s);",
+      "choices": ["A. HELLO", "B. Hello", "C. hello", "D. コンパイルエラー"],
+      "answer": "B"
+    },
+    {
+      "id": "B132",
+      "question": "次のコードを実行すると何が出力されますか？\n\nString s = \"Hello\";\nString t = s.toUpperCase();\nSystem.out.println(t);",
+      "choices": ["A. Hello", "B. hello", "C. HELLO", "D. コンパイルエラー"],
+      "answer": "C"
+    },
+    {
+      "id": "B133",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint x = 5;\nint y = 2;\nSystem.out.println(x / y);\nSystem.out.println(x % y);",
+      "choices": ["A. 2\n1", "B. 2.5\n0", "C. 2\n0", "D. 3\n1"],
+      "answer": "A"
+    },
+    {
+      "id": "B134",
+      "question": "次のコードを実行すると何が出力されますか？\n\nclass A {\n  A() { System.out.println(\"A\"); }\n}\nclass B extends A {\n  B() {\n    super();\n    System.out.println(\"B\");\n  }\n}\nclass C extends B {\n  C() {\n    System.out.println(\"C\");\n  }\n}\npublic class Main {\n  public static void main(String[] args) { new C(); }\n}",
+      "choices": ["A. C\nB\nA", "B. A\nB\nC", "C. A\nC\nB", "D. C\nA\nB"],
+      "answer": "B"
+    },
+    {
+      "id": "B135",
+      "question": "次のコードを実行すると何が出力されますか？\n\nObject obj = \"Hello\";\nSystem.out.println(obj instanceof String);\nSystem.out.println(obj instanceof Object);",
+      "choices": ["A. false\ntrue", "B. true\ntrue", "C. true\nfalse", "D. false\nfalse"],
+      "answer": "B"
+    },
+    {
+      "id": "B136",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint[] arr = new int[3];\nSystem.out.println(arr[0]);\nSystem.out.println(arr.length);",
+      "choices": ["A. 0\n3", "B. null\n3", "C. 0\n2", "D. コンパイルエラー"],
+      "answer": "A"
+    },
+    {
+      "id": "B137",
+      "question": "次のコードを実行すると何が出力されますか？\n\nString[] names = new String[3];\nSystem.out.println(names[0]);\nSystem.out.println(names.length);",
+      "choices": ["A. \"\"\n3", "B. null\n3", "C. null\n2", "D. コンパイルエラー"],
+      "answer": "B"
+    },
+    {
+      "id": "B138",
+      "question": "次のコードを実行すると何が出力されますか？\n\npublic class Main {\n  static int val;\n  public static void main(String[] args) {\n    System.out.println(val);\n  }\n}",
+      "choices": ["A. コンパイルエラー", "B. null", "C. 0", "D. 実行時エラー"],
+      "answer": "C"
+    },
+    {
+      "id": "B139",
+      "question": "次のコードを実行すると何が出力されますか？\n\nString a = null;\nString b = \"hello\";\nSystem.out.println(b.equals(a));\nSystem.out.println(a == null);",
+      "choices": ["A. true\ntrue", "B. false\ntrue", "C. NullPointerExceptionが発生", "D. false\nfalse"],
+      "answer": "B"
+    },
+    {
+      "id": "B140",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint n = 100;\nfor (int i = 2; i < n; i++) {\n  if (n % i == 0) {\n    System.out.println(\"not prime\");\n    break;\n  }\n}",
+      "choices": ["A. not prime", "B. prime", "C. 何も出力されない", "D. コンパイルエラー"],
+      "answer": "A"
+    },
+    {
+      "id": "B141",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint sum = 0;\nfor (int i = 1; i <= 5; i++) sum += i;\nSystem.out.println(sum);",
+      "choices": ["A. 10", "B. 15", "C. 14", "D. 5"],
+      "answer": "B"
+    },
+    {
+      "id": "B142",
+      "question": "次のコードを実行すると何が出力されますか？\n\nboolean b = true;\nSystem.out.println(b ? \"yes\" : \"no\");\nb = !b;\nSystem.out.println(b ? \"yes\" : \"no\");",
+      "choices": ["A. yes\nno", "B. no\nyes", "C. yes\nyes", "D. no\nno"],
+      "answer": "A"
+    },
+    {
+      "id": "B143",
+      "question": "次のコードを実行すると何が出力されますか？\n\nclass Counter {\n  static int count = 0;\n  int id;\n  Counter() { count++; id = count; }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Counter c1 = new Counter();\n    Counter c2 = new Counter();\n    System.out.println(c1.id + \" \" + c2.id);\n    System.out.println(c1.count);\n  }\n}",
+      "choices": ["A. 1 2\n2", "B. 0 0\n2", "C. 1 1\n2", "D. 0 1\n2"],
+      "answer": "A"
+    },
+    {
+      "id": "B144",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint i = 1;\nwhile (true) {\n  if (i > 4) break;\n  System.out.print(i + \" \");\n  i++;\n}",
+      "choices": ["A. 1 2 3 4 5", "B. 1 2 3 4", "C. 1 2 3", "D. 無限ループ"],
+      "answer": "B"
+    },
+    {
+      "id": "B145",
+      "question": "次のコードを実行すると何が出力されますか？\n\nSystem.out.println(\"5\" + 3 - 2);",
+      "choices": ["A. 6", "B. 51", "C. コンパイルエラー", "D. 531"],
+      "answer": "C"
+    },
+    {
+      "id": "B146",
+      "question": "次のコードを実行すると何が出力されますか？\n\nSystem.out.println(5 + 3 + \"2\");\nSystem.out.println(\"2\" + 5 + 3);",
+      "choices": ["A. 10\n253", "B. 82\n253", "C. 532\n253", "D. 10\n253"],
+      "answer": "A"
+    },
+    {
+      "id": "B147",
+      "question": "次のコードを実行すると何が出力されますか？\n\nclass Box {\n  int value = 5;\n}\npublic class Main {\n  static void modify(Box b) {\n    b.value = 99;\n  }\n  public static void main(String[] args) {\n    Box box = new Box();\n    modify(box);\n    System.out.println(box.value);\n  }\n}",
+      "choices": ["A. 5", "B. 0", "C. 99", "D. コンパイルエラー"],
+      "answer": "C"
+    },
+    {
+      "id": "B148",
+      "question": "次のコードを実行すると何が出力されますか？\n\nchar c = 'A';\nSystem.out.println(c + 1);\nSystem.out.println((char)(c + 1));",
+      "choices": ["A. A1\nB", "B. 66\nB", "C. B\nB", "D. A\nB"],
+      "answer": "B"
+    },
+    {
+      "id": "B149",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint x = -1;\nSystem.out.println(x >>> 31);\nSystem.out.println(x >> 31);",
+      "choices": ["A. 1\n-1", "B. 0\n-1", "C. 1\n1", "D. -1\n-1"],
+      "answer": "A"
+    },
+    {
+      "id": "B150",
+      "question": "次のコードを実行すると何が出力されますか？\n\nString s = \"abcdef\";\nSystem.out.println(s.indexOf(\"cd\"));\nSystem.out.println(s.charAt(2));",
+      "choices": ["A. 2\nc", "B. 3\nc", "C. 2\nb", "D. 3\nd"],
+      "answer": "A"
+    },
+    {
+      "id": "B151",
+      "question": "Javaの `String` クラスの `contains` メソッドについて正しいものはどれですか？",
+      "choices": [
+        "A. 引数の文字列がどこかに含まれる場合 true を返す",
+        "B. 引数の文字列が先頭にある場合のみ true を返す",
+        "C. 大文字小文字を区別しない",
+        "D. 戻り値は int 型である"
+      ],
+      "answer": "A"
+    },
+    {
+      "id": "B152",
+      "question": "`String` クラスのメソッドとして存在しないものはどれですか？",
+      "choices": [
+        "A. trim()",
+        "B. reverse()",
+        "C. replace()",
+        "D. isEmpty()"
+      ],
+      "answer": "B"
+    },
+    {
+      "id": "B153",
+      "question": "`Integer.MAX_VALUE` の値として正しいものはどれですか？",
+      "choices": [
+        "A. 2147483647",
+        "B. 2147483648",
+        "C. 9223372036854775807",
+        "D. 2147483646"
+      ],
+      "answer": "A"
+    },
+    {
+      "id": "B154",
+      "question": "`Integer.MIN_VALUE` の値として正しいものはどれですか？",
+      "choices": [
+        "A. -2147483647",
+        "B. -2147483648",
+        "C. 0",
+        "D. -2147483649"
+      ],
+      "answer": "B"
+    },
+    {
+      "id": "B155",
+      "question": "`Integer.toBinaryString(10)` の結果として正しいものはどれですか？",
+      "choices": [
+        "A. \"10\"",
+        "B. \"1010\"",
+        "C. \"1001\"",
+        "D. \"0001010\""
+      ],
+      "answer": "B"
+    },
+    {
+      "id": "B156",
+      "question": "`instanceof` 演算子について正しい説明はどれですか？",
+      "choices": [
+        "A. オブジェクトがあるクラスのインスタンスかどうかを boolean で返す",
+        "B. オブジェクトのクラス名を String で返す",
+        "C. プリミティブ型に対しても使用できる",
+        "D. 戻り値は int 型である"
+      ],
+      "answer": "A"
+    },
+    {
+      "id": "B157",
+      "question": "staticメソッドとインスタンスメソッドの実行順序について、次のクラスが初めてインスタンス化されたとき最初に実行されるのはどれですか？\n\nclass Sample {\n  static { /* static初期化ブロック */ }\n  { /* インスタンス初期化ブロック */ }\n  Sample() { /* コンストラクタ */ }\n}",
+      "choices": [
+        "A. コンストラクタ",
+        "B. インスタンス初期化ブロック",
+        "C. static初期化ブロック",
+        "D. 全て同時に実行される"
+      ],
+      "answer": "C"
+    },
+    {
+      "id": "B158",
+      "question": "コマンドライン引数について正しいものはどれですか？ `java MyApp Hello World` と実行した場合",
+      "choices": [
+        "A. args[0] は \"MyApp\" である",
+        "B. args[0] は \"Hello\" である",
+        "C. args.length は 3 である",
+        "D. args[1] は \"Hello\" である"
+      ],
+      "answer": "B"
+    },
+    {
+      "id": "B159",
+      "question": "`protected` アクセス修飾子について正しいものはどれですか？",
+      "choices": [
+        "A. 同一クラス内からのみアクセス可能",
+        "B. 同一パッケージとサブクラスからアクセス可能",
+        "C. どこからでもアクセス可能",
+        "D. 同一パッケージからのみアクセス可能"
+      ],
+      "answer": "B"
+    },
+    {
+      "id": "B160",
+      "question": "Javaのガベージコレクションについて正しい説明はどれですか？",
+      "choices": [
+        "A. プログラマが明示的に呼び出さないと実行されない",
+        "B. 参照がなくなったオブジェクトが回収対象になる",
+        "C. ガベージコレクションはスタック上のメモリを回収する",
+        "D. System.gc()を呼ぶと必ずガベージコレクションが実行される"
+      ],
+      "answer": "B"
+    },
+    {
+      "id": "B161",
+      "question": "Javaの値渡し（pass-by-value）について正しいものはどれですか？",
+      "choices": [
+        "A. Javaはオブジェクトを参照渡しする",
+        "B. Javaは常に値渡しで、参照型の場合は参照の値を渡す",
+        "C. プリミティブ型は参照渡し、オブジェクト型は値渡し",
+        "D. Javaは常に参照渡しである"
+      ],
+      "answer": "B"
+    },
+    {
+      "id": "B162",
+      "question": "`final` メソッドについて正しいものはどれですか？",
+      "choices": [
+        "A. サブクラスでオーバーライドできない",
+        "B. 戻り値が変更不能になる",
+        "C. 引数を変更できない",
+        "D. コンパイル時に最適化される"
+      ],
+      "answer": "A"
+    },
+    {
+      "id": "B163",
+      "question": "`abstract` クラスについて正しいものはどれですか？",
+      "choices": [
+        "A. 全てのメソッドをabstractにしなければならない",
+        "B. abstract でないメソッドを持つことができる",
+        "C. インスタンス化できる",
+        "D. finalクラスにすることができる"
+      ],
+      "answer": "B"
+    },
+    {
+      "id": "B164",
+      "question": "ポリモーフィズム（多態性）の説明として正しいものはどれですか？",
+      "choices": [
+        "A. 同じ変数名で複数の型を格納できる仕組み",
+        "B. 親クラスの参照変数で子クラスのオブジェクトを扱える仕組み",
+        "C. 一つのクラスで複数のコンストラクタを持てる仕組み",
+        "D. インターフェースを実装する仕組み"
+      ],
+      "answer": "B"
+    },
+    {
+      "id": "B165",
+      "question": "`Math.round(-2.5)` の結果として正しいものはどれですか？",
+      "choices": [
+        "A. -3",
+        "B. -2",
+        "C. 2",
+        "D. 3"
+      ],
+      "answer": "B"
+    },
+    {
+      "id": "B166",
+      "question": "`Math.floor(-2.3)` の結果として正しいものはどれですか？",
+      "choices": [
+        "A. -2.0",
+        "B. -3.0",
+        "C. 2.0",
+        "D. -2"
+      ],
+      "answer": "B"
+    },
+    {
+      "id": "B167",
+      "question": "`Math.ceil(-2.3)` の結果として正しいものはどれですか？",
+      "choices": [
+        "A. -3.0",
+        "B. 3.0",
+        "C. -2.0",
+        "D. 2.0"
+      ],
+      "answer": "C"
+    },
+    {
+      "id": "B168",
+      "question": "次のコードはコンパイルエラーになりますか？\n\nabstract class Animal {\n  abstract void speak();\n  void breathe() { System.out.println(\"breathing\"); }\n}",
+      "choices": [
+        "A. コンパイルエラー：abstractクラスに非abstractメソッドは書けない",
+        "B. コンパイルエラー：abstractメソッドに本体がない",
+        "C. コンパイルエラーにならない（正しいコード）",
+        "D. コンパイルエラー：abstractクラスはインスタンス化できない"
+      ],
+      "answer": "C"
+    },
+    {
+      "id": "B169",
+      "question": "static初期化ブロックについて正しいものはどれですか？",
+      "choices": [
+        "A. クラスが初めてロードされたとき1度だけ実行される",
+        "B. インスタンスが生成されるたびに実行される",
+        "C. コンストラクタの後に実行される",
+        "D. 複数書くことはできない"
+      ],
+      "answer": "A"
+    },
+    {
+      "id": "B170",
+      "question": "アクセス修飾子を何も付けない（デフォルトアクセス）場合、アクセスできるのはどれですか？",
+      "choices": [
+        "A. 同一クラスのみ",
+        "B. 同一パッケージ内のクラス",
+        "C. 同一パッケージとサブクラス",
+        "D. 全てのクラス"
+      ],
+      "answer": "B"
+    },
+    {
+      "id": "B171",
+      "question": "`String.valueOf(123)` の結果として正しいものはどれですか？",
+      "choices": [
+        "A. 数値の123",
+        "B. 文字列の\"123\"",
+        "C. コンパイルエラー",
+        "D. null"
+      ],
+      "answer": "B"
+    },
+    {
+      "id": "B172",
+      "question": "次のうち、コンパイルエラーになるものはどれですか？",
+      "choices": [
+        "A. int x = 100_000;",
+        "B. long l = 100L;",
+        "C. int i = 2_147_483_648;",
+        "D. double d = 1.5e3;"
+      ],
+      "answer": "C"
+    },
+    {
+      "id": "B173",
+      "question": "Javaで `int` 型のデフォルト値（フィールドの初期値）は何ですか？",
+      "choices": [
+        "A. null",
+        "B. -1",
+        "C. 0",
+        "D. 初期化されないためエラー"
+      ],
+      "answer": "C"
+    },
+    {
+      "id": "B174",
+      "question": "Javaで `boolean` 型のフィールドのデフォルト値は何ですか？",
+      "choices": [
+        "A. true",
+        "B. false",
+        "C. null",
+        "D. 0"
+      ],
+      "answer": "B"
+    },
+    {
+      "id": "B175",
+      "question": "インターフェースのメソッドについて、Java 8以前の説明として正しいものはどれですか？",
+      "choices": [
+        "A. 全てのメソッドは暗黙的にpublic abstractである",
+        "B. privateメソッドを持てる",
+        "C. コンストラクタを定義できる",
+        "D. staticメソッドのみ定義できる"
+      ],
+      "answer": "A"
+    },
+    {
+      "id": "B176",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint x = 3;\nswitch(x) {\n  case 1: System.out.println(\"A\");\n  case 2: System.out.println(\"B\"); break;\n  case 3: System.out.println(\"C\");\n  case 4: System.out.println(\"D\"); break;\n  default: System.out.println(\"E\");\n}",
+      "choices": ["A. C", "B. C\nD", "C. C\nD\nE", "D. D"],
+      "answer": "B"
+    },
+    {
+      "id": "B177",
+      "question": "次のコードを実行すると何が出力されますか？\n\nString s = \"Hello\";\nSystem.out.println(s.substring(1, 3));",
+      "choices": ["A. Hel", "B. ell", "C. el", "D. He"],
+      "answer": "C"
+    },
+    {
+      "id": "B178",
+      "question": "次のコードを実行すると何が出力されますか？\n\nint a = 0b1010;\nint b = 0x0F;\nSystem.out.println(a);\nSystem.out.println(b);",
+      "choices": ["A. 1010\n0F", "B. 10\n15", "C. 2\n9", "D. 8\n15"],
+      "answer": "B"
+    },
+    {
+      "id": "B179",
+      "question": "次のコードを実行すると何が出力されますか？\n\nclass Foo {\n  int x;\n  Foo(int x) { this.x = x; }\n  Foo() { this(42); }\n}\npublic class Main {\n  public static void main(String[] args) {\n    Foo f = new Foo();\n    System.out.println(f.x);\n  }\n}",
+      "choices": ["A. 0", "B. 42", "C. コンパイルエラー", "D. 実行時エラー"],
+      "answer": "B"
+    },
+    {
+      "id": "B180",
+      "question": "次のコードを実行すると何が出力されますか？\n\npublic class Main {\n  public static void main(String[] args) {\n    int[] arr = {1, 2, 3, 4, 5};\n    System.out.println(arr.length);\n    System.out.println(arr[arr.length - 1]);\n  }\n}",
+      "choices": ["A. 5\n4", "B. 4\n5", "C. 5\n5", "D. 5\nArrayIndexOutOfBoundsException"],
+      "answer": "C"
+    },
+    {
+      "id": "B181",
+      "question": "次のコードを実行すると何が出力されますか？\n\npublic class Main {\n  public static void main(String[] args) {\n    for (int i = 10; i > 0; i -= 3) {\n      System.out.print(i + \" \");\n    }\n  }\n}",
+      "choices": ["A. 10 7 4 1", "B. 10 7 4", "C. 10 7 4 1 -2", "D. 10 7 3"],
+      "answer": "A"
+    },
+    {
+      "id": "B182",
+      "question": "次のコードを実行すると何が出力されますか？\n\npublic class Main {\n  static int counter = 0;\n  public static void increment() { counter++; }\n  public static void main(String[] args) {\n    Main m1 = new Main();\n    Main m2 = new Main();\n    m1.increment();\n    m2.increment();\n    increment();\n    System.out.println(counter);\n  }\n}",
+      "choices": ["A. 1", "B. 2", "C. 3", "D. 0"],
+      "answer": "C"
+    }
+  ]
+}

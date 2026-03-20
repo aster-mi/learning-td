@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { UNIT_DEFS, type UnitType } from "../domain/Unit";
+import { getCatalogEntry } from "../data/unitCatalog";
 
 interface Props {
   isWin: boolean;
@@ -11,15 +11,11 @@ interface Props {
   wrongCount: number;
   elapsedSec: number;
   baseHpRatio: number;      // 0-1
-  newUnlock: UnitType | null;
+  newUnlock: string | null;
   onRetry: () => void;
   onBack: () => void;
   isMobile: boolean;
 }
-
-const UNIT_EMOJI: Record<UnitType, string> = {
-  basic: "🐱", fast: "💨", tank: "🛡️", shooter: "🏹", bomber: "🔥",
-};
 
 export function ResultScreen({
   isWin, stars, coins, accuracy, maxCombo,
@@ -140,9 +136,9 @@ export function ResultScreen({
             animation: "unlockPop 0.6s ease",
           }}>
             <div style={{ fontSize: 14, color: "#c084fc", marginBottom: 6 }}>🔓 新ユニット解放！</div>
-            <div style={{ fontSize: 32 }}>{UNIT_EMOJI[newUnlock]}</div>
+            <div style={{ fontSize: 32 }}>{getCatalogEntry(newUnlock)?.emoji ?? "❓"}</div>
             <div style={{ fontSize: 18, fontWeight: "bold", color: "#fff", marginTop: 4 }}>
-              {UNIT_DEFS[newUnlock].label}
+              {getCatalogEntry(newUnlock)?.label ?? newUnlock}
             </div>
           </div>
         )}

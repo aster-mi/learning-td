@@ -1,26 +1,16 @@
-import { UNIT_DEFS, type UnitType } from "../domain/Unit";
+import { getUnitDef } from "../domain/Unit";
+import { getCatalogEntry, RARITY_INFO } from "../data/unitCatalog";
 import { useWindowSize } from "../hooks/useWindowSize";
 
 interface Props {
   energy: number;
-  onDeploy: (type: UnitType) => void;
+  party: string[];           // 出陣デッキのユニットID配列
+  onDeploy: (type: string) => void;
   disabled?: boolean;
-  unlockedUnits?: string[];
 }
 
-const UNIT_TYPES: UnitType[] = ["basic", "fast", "tank", "shooter", "bomber"];
-
-const UNIT_EMOJI: Record<UnitType, string> = {
-  basic:   "🐱",
-  fast:    "💨",
-  tank:    "🛡️",
-  shooter: "🏹",
-  bomber:  "🔥",
-};
-
-export function CommandPanel({ energy, onDeploy, disabled, unlockedUnits }: Props) {
+export function CommandPanel({ energy, party, onDeploy, disabled }: Props) {
   const { isMobile } = useWindowSize();
-  const unlocked = unlockedUnits ? new Set(unlockedUnits) : null;
 
   return (
     <div style={{
@@ -48,17 +38,17 @@ export function CommandPanel({ energy, onDeploy, disabled, unlockedUnits }: Prop
 
       <div style={{ color: "#334155", fontSize: 14, alignSelf: "center", flexShrink: 0 }}>▶</div>
 
-      {/* ユニットボタン */}
-      {UNIT_TYPES.map(type => {
-        const def = UNIT_DEFS[type];
-        const isUnlocked = !unlocked || unlocked.has(type);
-        const canAfford = isUnlocked && energy >= def.cost && !disabled;
-        const emoji = UNIT_EMOJI[type];
+      {/* パーティユニットボタン */}
+      {party.map(unitId => {
+        const def = getUnitDef(unitId);
+        const catalog = getCatalogEntry(unitId);
+        const rarity = catalog ? RARITY_INFO[catalog.rarity] : null;
+        const canAfford = energy >= def.cost && !disabled;
 
         return (
           <button
-            key={type}
-            onClick={() => canAfford && onDeploy(type)}
+            key={unitId}
+            onClick={() => canAfford && onDeploy(unitId)}
             disabled={!canAfford}
             title={`HP:${def.hp}  ATK:${def.atk}  射程:${def.range}  SPD:${def.speed}  COST:${def.cost}`}
             style={{
@@ -83,34 +73,39 @@ export function CommandPanel({ energy, onDeploy, disabled, unlockedUnits }: Prop
               if (canAfford) (e.currentTarget as HTMLElement).style.background = "#1a3050";
             }}
           >
-            <div style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.2 }}>{isUnlocked ? emoji : "🔒"}</div>
-            <div style={{ fontSize: isMobile ? 10 : 11, marginTop: 1 }}>{isUnlocked ? def.label : "???"}</div>
+            <div style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.2 }}>{def.emoji}</div>
+            <div style={{
+              fontSize: isMobile ? 9 : 11, marginTop: 1,
+              overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+              maxWidth: isMobile ? 48 : 64,
+            }}>{def.label}</div>
             <div style={{ fontSize: 11, marginTop: 1, color: canAfford ? "#fbbf24" : "#64748b", fontWeight: "bold" }}>
-              {isUnlocked ? `⚡${def.cost}` : "🔒"}
+              ⚡{def.cost}
             </div>
-            {!isMobile && (
-              <div style={{ fontSize: 9, color: canAfford ? "#94a3b8" : "#334155" }}>
-                HP {def.hp}
+            {!isMobile && rarity && (
+              <div style={{ fontSize: 9, color: rarity.color }}>
+                {rarity.stars}
               </div>
             )}
           </button>
         );
       })}
 
-      {/* 説明（PCのみ） */}
-      {!isMobile && (
-        <div style={{
-          marginLeft: "auto", color: "#475569", fontSize: 10,
-          lineHeight: 1.9, alignSelf: "center",
-          borderLeft: "1px solid #1e293b", paddingLeft: 10, flexShrink: 0,
+      {/* 空スロット表示 */}
+      {Array.from({ length: Math.max(0, 5 - party.length) }).map((_, i) => (
+        <div key={`empty-${i}`} style={{
+          padding: isMobile ? "4px 6px" : "7px 12px",
+          background: "#0a1828",
+          border: "2px dashed #1e293b",
+          borderRadius: 8,
+          minWidth: isMobile ? 54 : 72,
+          flexShrink: 0,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          color: "#334155", fontSize: 20,
         }}>
-          <div>🐱 ネコ：バランス型</div>
-          <div>💨 速ネコ：高速・低HP</div>
-          <div>🛡️ タンク：高HP・低速</div>
-          <div>🏹 遠距離：長射程</div>
-          <div>🔥 火炎：高火力・低速</div>
+          +
         </div>
-      )}
+      ))}
     </div>
   );
 }

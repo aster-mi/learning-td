@@ -382,6 +382,78 @@ function drawCat(ctx: CanvasRenderingContext2D, u: Unit, t: number) {
   drawHpBar(ctx, cx, cy - r - bob - 14, r * 2.4, u.hp, u.maxHp);
 }
 
+// ── generic unit (emoji-based) ─────────────────────────────────────────────
+function drawGenericUnit(ctx: CanvasRenderingContext2D, u: Unit, t: number) {
+  const r  = u.def.radius;
+  const freq = u.def.speed / 50;
+  const ph  = t * freq * 5.5 + u.id * 1.73;
+  const bob = Math.abs(Math.sin(ph * 2)) * 1.8;
+  const col = u.def.color;
+
+  // Attack lunge animation (same as drawCat)
+  const atkElapsed = t * 1000 - u.lastAtkTime;
+  const isAttacking = atkElapsed >= 0 && atkElapsed < 250;
+  const atkProgress = isAttacking ? atkElapsed / 250 : 0;
+  const lungeX = isAttacking ? Math.sin(atkProgress * Math.PI) * r * 0.6 : 0;
+  const lungeY = isAttacking ? -Math.sin(atkProgress * Math.PI) * r * 0.3 : 0;
+
+  const cx = u.x + lungeX;
+  const cy = GROUND_Y - r * 0.92 - bob + lungeY;
+
+  // Shadow
+  ctx.fillStyle = "rgba(0,0,0,0.32)";
+  ctx.beginPath();
+  ctx.ellipse(cx, GROUND_Y + 2, r * 1.05, 4, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Legs (walking animation, same pattern as drawCat)
+  ctx.save();
+  ctx.strokeStyle = darker(col, 35);
+  ctx.lineWidth = r * 0.27;
+  ctx.lineCap = "round";
+  const ll = r * 0.88;
+  const a = Math.sin(ph);
+  const b2 = Math.sin(ph + Math.PI);
+  const c = Math.sin(ph + Math.PI * 0.5);
+  const d = Math.sin(ph + Math.PI * 1.5);
+  ctx.beginPath(); ctx.moveTo(cx - r * 0.28, cy + r * 0.54); ctx.lineTo(cx - r * 0.28 + a * 0.18 * ll, cy + ll + a * 0.52 * ll); ctx.stroke();
+  ctx.globalAlpha = 0.62;
+  ctx.beginPath(); ctx.moveTo(cx - r * 0.08, cy + r * 0.54); ctx.lineTo(cx - r * 0.08 + b2 * 0.18 * ll, cy + ll + b2 * 0.52 * ll); ctx.stroke();
+  ctx.globalAlpha = 1;
+  ctx.beginPath(); ctx.moveTo(cx + r * 0.22, cy + r * 0.5); ctx.lineTo(cx + r * 0.22 + c * 0.18 * ll, cy + ll + c * 0.52 * ll); ctx.stroke();
+  ctx.globalAlpha = 0.62;
+  ctx.beginPath(); ctx.moveTo(cx + r * 0.42, cy + r * 0.5); ctx.lineTo(cx + r * 0.42 + d * 0.18 * ll, cy + ll + d * 0.52 * ll); ctx.stroke();
+  ctx.globalAlpha = 1;
+  ctx.restore();
+
+  // Body (colored circle with gradient shading)
+  ctx.save();
+  ctx.fillStyle = col;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fill();
+  const bg = ctx.createRadialGradient(cx - r * 0.25, cy - r * 0.2, r * 0.05, cx, cy, r);
+  bg.addColorStop(0, "rgba(255,255,255,0.3)");
+  bg.addColorStop(0.6, "rgba(255,255,255,0)");
+  bg.addColorStop(1, "rgba(0,0,0,0.22)");
+  ctx.fillStyle = bg;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  // Emoji on top
+  ctx.save();
+  ctx.font = `${r * 1.4}px serif`;
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(u.def.emoji, cx, cy);
+  ctx.restore();
+
+  // HP bar
+  drawHpBar(ctx, cx, cy - r - bob - 14, r * 2.4, u.hp, u.maxHp);
+}
+
 // ── enemy ──────────────────────────────────────────────────────────────────
 function drawEnemy(ctx: CanvasRenderingContext2D, e: Enemy, t: number) {
   const r = e.def.radius;
@@ -876,7 +948,14 @@ export function BattleCanvas({ state, playerBaseX, enemyBaseX, canvasWidth, isPa
     drawBackground(ctx, canvasWidth, t, starsRef.current);
     drawPlayerCastle(ctx, playerBaseX, state.playerBaseHp, state.playerBaseMaxHp, t);
     drawEnemyCastle(ctx, enemyBaseX,   state.enemyBaseHp,  state.enemyBaseMaxHp,  t);
-    for (const u of state.units)   drawCat(ctx, u, t);
+    const CAT_TYPES = new Set(["basic", "fast", "tank", "shooter", "bomber"]);
+    for (const u of state.units) {
+      if (CAT_TYPES.has(u.def.type)) {
+        drawCat(ctx, u, t);
+      } else {
+        drawGenericUnit(ctx, u, t);
+      }
+    }
     for (const e of state.enemies) drawEnemy(ctx, e, t);
     for (const ef of hitEffectsRef.current) drawHitEffect(ctx, ef, now);
     for (const p  of particlesRef.current)  drawParticle(ctx, p,  now);

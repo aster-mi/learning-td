@@ -2,6 +2,7 @@ import { useCallback, useRef, useState } from "react";
 import { CategorySelect } from "./scenes/CategorySelect";
 import { StageSelect } from "./scenes/StageSelect";
 import { GameScene } from "./scenes/GameScene";
+import { PartySelect } from "./scenes/PartySelect";
 import { stages } from "./data/stages";
 import { LEVEL_DEFS, SUB_CATEGORIES } from "./data/questions";
 import { getWrongCount } from "./data/wrongStore";
@@ -47,7 +48,7 @@ function saveLevel(level: number) {
 }
 
 export default function App() {
-  const [scene, setScene]                 = useState<"category" | "select" | "game" | "achievements">("category");
+  const [scene, setScene]                 = useState<"category" | "select" | "party" | "game" | "achievements">("category");
   const [activeStageId, setActiveStageId] = useState<number>(1);
   const [clearedStages, setClearedStages] = useState<Set<number>>(loadCleared);
   const [subCategories, setSubCategories] = useState<string[]>(loadSubCategories);
@@ -97,7 +98,8 @@ export default function App() {
     gameKeyRef.current += 1;
     setActiveStageId(stageId);
     setIsDailyMode(false);
-    setScene("game");
+    // パーティ編成画面に遷移
+    setScene("party");
   };
 
   const handleDailyChallenge = () => {
@@ -105,6 +107,14 @@ export default function App() {
     gameKeyRef.current += 1;
     setActiveStageId(daily.stageId);
     setIsDailyMode(true);
+    setScene("party");
+  };
+
+  const handlePartyConfirm = (party: string[]) => {
+    const save = loadSave();
+    save.party = party;
+    saveSave(save);
+    setSaveData(save);
     setScene("game");
   };
 
@@ -129,10 +139,15 @@ export default function App() {
   const handleGachaClose = (reward: GachaReward) => {
     setShowGacha(false);
     const save = loadSave();
-    if (reward.type === "coins") {
-      save.coins += reward.value;
-    } else {
-      save.gachaItems.push({ type: reward.type, value: reward.value });
+    if (reward.type === "coins" && reward.coins) {
+      save.coins += reward.coins;
+    } else if (reward.type === "unit" && reward.unitEntry) {
+      if (!save.unlockedUnits.includes(reward.unitEntry.id)) {
+        save.unlockedUnits.push(reward.unitEntry.id);
+      } else {
+        // 被り: コイン補填
+        save.coins += reward.coins ?? 50;
+      }
     }
     saveSave(save);
     setSaveData(save);
@@ -178,6 +193,14 @@ export default function App() {
           onAchievements={() => setScene("achievements")}
         />
       )}
+      {scene === "party" && (
+        <PartySelect
+          ownedUnitIds={saveData.unlockedUnits}
+          currentParty={saveData.party}
+          onConfirm={handlePartyConfirm}
+          onBack={() => setScene("select")}
+        />
+      )}
       {scene === "achievements" && (
         <AchievementList
           unlockedIds={saveData.achievements}
@@ -194,7 +217,7 @@ export default function App() {
           onClear={handleClear}
           onRetry={handleRetry}
           reviewMode={reviewMode}
-          unlockedUnits={saveData.unlockedUnits}
+          party={saveData.party}
           isDailyChallenge={isDailyMode}
         />
       )}
@@ -203,6 +226,7 @@ export default function App() {
       {showGacha && (
         <GachaModal
           stars={gachaStars}
+          ownedUnitIds={saveData.unlockedUnits}
           onClose={handleGachaClose}
           isMobile={window.innerWidth < 768}
         />
