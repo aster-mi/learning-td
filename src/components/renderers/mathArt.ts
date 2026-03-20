@@ -27,6 +27,7 @@ export function drawAbacus(
   ctx: CanvasRenderingContext2D, cx: number, cy: number,
   r: number, col: string, t: number, ph: number,
 ): void {
+  void col;
   const w = r * 1.6;
   const h = r * 1.8;
   const fx = cx - w / 2;
@@ -632,7 +633,7 @@ export function drawPalette(
   ctx: CanvasRenderingContext2D, cx: number, cy: number,
   r: number, col: string, t: number, ph: number,
 ): void {
-  void ph;
+  void ph; void col;
   // --- magic paint particles ---
   for (let p = 0; p < 10; p++) {
     const pAngle = (p / 10) * Math.PI * 2 + t * 1.5;

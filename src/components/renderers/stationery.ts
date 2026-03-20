@@ -382,6 +382,7 @@ export function drawScissors(
   ctx: CanvasRenderingContext2D, cx: number, cy: number,
   r: number, col: string, t: number, ph: number,
 ): void {
+  void col; void t;
   ctx.save();
   ctx.translate(cx, cy);
 
