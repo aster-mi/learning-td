@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from "react";
 import { questions, SUB_CATEGORIES, LEVEL_DEFS, type Question } from "../data/questions";
 import { useWindowSize } from "../hooks/useWindowSize";
 import { recordWrong, removeWrong, getWrongIds } from "../data/wrongStore";
+import { recordCorrect, getCorrectMap } from "../data/correctStore";
 
 interface Props {
   energy: number;
@@ -16,9 +17,51 @@ interface Props {
   reviewMode?: boolean;
 }
 
-function pickRandom(pool: Question[], excludeId?: string): Question {
+/**
+ * 重み付きランダム選択
+ * 正解履歴による重み:
+ *   未正解: 1.0 / 正解1回: 0.3 / 正解2回: 0.15 / 正解3回以上: 0.08
+ * レベル近接ボーナス（selectedLevel 指定時）:
+ *   同レベル: ×1.0 / -1: ×0.6 / -2: ×0.3
+ * excludeId は直前に出した問題（連続回避）
+ */
+function pickWeighted(
+  pool: Question[],
+  correctCounts: Record<string, number>,
+  excludeId?: string,
+  selectedLevel?: number,
+): Question {
   const filtered = pool.filter(q => q.id !== excludeId);
-  const q = filtered[Math.floor(Math.random() * filtered.length)];
+  if (filtered.length === 0) {
+    const q = pool[Math.floor(Math.random() * pool.length)];
+    const choices = [...q.choices].sort(() => Math.random() - 0.5);
+    return { ...q, choices };
+  }
+
+  const weights = filtered.map(q => {
+    // 正解履歴による重み
+    const c = correctCounts[q.id] ?? 0;
+    let w = c === 0 ? 1.0 : c === 1 ? 0.3 : c === 2 ? 0.15 : 0.08;
+    // レベル近接ボーナス（選択レベルに近いほど出やすい）
+    if (selectedLevel != null) {
+      const diff = Math.abs(q.level - selectedLevel);
+      if (diff === 0) w *= 1.0;
+      else if (diff === 1) w *= 0.6;
+      else if (diff === 2) w *= 0.3;
+      else w *= 0.1;
+    }
+    return w;
+  });
+
+  const totalWeight = weights.reduce((a, b) => a + b, 0);
+  let r = Math.random() * totalWeight;
+  let idx = 0;
+  for (let i = 0; i < weights.length; i++) {
+    r -= weights[i];
+    if (r <= 0) { idx = i; break; }
+  }
+
+  const q = filtered[idx];
   const choices = [...q.choices].sort(() => Math.random() - 0.5);
   return { ...q, choices };
 }
@@ -33,13 +76,26 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
     if (reviewMode) {
       return wrongIds!.has(q.id);
     }
-    return subCategories.includes(q.sub) && q.level <= selectedLevel;
+    // 選択レベル ±2 の範囲でフィルタ（近い問題が出やすくなるよう pickWeighted でも重み付け）
+    return subCategories.includes(q.sub) && q.level >= Math.max(1, selectedLevel - 2) && q.level <= selectedLevel;
   });
   const pool = filteredPool.length > 0
     ? filteredPool
     : questions.filter(q => subCategories.includes(q.sub));
 
-  const [current, setCurrent]       = useState<Question>(() => pickRandom(pool));
+  // 正解履歴マップ（{ questionId: count }）をセッション開始時にロード
+  const correctMapRef = useRef<Record<string, number>>(() => {
+    const map = getCorrectMap();
+    const counts: Record<string, number> = {};
+    for (const [id, entry] of Object.entries(map)) counts[id] = entry.count;
+    return counts;
+  });
+  // 初回のみ計算
+  if (typeof correctMapRef.current === "function") {
+    correctMapRef.current = (correctMapRef.current as unknown as () => Record<string, number>)();
+  }
+
+  const [current, setCurrent]       = useState<Question>(() => pickWeighted(pool, correctMapRef.current as Record<string, number>, undefined, selectedLevel));
   const [feedback, setFeedback]     = useState<"correct" | "wrong" | null>(null);
   const [selected, setSelected]     = useState<string | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
@@ -58,6 +114,8 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
         setCorrectCount(n => n + 1);
         onCorrect();
         answeredCorrectRef.current.add(current.id);
+        // 正解履歴をlocalStorageに記録（出題優先度を下げるため）
+        recordCorrect(current.id);
         // 復習モードで正解 → 復習リストから除外
         if (reviewMode) removeWrong(current.id);
       } else {
@@ -85,11 +143,16 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
         const remaining = latestPool.filter(
           q => q.id !== current.id && !answeredCorrectRef.current.has(q.id)
         );
+        const counts = correctMapRef.current as Record<string, number>;
+        // 正解を記録した場合、メモリ上のカウントも更新
+        if (choice === current.answer) {
+          counts[current.id] = (counts[current.id] ?? 0) + 1;
+        }
         if (remaining.length === 0) {
           answeredCorrectRef.current = new Set();
-          setCurrent(pickRandom(latestPool, current.id));
+          setCurrent(pickWeighted(latestPool, counts, current.id, reviewMode ? undefined : selectedLevel));
         } else {
-          setCurrent(pickRandom(remaining));
+          setCurrent(pickWeighted(remaining, counts, undefined, reviewMode ? undefined : selectedLevel));
         }
       }, 900);
     },
