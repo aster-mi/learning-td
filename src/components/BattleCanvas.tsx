@@ -469,6 +469,9 @@ function drawEnemy(ctx: CanvasRenderingContext2D, e: Enemy, t: number) {
   ctx.restore();
 
   if      (e.def.type === "boss")   drawBossDog(ctx, cx, cy, r, col, t);
+  else if (e.def.type === "warlock") drawWarlockDog(ctx, cx, cy, r, col, t);
+  else if (e.def.type === "brute")  drawBruteDog(ctx, cx, cy, r, col, t);
+  else if (e.def.type === "assassin") drawAssassinDog(ctx, cx, cy, r, col, ph);
   else if (e.def.type === "speedy") drawSpeedyDog(ctx, cx, cy, r, col, ph);
   else if (e.def.type === "tank")   drawTankDog(ctx, cx, cy, r, col, t);
   else if (e.def.type === "fast")   drawFastDog(ctx, cx, cy, r, col, ph);
@@ -600,6 +603,103 @@ function drawSpeedyDog(ctx: CanvasRenderingContext2D, cx:number, cy:number, r:nu
   ctx.beginPath(); ctx.arc(hx - hr*0.18, hy - hr*0.1, hr*0.2, 0, Math.PI*2); ctx.fill();
   ctx.fillStyle = "#000";
   ctx.beginPath(); ctx.arc(hx - hr*0.18, hy - hr*0.1, hr*0.1, 0, Math.PI*2); ctx.fill();
+}
+
+function drawAssassinDog(ctx: CanvasRenderingContext2D, cx:number, cy:number, r:number, col:string, ph:number) {
+  const lc = lighter(col, 70);
+  // Lean body
+  ctx.fillStyle = col;
+  ctx.beginPath(); ctx.ellipse(cx, cy, r*1.24, r*0.62, -0.2, 0, Math.PI*2); ctx.fill();
+  // Blade-like tail
+  ctx.fillStyle = lc;
+  ctx.beginPath();
+  ctx.moveTo(cx + r*0.85, cy - r*0.1);
+  ctx.lineTo(cx + r*1.9, cy - r*0.35 + Math.sin(ph * 4) * 2);
+  ctx.lineTo(cx + r*1.2, cy + r*0.15);
+  ctx.closePath();
+  ctx.fill();
+  // Head and mask
+  const hx = cx - r*0.58, hy = cy - r*0.5, hr = r*0.65;
+  ctx.fillStyle = col;
+  ctx.beginPath(); ctx.ellipse(hx, hy, hr*1.05, hr*0.8, -0.2, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = darker(col, 40);
+  ctx.beginPath(); ctx.roundRect(hx - hr*0.75, hy - hr*0.12, hr*1.3, hr*0.35, 2); ctx.fill();
+  // Red eye slit
+  ctx.fillStyle = "#fef2f2";
+  ctx.beginPath(); ctx.arc(hx - hr*0.22, hy - hr*0.02, hr*0.15, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = "#b91c1c";
+  ctx.beginPath(); ctx.arc(hx - hr*0.22, hy - hr*0.02, hr*0.08, 0, Math.PI*2); ctx.fill();
+}
+
+function drawBruteDog(ctx: CanvasRenderingContext2D, cx:number, cy:number, r:number, col:string, t:number) {
+  const dc = darker(col, 35);
+  // Huge body
+  ctx.fillStyle = dc;
+  ctx.beginPath(); ctx.roundRect(cx - r*1.05, cy - r*0.95, r*2.1, r*1.95, 8); ctx.fill();
+  // Thick armor bands
+  ctx.fillStyle = col;
+  ctx.fillRect(cx - r*0.92, cy - r*0.65, r*1.84, r*0.3);
+  ctx.fillRect(cx - r*0.92, cy - r*0.15, r*1.84, r*0.3);
+  ctx.fillRect(cx - r*0.92, cy + r*0.35, r*1.84, r*0.3);
+  // Spikes
+  ctx.fillStyle = lighter(col, 45);
+  for (let i = 0; i < 4; i++) {
+    const sx = cx - r*0.7 + i * r * 0.5;
+    ctx.beginPath();
+    ctx.moveTo(sx, cy - r*0.96);
+    ctx.lineTo(sx + r*0.1, cy - r*1.42 - Math.sin(t * 2 + i) * 1.5);
+    ctx.lineTo(sx + r*0.2, cy - r*0.96);
+    ctx.closePath();
+    ctx.fill();
+  }
+  // Head
+  const hx = cx - r*0.44, hy = cy - r*1.18, hr = r*0.86;
+  ctx.fillStyle = dc;
+  ctx.beginPath(); ctx.arc(hx, hy, hr, 0, Math.PI*2); ctx.fill();
+  // Jaw
+  ctx.fillStyle = col;
+  ctx.beginPath(); ctx.roundRect(hx - hr*0.75, hy + hr*0.08, hr*1.2, hr*0.45, 4); ctx.fill();
+  // Eye
+  ctx.fillStyle = "#fee2e2";
+  ctx.beginPath(); ctx.arc(hx - hr*0.2, hy - hr*0.06, hr*0.14, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = "#991b1b";
+  ctx.beginPath(); ctx.arc(hx - hr*0.2, hy - hr*0.06, hr*0.08, 0, Math.PI*2); ctx.fill();
+}
+
+function drawWarlockDog(ctx: CanvasRenderingContext2D, cx:number, cy:number, r:number, col:string, t:number) {
+  const pulse = 0.55 + 0.45 * Math.sin(t * 3.1);
+  // Magic aura
+  ctx.save();
+  ctx.globalAlpha = 0.2 + pulse * 0.18;
+  ctx.fillStyle = lighter(col, 30);
+  ctx.beginPath(); ctx.ellipse(cx, cy, r*1.5, r*1.25, 0, 0, Math.PI*2); ctx.fill();
+  ctx.restore();
+  // Robe-like body
+  ctx.fillStyle = darker(col, 20);
+  ctx.beginPath();
+  ctx.moveTo(cx - r*0.95, cy + r*0.75);
+  ctx.quadraticCurveTo(cx - r*1.05, cy - r*0.5, cx - r*0.5, cy - r*0.9);
+  ctx.lineTo(cx + r*0.7, cy - r*0.9);
+  ctx.quadraticCurveTo(cx + r*1.1, cy - r*0.45, cx + r*0.9, cy + r*0.75);
+  ctx.closePath();
+  ctx.fill();
+  // Rune belt
+  ctx.fillStyle = lighter(col, 50);
+  ctx.fillRect(cx - r*0.6, cy - r*0.1, r*1.2, r*0.2);
+  // Head
+  const hx = cx - r*0.28, hy = cy - r*1.08, hr = r*0.74;
+  ctx.fillStyle = col;
+  ctx.beginPath(); ctx.arc(hx, hy, hr, 0, Math.PI*2); ctx.fill();
+  // Glowing eye and staff crystal
+  ctx.fillStyle = "#e0e7ff";
+  ctx.beginPath(); ctx.arc(hx - hr*0.16, hy - hr*0.05, hr*0.14, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = "#4338ca";
+  ctx.beginPath(); ctx.arc(hx - hr*0.16, hy - hr*0.05, hr*0.08, 0, Math.PI*2); ctx.fill();
+  // Staff
+  ctx.strokeStyle = "#312e81"; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.moveTo(cx + r*0.7, cy + r*0.6); ctx.lineTo(cx + r*1.05, cy - r*0.85); ctx.stroke();
+  ctx.fillStyle = `rgba(165,180,252,${0.45 + pulse * 0.4})`;
+  ctx.beginPath(); ctx.arc(cx + r*1.1, cy - r*0.95, r*0.19, 0, Math.PI*2); ctx.fill();
 }
 
 // ── boss dog (huge, purple, armored with aura) ────────────────────────────

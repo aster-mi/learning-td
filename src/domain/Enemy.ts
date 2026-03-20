@@ -29,6 +29,18 @@ export const ENEMY_DEFS: Record<EnemyType, EnemyDef> = {
     type: "speedy", label: "すばやい犬",
     hp: 28,  atk: 5,  atkInterval: 500,  speed: 100, range: 26, color: "#fb923c", radius: 9,
   },
+  assassin: {
+    type: "assassin", label: "暗殺犬",
+    hp: 36,  atk: 14, atkInterval: 700,  speed: 125, range: 30, color: "#f97316", radius: 10,
+  },
+  brute: {
+    type: "brute", label: "巨獣犬",
+    hp: 360, atk: 28, atkInterval: 2400, speed: 10,  range: 52, color: "#7f1d1d", radius: 24,
+  },
+  warlock: {
+    type: "warlock", label: "呪術犬",
+    hp: 140, atk: 18, atkInterval: 1300, speed: 30,  range: 85, color: "#4f46e5", radius: 17,
+  },
   boss: {
     type: "boss", label: "ボス犬",
     hp: 450, atk: 35, atkInterval: 2800, speed: 6,   range: 65, color: "#7c3aed", radius: 30,
