@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import type { GameState } from "../domain/GameEngine";
 import type { Unit } from "../domain/Unit";
 import type { Enemy } from "../domain/Enemy";
+import { UNIT_RENDERERS } from "./renderers";
 
 interface Props {
   state: GameState;
@@ -382,7 +383,7 @@ function drawCat(ctx: CanvasRenderingContext2D, u: Unit, t: number) {
   drawHpBar(ctx, cx, cy - r - bob - 14, r * 2.4, u.hp, u.maxHp);
 }
 
-// ── generic unit (emoji-based) ─────────────────────────────────────────────
+// ── generic unit (custom vector renderers) ────────────────────────────────
 function drawGenericUnit(ctx: CanvasRenderingContext2D, u: Unit, t: number) {
   const r  = u.def.radius;
   const freq = u.def.speed / 50;
@@ -406,49 +407,25 @@ function drawGenericUnit(ctx: CanvasRenderingContext2D, u: Unit, t: number) {
   ctx.ellipse(cx, GROUND_Y + 2, r * 1.05, 4, 0, 0, Math.PI * 2);
   ctx.fill();
 
-  // Legs (walking animation, same pattern as drawCat)
-  ctx.save();
-  ctx.strokeStyle = darker(col, 35);
-  ctx.lineWidth = r * 0.27;
-  ctx.lineCap = "round";
-  const ll = r * 0.88;
-  const a = Math.sin(ph);
-  const b2 = Math.sin(ph + Math.PI);
-  const c = Math.sin(ph + Math.PI * 0.5);
-  const d = Math.sin(ph + Math.PI * 1.5);
-  ctx.beginPath(); ctx.moveTo(cx - r * 0.28, cy + r * 0.54); ctx.lineTo(cx - r * 0.28 + a * 0.18 * ll, cy + ll + a * 0.52 * ll); ctx.stroke();
-  ctx.globalAlpha = 0.62;
-  ctx.beginPath(); ctx.moveTo(cx - r * 0.08, cy + r * 0.54); ctx.lineTo(cx - r * 0.08 + b2 * 0.18 * ll, cy + ll + b2 * 0.52 * ll); ctx.stroke();
-  ctx.globalAlpha = 1;
-  ctx.beginPath(); ctx.moveTo(cx + r * 0.22, cy + r * 0.5); ctx.lineTo(cx + r * 0.22 + c * 0.18 * ll, cy + ll + c * 0.52 * ll); ctx.stroke();
-  ctx.globalAlpha = 0.62;
-  ctx.beginPath(); ctx.moveTo(cx + r * 0.42, cy + r * 0.5); ctx.lineTo(cx + r * 0.42 + d * 0.18 * ll, cy + ll + d * 0.52 * ll); ctx.stroke();
-  ctx.globalAlpha = 1;
-  ctx.restore();
-
-  // Body (colored circle with gradient shading)
-  ctx.save();
-  ctx.fillStyle = col;
-  ctx.beginPath();
-  ctx.arc(cx, cy, r, 0, Math.PI * 2);
-  ctx.fill();
-  const bg = ctx.createRadialGradient(cx - r * 0.25, cy - r * 0.2, r * 0.05, cx, cy, r);
-  bg.addColorStop(0, "rgba(255,255,255,0.3)");
-  bg.addColorStop(0.6, "rgba(255,255,255,0)");
-  bg.addColorStop(1, "rgba(0,0,0,0.22)");
-  ctx.fillStyle = bg;
-  ctx.beginPath();
-  ctx.arc(cx, cy, r, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-
-  // Emoji on top
-  ctx.save();
-  ctx.font = `${r * 1.4}px serif`;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(u.def.emoji, cx, cy);
-  ctx.restore();
+  // Dispatch to custom renderer if available, otherwise fallback
+  const customDraw = UNIT_RENDERERS[u.def.type];
+  if (customDraw) {
+    ctx.save();
+    customDraw(ctx, cx, cy, r, col, t, ph);
+    ctx.restore();
+  } else {
+    // Fallback: colored circle + emoji
+    ctx.save();
+    ctx.fillStyle = col;
+    ctx.beginPath();
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.font = `${r * 1.4}px serif`;
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText(u.def.emoji, cx, cy);
+    ctx.restore();
+  }
 
   // HP bar
   drawHpBar(ctx, cx, cy - r - bob - 14, r * 2.4, u.hp, u.maxHp);
