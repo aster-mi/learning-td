@@ -1,6 +1,5 @@
 import { useState, useMemo, useCallback } from "react";
 import {
-  UNIT_CATALOG,
   getCatalogEntry,
   RARITY_INFO,
   SERIES_LIST,
@@ -223,13 +222,6 @@ export function PartySelect({ ownedUnitIds, currentParty, onConfirm, onBack }: P
     }
     return entries;
   }, [ownedUnitIds, seriesFilter]);
-
-  const addUnit = useCallback((id: string) => {
-    setParty(prev => {
-      if (prev.length >= MAX_PARTY || prev.includes(id)) return prev;
-      return [...prev, id];
-    });
-  }, []);
 
   const removeUnit = useCallback((id: string) => {
     setParty(prev => prev.filter(u => u !== id));

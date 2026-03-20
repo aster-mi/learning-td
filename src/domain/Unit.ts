@@ -1,4 +1,4 @@
-import { UNIT_CATALOG, getCatalogEntry, type UnitCatalogEntry } from "../data/unitCatalog";
+import { UNIT_CATALOG, type UnitCatalogEntry } from "../data/unitCatalog";
 
 /** 後方互換: 旧UnitType (文字列リテラル) */
 export type UnitType = string;

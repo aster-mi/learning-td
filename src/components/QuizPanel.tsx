@@ -84,18 +84,15 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
     : questions.filter(q => subCategories.includes(q.sub));
 
   // 正解履歴マップ（{ questionId: count }）をセッション開始時にロード
-  const correctMapRef = useRef<Record<string, number>>(() => {
+  const correctMapRef = useRef<Record<string, number> | null>(null);
+  if (correctMapRef.current === null) {
     const map = getCorrectMap();
     const counts: Record<string, number> = {};
     for (const [id, entry] of Object.entries(map)) counts[id] = entry.count;
-    return counts;
-  });
-  // 初回のみ計算
-  if (typeof correctMapRef.current === "function") {
-    correctMapRef.current = (correctMapRef.current as unknown as () => Record<string, number>)();
+    correctMapRef.current = counts;
   }
 
-  const [current, setCurrent]       = useState<Question>(() => pickWeighted(pool, correctMapRef.current as Record<string, number>, undefined, selectedLevel));
+  const [current, setCurrent]       = useState<Question>(() => pickWeighted(pool, correctMapRef.current!, undefined, selectedLevel));
   const [feedback, setFeedback]     = useState<"correct" | "wrong" | null>(null);
   const [selected, setSelected]     = useState<string | null>(null);
   const [correctCount, setCorrectCount] = useState(0);
@@ -143,7 +140,7 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
         const remaining = latestPool.filter(
           q => q.id !== current.id && !answeredCorrectRef.current.has(q.id)
         );
-        const counts = correctMapRef.current as Record<string, number>;
+        const counts = correctMapRef.current!;
         // 正解を記録した場合、メモリ上のカウントも更新
         if (choice === current.answer) {
           counts[current.id] = (counts[current.id] ?? 0) + 1;
