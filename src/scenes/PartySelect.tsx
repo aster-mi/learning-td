@@ -6,6 +6,7 @@ import {
   type UnitCatalogEntry,
 } from "../data/unitCatalog";
 import { useWindowSize } from "../hooks/useWindowSize";
+import { UnitIcon } from "../components/UnitIcon";
 
 interface Props {
   ownedUnitIds: string[];
@@ -71,9 +72,7 @@ function PartySlot({
     >
       {entry ? (
         <>
-          <span style={{ fontSize: isMobile ? 22 : 28, lineHeight: 1 }}>
-            {entry.emoji}
-          </span>
+          <UnitIcon unitId={entry.id} color={entry.color} size={isMobile ? 32 : 40} emoji={entry.emoji} />
           <span style={{
             fontSize: isMobile ? 8 : 9, fontWeight: 600,
             maxWidth: size - 8, overflow: "hidden",
@@ -149,13 +148,13 @@ function UnitCard({
         {rarity.stars}
       </span>
 
-      {/* emoji */}
-      <span style={{
-        fontSize: isMobile ? 32 : 40, lineHeight: 1,
+      {/* icon */}
+      <div style={{
         filter: disabled ? "grayscale(0.8)" : "none",
+        lineHeight: 0,
       }}>
-        {entry.emoji}
-      </span>
+        <UnitIcon unitId={entry.id} color={entry.color} size={isMobile ? 40 : 52} emoji={entry.emoji} />
+      </div>
 
       {/* name */}
       <span style={{

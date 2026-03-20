@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from "react";
-import { questions, SUB_CATEGORIES, LEVEL_DEFS, type Question } from "../data/questions";
+import { questions, SUB_CATEGORIES, LEVEL_DEFS, LEVEL_ALL, type Question } from "../data/questions";
 import { useWindowSize } from "../hooks/useWindowSize";
 import { recordWrong, removeWrong, getWrongIds } from "../data/wrongStore";
 import { recordCorrect, getCorrectMap } from "../data/correctStore";
@@ -76,7 +76,8 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
     if (reviewMode) {
       return wrongIds!.has(q.id);
     }
-    // 選択レベル ±2 の範囲でフィルタ（近い問題が出やすくなるよう pickWeighted でも重み付け）
+    // 「指定なし」ならレベルフィルタなし、それ以外は選択レベル ±2 の範囲
+    if (selectedLevel === LEVEL_ALL) return subCategories.includes(q.sub);
     return subCategories.includes(q.sub) && q.level >= Math.max(1, selectedLevel - 2) && q.level <= selectedLevel;
   });
   const pool = filteredPool.length > 0

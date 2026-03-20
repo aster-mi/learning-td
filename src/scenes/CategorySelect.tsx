@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useWindowSize } from "../hooks/useWindowSize";
-import { LEVEL_DEFS, MAIN_CATEGORY_META, SUB_CATEGORIES, type MainCategory } from "../data/questions";
+import { LEVEL_DEFS, LEVEL_ALL, MAIN_CATEGORY_META, SUB_CATEGORIES, type MainCategory } from "../data/questions";
 
 interface Props {
   initialSelected: string[];   // sub名のリスト
@@ -11,17 +11,16 @@ interface Props {
 }
 
 // メインカテゴリの順序
-const MAIN_ORDER: MainCategory[] = ["算数", "国語", "理科", "社会", "英語", "プログラミング"];
+const MAIN_ORDER: MainCategory[] = ["算数", "国語", "理科", "社会", "英語", "プログラミング", "雑学", "なぞなぞ"];
 
 export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrongCount, onReview }: Props) {
   const { isMobile } = useWindowSize();
   const allSubs = SUB_CATEGORIES.map(s => s.name);
-  const maxLevel = Math.max(...LEVEL_DEFS.map(l => l.level));
 
   const [selected, setSelected] = useState<Set<string>>(
     () => new Set(initialSelected.length > 0 ? initialSelected : allSubs)
   );
-  const [level, setLevel] = useState<number>(initialLevel > 0 ? initialLevel : maxLevel);
+  const [level, setLevel] = useState<number>(initialLevel > 0 ? initialLevel : LEVEL_ALL);
   // どのメインカテゴリが開いているか（デフォルト閉じ）
   const [openMain, setOpenMain] = useState<Set<MainCategory>>(() => new Set());
 
@@ -110,12 +109,15 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
               width: "100%",
               padding: isMobile ? "10px 12px" : "11px 14px",
               background: "#1e293b", color: "#f1f5f9",
-              border: `2px solid ${LEVEL_DEFS.find(d => d.level === level)?.color ?? "#334155"}`,
+              border: `2px solid ${level === LEVEL_ALL ? "#a78bfa" : (LEVEL_DEFS.find(d => d.level === level)?.color ?? "#334155")}`,
               borderRadius: 8, fontSize: isMobile ? 15 : 15,
               cursor: "pointer", outline: "none",
               appearance: "auto",
             }}
           >
+            <option value={LEVEL_ALL} style={{ background: "#1e293b" }}>
+              🌈 指定なし（全て）
+            </option>
             {LEVEL_DEFS.map(ld => (
               <option key={ld.level} value={ld.level} style={{ background: "#1e293b" }}>
                 {ld.emoji} {ld.label}まで
@@ -124,8 +126,12 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
           </select>
           <div style={{ marginTop: 8, fontSize: 11, color: "#64748b" }}>
             {(() => {
+              const isAll = level === LEVEL_ALL;
+              const count = isAll
+                ? questions.filter(q => selected.has(q.sub)).length
+                : questions.filter(q => selected.has(q.sub) && q.level <= level).length;
+              if (isAll) return `🌈 全レベルの問題を出題 （対象 ${count} 問）`;
               const ld = LEVEL_DEFS.find(d => d.level === level);
-              const count = questions.filter(q => selected.has(q.sub) && q.level <= level).length;
               return `${ld?.emoji ?? ""} ${ld?.label ?? ""}以下の問題を出題 （対象 ${count} 問）`;
             })()}
           </div>

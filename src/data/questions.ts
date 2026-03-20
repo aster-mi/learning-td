@@ -1,8 +1,11 @@
 // ── メインカテゴリ ──────────────────────────────────────────
-export type MainCategory = "算数" | "国語" | "理科" | "社会" | "英語" | "プログラミング";
+export type MainCategory = "算数" | "国語" | "理科" | "社会" | "英語" | "プログラミング" | "雑学" | "なぞなぞ";
 
 // ── 難易度レベル定義 ────────────────────────────────────────
 export type Level = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+
+/** 「指定なし（全て）」を表す特殊値 */
+export const LEVEL_ALL = 0;
 
 export const LEVEL_DEFS: { level: Level; label: string; emoji: string; color: string; desc: string }[] = [
   { level: 1,  label: "小学1年生",  emoji: "🌱", color: "#86efac", desc: "小学1年生レベル" },
@@ -33,6 +36,8 @@ export const MAIN_CATEGORY_META: Record<MainCategory, { emoji: string; color: st
   社会:         { emoji: "🌍", color: "#f59e0b" },
   英語:         { emoji: "🇬🇧", color: "#ef4444" },
   プログラミング: { emoji: "💻", color: "#06b6d4" },
+  雑学:           { emoji: "💡", color: "#f472b6" },
+  なぞなぞ:       { emoji: "❓", color: "#a78bfa" },
 };
 
 export const SUB_CATEGORIES: SubCategoryDef[] = [
@@ -56,6 +61,13 @@ export const SUB_CATEGORIES: SubCategoryDef[] = [
   { main: "プログラミング", name: "Java Bronze", emoji: "☕", color: "#f97316", desc: "Javaの基礎文法・オブジェクト指向入門" },
   { main: "プログラミング", name: "Java Silver", emoji: "🥈", color: "#94a3b8", desc: "Java SE開発者向け中級" },
   { main: "プログラミング", name: "Java Gold",   emoji: "🥇", color: "#fbbf24", desc: "Java SE開発者向け上級" },
+  // 雑学
+  { main: "雑学",           name: "生活・常識",   emoji: "🏠", color: "#f472b6", desc: "日常の豆知識・一般常識" },
+  { main: "雑学",           name: "スポーツ・芸能", emoji: "⚽", color: "#fb7185", desc: "スポーツ・芸能・エンタメ" },
+  { main: "雑学",           name: "自然・科学トリビア", emoji: "🌏", color: "#e879f9", desc: "自然や科学の意外な事実" },
+  // なぞなぞ
+  { main: "なぞなぞ",       name: "かんたんなぞなぞ", emoji: "😊", color: "#a78bfa", desc: "小学生向けのやさしいなぞなぞ" },
+  { main: "なぞなぞ",       name: "むずかしいなぞなぞ", emoji: "🤔", color: "#8b5cf6", desc: "ひらめき力が試される難問" },
 ];
 
 // ── 問題型 ────────────────────────────────────────────────

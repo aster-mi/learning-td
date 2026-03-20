@@ -1,6 +1,7 @@
 import { getUnitDef } from "../domain/Unit";
 import { getCatalogEntry, RARITY_INFO } from "../data/unitCatalog";
 import { useWindowSize } from "../hooks/useWindowSize";
+import { UnitIcon } from "./UnitIcon";
 
 interface Props {
   energy: number;
@@ -73,7 +74,9 @@ export function CommandPanel({ energy, party, onDeploy, disabled }: Props) {
               if (canAfford) (e.currentTarget as HTMLElement).style.background = "#1a3050";
             }}
           >
-            <div style={{ fontSize: isMobile ? 16 : 18, lineHeight: 1.2 }}>{def.emoji}</div>
+            <div style={{ lineHeight: 1, display: "flex", justifyContent: "center" }}>
+              <UnitIcon unitId={unitId} color={def.color} size={isMobile ? 28 : 34} emoji={def.emoji} />
+            </div>
             <div style={{
               fontSize: isMobile ? 9 : 11, marginTop: 1,
               overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",

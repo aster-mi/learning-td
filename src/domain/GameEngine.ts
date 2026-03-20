@@ -44,7 +44,8 @@ export class GameEngine {
   constructor(stage: StageData, selectedLevel: number = 7) {
     this.stage = stage;
     // Lv.1→0.35, Lv.7→1.0 (標準), Lv.10→1.10（上限を抑えた2段階カーブ）
-    const lv = Math.max(1, Math.min(10, selectedLevel));
+    // selectedLevel===0 は「指定なし（全て）」→ 標準難易度(Lv.7)で計算
+    const lv = selectedLevel <= 0 ? 7 : Math.max(1, Math.min(10, selectedLevel));
     this.difficultyScale = lv <= 7
       ? 0.35 + (lv - 1) * (0.65 / 6)   // Lv.1〜7: 35%→100%
       : 1.0  + (lv - 7) * (0.10 / 3);  // Lv.8〜10: 100%→110%

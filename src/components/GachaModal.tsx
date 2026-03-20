@@ -5,6 +5,7 @@ import {
   type UnitCatalogEntry,
   type Rarity,
 } from "../data/unitCatalog";
+import { UnitIcon } from "./UnitIcon";
 
 // ── Types ────────────────────────────────────────────────────────────────────
 
@@ -372,12 +373,22 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
                 {rInfo.stars} {rInfo.label}
               </div>
 
-              {/* Emoji */}
+              {/* Icon */}
               <div style={{
-                fontSize: 72, marginBottom: 10,
+                marginBottom: 10,
                 animation: "gachaPop 0.5s ease",
+                display: "flex", justifyContent: "center",
               }}>
-                {displayEmoji}
+                {reward.type === "unit" && reward.unitEntry ? (
+                  <UnitIcon
+                    unitId={reward.unitEntry.id}
+                    color={reward.unitEntry.color}
+                    size={80}
+                    emoji={reward.unitEntry.emoji}
+                  />
+                ) : (
+                  <span style={{ fontSize: 72, lineHeight: 1 }}>{displayEmoji}</span>
+                )}
               </div>
 
               {/* Name */}
