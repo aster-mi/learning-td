@@ -48,7 +48,7 @@ function saveLevel(level: number) {
 }
 
 export default function App() {
-  const [scene, setScene]                 = useState<"category" | "select" | "party" | "game" | "achievements">("category");
+  const [scene, setScene]                 = useState<"category" | "select" | "party" | "gacha" | "game" | "achievements">("category");
   const [activeStageId, setActiveStageId] = useState<number>(1);
   const [clearedStages, setClearedStages] = useState<Set<number>>(loadCleared);
   const [subCategories, setSubCategories] = useState<string[]>(loadSubCategories);
@@ -60,10 +60,6 @@ export default function App() {
 
   // Achievement toast
   const [newAchievements, setNewAchievements] = useState<Achievement[]>([]);
-
-  // Gacha state
-  const [showGacha, setShowGacha] = useState(false);
-  const [gachaStars, setGachaStars] = useState(1);
 
   const checkAchievements = useCallback(() => {
     const save = loadSave();
@@ -94,12 +90,12 @@ export default function App() {
     setScene("game");
   };
 
+  // ステージ選択 → 直接ゲームへ（パーティ編成は任意）
   const handleStageSelect = (stageId: number) => {
     gameKeyRef.current += 1;
     setActiveStageId(stageId);
     setIsDailyMode(false);
-    // パーティ編成画面に遷移
-    setScene("party");
+    setScene("game");
   };
 
   const handleDailyChallenge = () => {
@@ -107,15 +103,38 @@ export default function App() {
     gameKeyRef.current += 1;
     setActiveStageId(daily.stageId);
     setIsDailyMode(true);
-    setScene("party");
+    setScene("game");
   };
 
+  // パーティ編成（ワールドマップから任意アクセス）
   const handlePartyConfirm = (party: string[]) => {
     const save = loadSave();
     save.party = party;
     saveSave(save);
     setSaveData(save);
-    setScene("game");
+    setScene("select");
+  };
+
+  // ガチャ結果処理（コイン消費 + ユニット/バフ追加）
+  const handleGachaPull = (reward: GachaReward, cost: number) => {
+    const save = loadSave();
+    save.coins -= cost;
+    if (reward.type === "unit" && reward.unitEntry) {
+      if (!save.unlockedUnits.includes(reward.unitEntry.id)) {
+        save.unlockedUnits.push(reward.unitEntry.id);
+      } else {
+        save.coins += reward.coins ?? 50;
+      }
+    } else if (reward.type === "buff") {
+      save.gachaItems.push({
+        type: reward.buffType ?? "unknown",
+        value: 1,
+      });
+    } else if (reward.type === "coins" && reward.coins) {
+      save.coins += reward.coins;
+    }
+    saveSave(save);
+    setSaveData(save);
   };
 
   const handleClear = (stageId: number) => {
@@ -127,30 +146,7 @@ export default function App() {
     });
     const save = loadSave();
     setSaveData(save);
-
-    // Show gacha
-    const stars = save.stageStars[stageId] ?? 1;
-    setGachaStars(stars);
-    setShowGacha(true);
-
     checkAchievements();
-  };
-
-  const handleGachaClose = (reward: GachaReward) => {
-    setShowGacha(false);
-    const save = loadSave();
-    if (reward.type === "coins" && reward.coins) {
-      save.coins += reward.coins;
-    } else if (reward.type === "unit" && reward.unitEntry) {
-      if (!save.unlockedUnits.includes(reward.unitEntry.id)) {
-        save.unlockedUnits.push(reward.unitEntry.id);
-      } else {
-        // 被り: コイン補填
-        save.coins += reward.coins ?? 50;
-      }
-    }
-    saveSave(save);
-    setSaveData(save);
   };
 
   const handleRetry = () => {
@@ -191,6 +187,8 @@ export default function App() {
           onBack={() => { setSaveData(loadSave()); setScene("category"); }}
           onDaily={handleDailyChallenge}
           onAchievements={() => setScene("achievements")}
+          onParty={() => setScene("party")}
+          onGacha={() => { setSaveData(loadSave()); setScene("gacha"); }}
         />
       )}
       {scene === "party" && (
@@ -199,6 +197,15 @@ export default function App() {
           currentParty={saveData.party}
           onConfirm={handlePartyConfirm}
           onBack={() => setScene("select")}
+        />
+      )}
+      {scene === "gacha" && (
+        <GachaModal
+          coins={saveData.coins}
+          ownedUnitIds={saveData.unlockedUnits}
+          onPull={handleGachaPull}
+          onClose={() => { setSaveData(loadSave()); setScene("select"); }}
+          isMobile={window.innerWidth < 768}
         />
       )}
       {scene === "achievements" && (
@@ -219,16 +226,6 @@ export default function App() {
           reviewMode={reviewMode}
           party={saveData.party}
           isDailyChallenge={isDailyMode}
-        />
-      )}
-
-      {/* Gacha after stage clear */}
-      {showGacha && (
-        <GachaModal
-          stars={gachaStars}
-          ownedUnitIds={saveData.unlockedUnits}
-          onClose={handleGachaClose}
-          isMobile={window.innerWidth < 768}
         />
       )}
 

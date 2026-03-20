@@ -11,6 +11,8 @@ interface Props {
   onBack: () => void;
   onDaily: () => void;
   onAchievements: () => void;
+  onParty: () => void;
+  onGacha: () => void;
 }
 
 const WORLD_THEMES = [
@@ -29,7 +31,7 @@ function StarDisplay({ count, max = 3 }: { count: number; max?: number }) {
   );
 }
 
-export function StageSelect({ clearedStages, stageStars, coins, onSelect, onBack, onDaily, onAchievements }: Props) {
+export function StageSelect({ clearedStages, stageStars, coins, onSelect, onBack, onDaily, onAchievements, onParty, onGacha }: Props) {
   const { isMobile } = useWindowSize();
   const [tab, setTab] = useState<"normal" | "ex">("normal");
 
@@ -82,6 +84,52 @@ export function StageSelect({ clearedStages, stageStars, coins, onSelect, onBack
           </div>
         </div>
       </div>
+
+      {/* Party & Gacha buttons */}
+      <div style={{
+        width: "100%", maxWidth: 500, marginBottom: 12,
+        display: "flex", gap: 8,
+      }}>
+        <button onClick={onParty} style={{
+          flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+          padding: "10px 12px",
+          background: "linear-gradient(135deg, #0d9488, #14b8a6)",
+          border: "2px solid #2dd4bf",
+          borderRadius: 10,
+          color: "#fff", fontWeight: "bold", fontSize: 15,
+          cursor: "pointer",
+          boxShadow: "0 4px 12px rgba(20,184,166,0.3)",
+          transition: "transform 0.15s",
+        }}
+          onMouseEnter={e => e.currentTarget.style.transform = "scale(1.03)"}
+          onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
+        >
+          ⚔️ 編成
+        </button>
+        <button onClick={onGacha} style={{
+          flex: 1, display: "flex", alignItems: "center", justifyContent: "center", gap: 6,
+          padding: "10px 12px",
+          background: "linear-gradient(135deg, #b45309, #f59e0b)",
+          border: "2px solid #fbbf24",
+          borderRadius: 10,
+          color: "#fff", fontWeight: "bold", fontSize: 15,
+          cursor: "pointer",
+          boxShadow: "0 4px 16px rgba(251,191,36,0.35)",
+          animation: "gachaPulse 2s ease-in-out infinite",
+          transition: "transform 0.15s",
+        }}
+          onMouseEnter={e => e.currentTarget.style.transform = "scale(1.03)"}
+          onMouseLeave={e => e.currentTarget.style.transform = "scale(1)"}
+        >
+          🎰 ガチャ
+        </button>
+      </div>
+      <style>{`
+        @keyframes gachaPulse {
+          0%, 100% { box-shadow: 0 4px 16px rgba(251,191,36,0.35); }
+          50% { box-shadow: 0 4px 24px rgba(251,191,36,0.6); }
+        }
+      `}</style>
 
       {/* Title */}
       <h1 style={{ margin: "0 0 4px", fontSize: isMobile ? 20 : 28, fontWeight: "bold" }}>
@@ -353,7 +401,9 @@ export function StageSelect({ clearedStages, stageStars, coins, onSelect, onBack
         ⭐ 正答率80%+ & 拠点HP50%+ → 星3<br />
         🔓 ステージクリアで新ユニット解放<br />
         😈 全ステージクリアでEXステージ出現<br />
-        📅 毎日チャレンジでボーナスコインGET
+        📅 毎日チャレンジでボーナスコインGET<br />
+        🎰 コインでガチャを回して仲間を増やそう<br />
+        ⚔️ 編成で出陣メンバーを入れ替えよう
       </div>
     </div>
   );
