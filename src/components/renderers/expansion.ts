@@ -8,22 +8,41 @@ type DrawFn = (
   ph: number,
 ) => void;
 
-type Variant =
-  | "shield"
+type BodyKind = "mech" | "beast" | "knight" | "bard" | "athlete" | "mage" | "hover" | "book";
+type HeadKind = "visor" | "helm" | "hood" | "leaf" | "crown" | "cap" | "horn" | "none";
+type ItemKind =
+  | "none"
   | "spear"
-  | "orb"
-  | "turret"
-  | "wing"
+  | "shield"
+  | "hammer"
+  | "bow"
+  | "staff"
   | "gear"
-  | "leaf"
-  | "flame"
-  | "crystal"
-  | "wave";
+  | "orb"
+  | "torch"
+  | "blade"
+  | "book"
+  | "brush"
+  | "propeller"
+  | "drum"
+  | "horn"
+  | "baton"
+  | "racket"
+  | "ball"
+  | "whistle"
+  | "cannon"
+  | "wing"
+  | "crystal";
+type AuraKind = "none" | "spark" | "wind" | "music" | "leaf" | "flame" | "ice" | "grid";
 
-interface ExpansionConfig {
+interface StyleConfig {
   id: string;
-  variant: Variant;
-  badge: string;
+  body: BodyKind;
+  head: HeadKind;
+  left: ItemKind;
+  right: ItemKind;
+  aura: AuraKind;
+  trim: string;
 }
 
 function hexToRgb(hex: string) {
@@ -38,269 +57,633 @@ function lighter(hex: string, n: number) {
   return `rgb(${Math.min(255, r + n)},${Math.min(255, g + n)},${Math.min(255, b + n)})`;
 }
 
-function drawBase(
+function drawShadow(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, scale = 1) {
+  ctx.fillStyle = "rgba(0,0,0,0.22)";
+  ctx.beginPath();
+  ctx.ellipse(cx, cy + r * 0.92, r * 0.95 * scale, r * 0.16 * scale, 0, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+function drawAura(
   ctx: CanvasRenderingContext2D,
+  kind: AuraKind,
+  cx: number,
+  cy: number,
+  r: number,
+  trim: string,
+  t: number,
+) {
+  void trim;
+  if (kind === "none") return;
+  const p = 0.45 + 0.55 * Math.sin(t * 3.2);
+  ctx.save();
+  switch (kind) {
+    case "spark": {
+      ctx.strokeStyle = `rgba(255,255,255,${0.35 + p * 0.3})`;
+      ctx.lineWidth = r * 0.05;
+      for (let i = 0; i < 5; i++) {
+        const a = (i / 5) * Math.PI * 2 + t * 1.2;
+        const x1 = cx + Math.cos(a) * r * 0.75;
+        const y1 = cy + Math.sin(a) * r * 0.55;
+        const x2 = cx + Math.cos(a) * r * 1.0;
+        const y2 = cy + Math.sin(a) * r * 0.75;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      }
+      break;
+    }
+    case "wind": {
+      ctx.strokeStyle = `rgba(210,240,255,${0.28 + p * 0.25})`;
+      ctx.lineWidth = r * 0.06;
+      for (let i = 0; i < 2; i++) {
+        const yy = cy - r * 0.25 + i * r * 0.28;
+        ctx.beginPath();
+        ctx.moveTo(cx - r * 0.95, yy);
+        ctx.quadraticCurveTo(cx - r * 0.2, yy - r * 0.2, cx + r * 0.65, yy + r * 0.06);
+        ctx.stroke();
+      }
+      break;
+    }
+    case "music": {
+      ctx.fillStyle = `rgba(255,255,255,${0.25 + p * 0.25})`;
+      for (let i = 0; i < 3; i++) {
+        const a = t * 1.8 + i * 2;
+        const x = cx + Math.sin(a) * r * 0.85;
+        const y = cy - r * 0.55 - i * r * 0.08;
+        ctx.beginPath();
+        ctx.arc(x, y, r * 0.08, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillRect(x + r * 0.06, y - r * 0.22, r * 0.05, r * 0.22);
+      }
+      break;
+    }
+    case "leaf": {
+      ctx.fillStyle = `rgba(220,255,220,${0.18 + p * 0.2})`;
+      for (let i = 0; i < 3; i++) {
+        const a = t * 1.7 + i * 2.2;
+        const x = cx + Math.cos(a) * r * 0.78;
+        const y = cy + Math.sin(a) * r * 0.55;
+        ctx.beginPath();
+        ctx.ellipse(x, y, r * 0.12, r * 0.07, a, 0, Math.PI * 2);
+        ctx.fill();
+      }
+      break;
+    }
+    case "flame": {
+      ctx.fillStyle = `rgba(255,180,80,${0.22 + p * 0.25})`;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy - r * 0.1, r * 1.1, r * 0.82, 0, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    }
+    case "ice": {
+      ctx.strokeStyle = `rgba(180,240,255,${0.25 + p * 0.25})`;
+      ctx.lineWidth = r * 0.05;
+      for (let i = 0; i < 4; i++) {
+        const a = (i / 4) * Math.PI * 2 + t * 0.6;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + Math.cos(a) * r * 0.9, cy + Math.sin(a) * r * 0.6);
+        ctx.stroke();
+      }
+      break;
+    }
+    case "grid": {
+      ctx.strokeStyle = `rgba(220,220,255,${0.16 + p * 0.18})`;
+      ctx.lineWidth = r * 0.03;
+      for (let i = -2; i <= 2; i++) {
+        const x = cx + i * r * 0.26;
+        ctx.beginPath();
+        ctx.moveTo(x, cy - r * 0.72);
+        ctx.lineTo(x, cy + r * 0.72);
+        ctx.stroke();
+      }
+      for (let j = -2; j <= 2; j++) {
+        const y = cy + j * r * 0.22;
+        ctx.beginPath();
+        ctx.moveTo(cx - r * 0.85, y);
+        ctx.lineTo(cx + r * 0.85, y);
+        ctx.stroke();
+      }
+      break;
+    }
+  }
+  ctx.restore();
+}
+
+function drawBody(
+  ctx: CanvasRenderingContext2D,
+  kind: BodyKind,
   cx: number,
   cy: number,
   r: number,
   col: string,
+  trim: string,
   t: number,
   ph: number,
 ) {
-  const bob = Math.sin(t * 3 + ph * 2) * r * 0.05;
-  const bodyY = cy - bob;
-  const leg = Math.sin(ph * Math.PI * 2) * r * 0.18;
-
-  ctx.fillStyle = "rgba(0,0,0,0.24)";
-  ctx.beginPath();
-  ctx.ellipse(cx, cy + r * 0.8, r * 0.95, r * 0.16, 0, 0, Math.PI * 2);
-  ctx.fill();
-
-  ctx.strokeStyle = darker(col, 45);
-  ctx.lineWidth = r * 0.17;
-  ctx.lineCap = "round";
-  ctx.beginPath();
-  ctx.moveTo(cx - r * 0.28, bodyY + r * 0.7);
-  ctx.lineTo(cx - r * 0.28 + leg, bodyY + r * 1.06);
-  ctx.stroke();
-  ctx.beginPath();
-  ctx.moveTo(cx + r * 0.28, bodyY + r * 0.7);
-  ctx.lineTo(cx + r * 0.28 - leg, bodyY + r * 1.06);
-  ctx.stroke();
-
-  const grad = ctx.createLinearGradient(cx - r, bodyY - r, cx + r, bodyY + r);
+  const bob = Math.sin(t * 3 + ph * 1.7) * r * 0.05;
+  const y = cy - bob;
+  const grad = ctx.createLinearGradient(cx - r, y - r, cx + r, y + r);
   grad.addColorStop(0, lighter(col, 24));
-  grad.addColorStop(0.6, col);
+  grad.addColorStop(0.58, col);
   grad.addColorStop(1, darker(col, 24));
   ctx.fillStyle = grad;
-  ctx.beginPath();
-  ctx.roundRect(cx - r * 0.9, bodyY - r * 0.7, r * 1.8, r * 1.45, r * 0.22);
-  ctx.fill();
 
-  ctx.fillStyle = "rgba(255,255,255,0.18)";
-  ctx.beginPath();
-  ctx.roundRect(cx - r * 0.9, bodyY - r * 0.7, r * 1.8, r * 0.32, r * 0.22);
-  ctx.fill();
-
-  return bodyY;
-}
-
-function drawVariant(
-  ctx: CanvasRenderingContext2D,
-  variant: Variant,
-  cx: number,
-  bodyY: number,
-  r: number,
-  col: string,
-  t: number,
-  ph: number,
-) {
-  switch (variant) {
-    case "shield":
-      ctx.fillStyle = darker(col, 30);
+  switch (kind) {
+    case "mech":
       ctx.beginPath();
-      ctx.moveTo(cx - r * 0.95, bodyY - r * 0.1);
-      ctx.lineTo(cx - r * 0.45, bodyY - r * 0.45);
-      ctx.lineTo(cx - r * 0.45, bodyY + r * 0.42);
-      ctx.closePath();
+      ctx.roundRect(cx - r * 0.9, y - r * 0.64, r * 1.8, r * 1.34, r * 0.18);
       ctx.fill();
-      break;
-    case "spear":
-      ctx.strokeStyle = darker(col, 35);
-      ctx.lineWidth = r * 0.12;
-      ctx.beginPath();
-      ctx.moveTo(cx + r * 0.45, bodyY + r * 0.45);
-      ctx.lineTo(cx + r * 1.05, bodyY - r * 0.5);
-      ctx.stroke();
-      ctx.fillStyle = lighter(col, 70);
-      ctx.beginPath();
-      ctx.moveTo(cx + r * 1.05, bodyY - r * 0.5);
-      ctx.lineTo(cx + r * 0.88, bodyY - r * 0.42);
-      ctx.lineTo(cx + r * 0.96, bodyY - r * 0.26);
-      ctx.closePath();
-      ctx.fill();
-      break;
-    case "orb":
-      ctx.fillStyle = `rgba(255,255,255,${0.28 + Math.abs(Math.sin(t * 4 + ph)) * 0.25})`;
-      ctx.beginPath();
-      ctx.arc(cx + r * 0.62, bodyY - r * 0.25, r * 0.22, 0, Math.PI * 2);
-      ctx.fill();
-      break;
-    case "turret":
       ctx.fillStyle = darker(col, 40);
-      ctx.beginPath();
-      ctx.roundRect(cx - r * 0.3, bodyY - r * 0.92, r * 0.6, r * 0.38, r * 0.1);
-      ctx.fill();
-      ctx.fillStyle = lighter(col, 65);
-      ctx.fillRect(cx + r * 0.12, bodyY - r * 0.78, r * 0.35, r * 0.08);
-      break;
-    case "wing":
-      ctx.fillStyle = lighter(col, 45);
-      ctx.beginPath();
-      ctx.ellipse(cx - r * 0.72, bodyY - r * 0.02, r * 0.26, r * 0.16, -0.45, 0, Math.PI * 2);
-      ctx.fill();
-      ctx.beginPath();
-      ctx.ellipse(cx + r * 0.72, bodyY - r * 0.02, r * 0.26, r * 0.16, 0.45, 0, Math.PI * 2);
-      ctx.fill();
-      break;
-    case "gear":
-      ctx.strokeStyle = darker(col, 55);
-      ctx.lineWidth = r * 0.08;
-      ctx.beginPath();
-      ctx.arc(cx + r * 0.65, bodyY - r * 0.2, r * 0.2, 0, Math.PI * 2);
-      ctx.stroke();
-      for (let i = 0; i < 6; i++) {
-        const a = (i / 6) * Math.PI * 2 + t * 2;
+      for (let i = 0; i < 3; i++) {
+        const bx = cx - r * 0.52 + i * r * 0.52;
         ctx.beginPath();
-        ctx.moveTo(cx + r * 0.65 + Math.cos(a) * r * 0.2, bodyY - r * 0.2 + Math.sin(a) * r * 0.2);
-        ctx.lineTo(cx + r * 0.65 + Math.cos(a) * r * 0.28, bodyY - r * 0.2 + Math.sin(a) * r * 0.28);
-        ctx.stroke();
+        ctx.arc(bx, y - r * 0.18, r * 0.07, 0, Math.PI * 2);
+        ctx.fill();
       }
       break;
-    case "leaf":
-      ctx.fillStyle = lighter(col, 34);
+    case "beast":
       ctx.beginPath();
-      ctx.moveTo(cx, bodyY - r * 0.85);
-      ctx.quadraticCurveTo(cx + r * 0.34, bodyY - r * 0.52, cx, bodyY - r * 0.22);
-      ctx.quadraticCurveTo(cx - r * 0.34, bodyY - r * 0.52, cx, bodyY - r * 0.85);
+      ctx.ellipse(cx, y + r * 0.05, r * 0.95, r * 0.66, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(cx + r * 0.6, y - r * 0.16, r * 0.32, r * 0.3, 0, 0, Math.PI * 2);
       ctx.fill();
       break;
-    case "flame":
-      ctx.fillStyle = `rgba(255,180,60,${0.55 + Math.abs(Math.sin(t * 5 + ph)) * 0.3})`;
+    case "knight":
       ctx.beginPath();
-      ctx.moveTo(cx - r * 0.15, bodyY - r * 0.1);
-      ctx.quadraticCurveTo(cx, bodyY - r * 0.72, cx + r * 0.2, bodyY - r * 0.08);
-      ctx.closePath();
+      ctx.roundRect(cx - r * 0.78, y - r * 0.68, r * 1.56, r * 1.42, r * 0.2);
       ctx.fill();
+      ctx.fillStyle = trim;
+      ctx.fillRect(cx - r * 0.12, y - r * 0.58, r * 0.24, r * 1.15);
       break;
-    case "crystal":
-      ctx.fillStyle = lighter(col, 62);
+    case "bard":
       ctx.beginPath();
-      ctx.moveTo(cx + r * 0.55, bodyY - r * 0.64);
-      ctx.lineTo(cx + r * 0.78, bodyY - r * 0.3);
-      ctx.lineTo(cx + r * 0.55, bodyY + r * 0.03);
-      ctx.lineTo(cx + r * 0.35, bodyY - r * 0.3);
-      ctx.closePath();
+      ctx.ellipse(cx, y, r * 0.9, r * 0.7, 0, 0, Math.PI * 2);
       ctx.fill();
+      ctx.fillStyle = `rgba(255,255,255,0.15)`;
+      ctx.fillRect(cx - r * 0.68, y + r * 0.38, r * 1.36, r * 0.16);
       break;
-    case "wave":
-      ctx.strokeStyle = lighter(col, 48);
-      ctx.lineWidth = r * 0.09;
+    case "athlete":
       ctx.beginPath();
-      ctx.moveTo(cx - r * 0.62, bodyY + r * 0.1);
-      ctx.quadraticCurveTo(cx - r * 0.2, bodyY - r * 0.22, cx + r * 0.15, bodyY + r * 0.1);
-      ctx.quadraticCurveTo(cx + r * 0.45, bodyY + r * 0.38, cx + r * 0.75, bodyY + r * 0.1);
+      ctx.roundRect(cx - r * 0.7, y - r * 0.62, r * 1.4, r * 1.28, r * 0.24);
+      ctx.fill();
+      ctx.strokeStyle = lighter(col, 50);
+      ctx.lineWidth = r * 0.06;
+      ctx.beginPath();
+      ctx.moveTo(cx - r * 0.45, y - r * 0.58);
+      ctx.lineTo(cx - r * 0.45, y + r * 0.6);
+      ctx.moveTo(cx, y - r * 0.58);
+      ctx.lineTo(cx, y + r * 0.6);
       ctx.stroke();
+      break;
+    case "mage":
+      ctx.beginPath();
+      ctx.moveTo(cx - r * 0.78, y + r * 0.62);
+      ctx.quadraticCurveTo(cx - r * 0.95, y - r * 0.28, cx - r * 0.35, y - r * 0.72);
+      ctx.lineTo(cx + r * 0.45, y - r * 0.72);
+      ctx.quadraticCurveTo(cx + r * 1.0, y - r * 0.3, cx + r * 0.78, y + r * 0.62);
+      ctx.closePath();
+      ctx.fill();
+      break;
+    case "hover":
+      ctx.beginPath();
+      ctx.roundRect(cx - r * 0.84, y - r * 0.56, r * 1.68, r * 1.06, r * 0.3);
+      ctx.fill();
+      ctx.fillStyle = `rgba(255,255,255,0.25)`;
+      ctx.beginPath();
+      ctx.ellipse(cx - r * 0.24, y - r * 0.1, r * 0.18, r * 0.12, 0, 0, Math.PI * 2);
+      ctx.ellipse(cx + r * 0.24, y - r * 0.1, r * 0.18, r * 0.12, 0, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    case "book":
+      ctx.beginPath();
+      ctx.roundRect(cx - r * 0.9, y - r * 0.68, r * 1.8, r * 1.36, r * 0.14);
+      ctx.fill();
+      ctx.fillStyle = trim;
+      ctx.fillRect(cx + r * 0.7, y - r * 0.65, r * 0.14, r * 1.3);
+      ctx.fillStyle = lighter(col, 52);
+      ctx.fillRect(cx - r * 0.72, y - r * 0.4, r * 1.15, r * 0.18);
+      break;
+  }
+
+  return y;
+}
+
+function drawHead(ctx: CanvasRenderingContext2D, kind: HeadKind, cx: number, y: number, r: number, col: string, trim: string, t: number) {
+  switch (kind) {
+    case "none":
+      return;
+    case "visor":
+      ctx.fillStyle = darker(col, 55);
+      ctx.beginPath();
+      ctx.roundRect(cx - r * 0.42, y - r * 0.9, r * 0.84, r * 0.28, r * 0.08);
+      ctx.fill();
+      ctx.fillStyle = trim;
+      ctx.fillRect(cx - r * 0.35, y - r * 0.79, r * 0.7, r * 0.06);
+      break;
+    case "helm":
+      ctx.fillStyle = darker(col, 48);
+      ctx.beginPath();
+      ctx.arc(cx, y - r * 0.7, r * 0.34, Math.PI, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = trim;
+      ctx.fillRect(cx - r * 0.06, y - r * 1.0, r * 0.12, r * 0.26);
+      break;
+    case "hood":
+      ctx.fillStyle = darker(col, 36);
+      ctx.beginPath();
+      ctx.moveTo(cx - r * 0.42, y - r * 0.45);
+      ctx.lineTo(cx - r * 0.18, y - r * 1.02);
+      ctx.lineTo(cx + r * 0.2, y - r * 0.45);
+      ctx.closePath();
+      ctx.fill();
+      break;
+    case "leaf":
+      ctx.fillStyle = trim;
+      ctx.beginPath();
+      ctx.moveTo(cx, y - r * 1.02);
+      ctx.quadraticCurveTo(cx + r * 0.2, y - r * 0.72, cx, y - r * 0.46);
+      ctx.quadraticCurveTo(cx - r * 0.2, y - r * 0.72, cx, y - r * 1.02);
+      ctx.fill();
+      break;
+    case "crown":
+      ctx.fillStyle = trim;
+      ctx.beginPath();
+      ctx.moveTo(cx - r * 0.3, y - r * 0.78);
+      ctx.lineTo(cx - r * 0.18, y - r * 1.0);
+      ctx.lineTo(cx, y - r * 0.8);
+      ctx.lineTo(cx + r * 0.18, y - r * 1.0);
+      ctx.lineTo(cx + r * 0.3, y - r * 0.78);
+      ctx.closePath();
+      ctx.fill();
+      break;
+    case "cap":
+      ctx.fillStyle = darker(col, 40);
+      ctx.beginPath();
+      ctx.roundRect(cx - r * 0.35, y - r * 0.88, r * 0.7, r * 0.22, r * 0.07);
+      ctx.fill();
+      ctx.fillRect(cx + r * 0.2, y - r * 0.76, r * 0.22, r * 0.06);
+      break;
+    case "horn":
+      ctx.fillStyle = trim;
+      const wob = Math.sin(t * 2.5) * r * 0.02;
+      ctx.beginPath();
+      ctx.moveTo(cx - r * 0.3, y - r * 0.7);
+      ctx.lineTo(cx - r * 0.45, y - r * 1.0 + wob);
+      ctx.lineTo(cx - r * 0.18, y - r * 0.74);
+      ctx.closePath();
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(cx + r * 0.3, y - r * 0.7);
+      ctx.lineTo(cx + r * 0.45, y - r * 1.0 - wob);
+      ctx.lineTo(cx + r * 0.18, y - r * 0.74);
+      ctx.closePath();
+      ctx.fill();
       break;
   }
 }
 
-function drawFace(
-  ctx: CanvasRenderingContext2D,
-  cx: number,
-  bodyY: number,
-  r: number,
-  badge: string,
-) {
+function drawFace(ctx: CanvasRenderingContext2D, cx: number, y: number, r: number, mood: "smile" | "stern" | "focus") {
   ctx.fillStyle = "#fff";
   ctx.beginPath();
-  ctx.arc(cx - r * 0.24, bodyY - r * 0.1, r * 0.12, 0, Math.PI * 2);
-  ctx.arc(cx + r * 0.24, bodyY - r * 0.1, r * 0.12, 0, Math.PI * 2);
+  ctx.arc(cx - r * 0.2, y - r * 0.14, r * 0.11, 0, Math.PI * 2);
+  ctx.arc(cx + r * 0.2, y - r * 0.14, r * 0.11, 0, Math.PI * 2);
   ctx.fill();
-
   ctx.fillStyle = "#111";
   ctx.beginPath();
-  ctx.arc(cx - r * 0.24, bodyY - r * 0.1, r * 0.06, 0, Math.PI * 2);
-  ctx.arc(cx + r * 0.24, bodyY - r * 0.1, r * 0.06, 0, Math.PI * 2);
+  ctx.arc(cx - r * 0.2, y - r * 0.14, r * 0.06, 0, Math.PI * 2);
+  ctx.arc(cx + r * 0.2, y - r * 0.14, r * 0.06, 0, Math.PI * 2);
   ctx.fill();
 
   ctx.strokeStyle = "#222";
   ctx.lineWidth = r * 0.05;
   ctx.beginPath();
-  ctx.arc(cx, bodyY + r * 0.14, r * 0.17, 0.2, Math.PI - 0.2);
+  if (mood === "smile") {
+    ctx.arc(cx, y + r * 0.12, r * 0.18, 0.2, Math.PI - 0.2);
+  } else if (mood === "stern") {
+    ctx.moveTo(cx - r * 0.16, y + r * 0.16);
+    ctx.lineTo(cx + r * 0.16, y + r * 0.16);
+  } else {
+    ctx.moveTo(cx - r * 0.16, y + r * 0.12);
+    ctx.quadraticCurveTo(cx, y + r * 0.2, cx + r * 0.16, y + r * 0.12);
+  }
   ctx.stroke();
-
-  ctx.fillStyle = "rgba(0,0,0,0.22)";
-  ctx.beginPath();
-  ctx.roundRect(cx - r * 0.28, bodyY - r * 0.57, r * 0.56, r * 0.24, r * 0.07);
-  ctx.fill();
-  ctx.fillStyle = "#fff";
-  ctx.font = `bold ${Math.max(8, Math.floor(r * 0.16))}px sans-serif`;
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  ctx.fillText(badge, cx, bodyY - r * 0.45);
 }
 
-function drawExpansion(
-  config: ExpansionConfig,
-): DrawFn {
+function drawItem(ctx: CanvasRenderingContext2D, item: ItemKind, side: -1 | 1, cx: number, y: number, r: number, col: string, trim: string, t: number) {
+  if (item === "none") return;
+  const ax = cx + side * r * 0.86;
+  const ay = y + r * 0.02;
+  const dark = darker(col, 50);
+
+  ctx.save();
+  ctx.translate(ax, ay);
+  if (side < 0) ctx.scale(-1, 1);
+
+  switch (item) {
+    case "spear":
+      ctx.strokeStyle = dark;
+      ctx.lineWidth = r * 0.09;
+      ctx.beginPath();
+      ctx.moveTo(-r * 0.05, r * 0.45);
+      ctx.lineTo(r * 0.48, -r * 0.46);
+      ctx.stroke();
+      ctx.fillStyle = lighter(col, 64);
+      ctx.beginPath();
+      ctx.moveTo(r * 0.48, -r * 0.46);
+      ctx.lineTo(r * 0.33, -r * 0.38);
+      ctx.lineTo(r * 0.4, -r * 0.24);
+      ctx.closePath();
+      ctx.fill();
+      break;
+    case "shield":
+      ctx.fillStyle = dark;
+      ctx.beginPath();
+      ctx.moveTo(-r * 0.04, -r * 0.35);
+      ctx.lineTo(r * 0.36, -r * 0.2);
+      ctx.lineTo(r * 0.34, r * 0.36);
+      ctx.lineTo(r * 0.02, r * 0.42);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = trim;
+      ctx.beginPath();
+      ctx.arc(r * 0.16, r * 0.05, r * 0.08, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    case "hammer":
+      ctx.strokeStyle = dark;
+      ctx.lineWidth = r * 0.09;
+      ctx.beginPath();
+      ctx.moveTo(-r * 0.05, r * 0.4);
+      ctx.lineTo(r * 0.32, -r * 0.32);
+      ctx.stroke();
+      ctx.fillStyle = trim;
+      ctx.fillRect(r * 0.2, -r * 0.45, r * 0.27, r * 0.16);
+      break;
+    case "bow":
+      ctx.strokeStyle = dark;
+      ctx.lineWidth = r * 0.08;
+      ctx.beginPath();
+      ctx.arc(r * 0.12, -r * 0.04, r * 0.34, -1, 1);
+      ctx.stroke();
+      ctx.strokeStyle = lighter(col, 70);
+      ctx.lineWidth = r * 0.04;
+      ctx.beginPath();
+      ctx.moveTo(r * 0.3, -r * 0.34);
+      ctx.lineTo(r * 0.3, r * 0.26);
+      ctx.stroke();
+      break;
+    case "staff":
+      ctx.strokeStyle = dark;
+      ctx.lineWidth = r * 0.08;
+      ctx.beginPath();
+      ctx.moveTo(0, r * 0.42);
+      ctx.lineTo(r * 0.22, -r * 0.44);
+      ctx.stroke();
+      ctx.fillStyle = trim;
+      ctx.beginPath();
+      ctx.arc(r * 0.24, -r * 0.5, r * 0.12, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    case "gear":
+      ctx.strokeStyle = dark;
+      ctx.lineWidth = r * 0.06;
+      ctx.beginPath();
+      ctx.arc(r * 0.18, -r * 0.08, r * 0.2, 0, Math.PI * 2);
+      ctx.stroke();
+      for (let i = 0; i < 6; i++) {
+        const a = (i / 6) * Math.PI * 2 + t * 1.6;
+        ctx.beginPath();
+        ctx.moveTo(r * 0.18 + Math.cos(a) * r * 0.2, -r * 0.08 + Math.sin(a) * r * 0.2);
+        ctx.lineTo(r * 0.18 + Math.cos(a) * r * 0.28, -r * 0.08 + Math.sin(a) * r * 0.28);
+        ctx.stroke();
+      }
+      break;
+    case "orb":
+      ctx.fillStyle = trim;
+      ctx.beginPath();
+      ctx.arc(r * 0.2, -r * 0.08, r * 0.16, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    case "torch":
+      ctx.strokeStyle = dark;
+      ctx.lineWidth = r * 0.08;
+      ctx.beginPath();
+      ctx.moveTo(0, r * 0.38);
+      ctx.lineTo(r * 0.22, -r * 0.2);
+      ctx.stroke();
+      ctx.fillStyle = `rgba(255,180,70,${0.6 + Math.abs(Math.sin(t * 5)) * 0.3})`;
+      ctx.beginPath();
+      ctx.moveTo(r * 0.18, -r * 0.28);
+      ctx.quadraticCurveTo(r * 0.32, -r * 0.5, r * 0.4, -r * 0.24);
+      ctx.closePath();
+      ctx.fill();
+      break;
+    case "blade":
+      ctx.strokeStyle = dark;
+      ctx.lineWidth = r * 0.08;
+      ctx.beginPath();
+      ctx.moveTo(0, r * 0.35);
+      ctx.lineTo(r * 0.36, -r * 0.34);
+      ctx.stroke();
+      break;
+    case "book":
+      ctx.fillStyle = dark;
+      ctx.beginPath();
+      ctx.roundRect(-r * 0.02, -r * 0.28, r * 0.34, r * 0.26, r * 0.06);
+      ctx.fill();
+      ctx.fillStyle = trim;
+      ctx.fillRect(r * 0.24, -r * 0.28, r * 0.05, r * 0.26);
+      break;
+    case "brush":
+      ctx.strokeStyle = dark;
+      ctx.lineWidth = r * 0.08;
+      ctx.beginPath();
+      ctx.moveTo(0, r * 0.4);
+      ctx.lineTo(r * 0.3, -r * 0.18);
+      ctx.stroke();
+      ctx.fillStyle = trim;
+      ctx.beginPath();
+      ctx.moveTo(r * 0.3, -r * 0.18);
+      ctx.lineTo(r * 0.42, -r * 0.26);
+      ctx.lineTo(r * 0.34, -r * 0.02);
+      ctx.closePath();
+      ctx.fill();
+      break;
+    case "propeller":
+      ctx.strokeStyle = dark;
+      ctx.lineWidth = r * 0.06;
+      ctx.beginPath();
+      ctx.moveTo(r * 0.14, -r * 0.02);
+      ctx.lineTo(r * 0.14, -r * 0.35);
+      ctx.stroke();
+      ctx.fillStyle = trim;
+      ctx.beginPath();
+      ctx.ellipse(r * 0.14, -r * 0.36, r * 0.2, r * 0.06, Math.sin(t * 18) * 0.5, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    case "drum":
+      ctx.fillStyle = dark;
+      ctx.beginPath();
+      ctx.roundRect(-r * 0.02, -r * 0.08, r * 0.32, r * 0.22, r * 0.06);
+      ctx.fill();
+      ctx.fillStyle = trim;
+      ctx.fillRect(-r * 0.01, -r * 0.04, r * 0.3, r * 0.04);
+      break;
+    case "horn":
+      ctx.fillStyle = trim;
+      ctx.beginPath();
+      ctx.moveTo(0, 0);
+      ctx.lineTo(r * 0.34, -r * 0.14);
+      ctx.lineTo(r * 0.34, r * 0.12);
+      ctx.closePath();
+      ctx.fill();
+      break;
+    case "baton":
+      ctx.strokeStyle = dark;
+      ctx.lineWidth = r * 0.08;
+      ctx.beginPath();
+      ctx.moveTo(0, r * 0.35);
+      ctx.lineTo(r * 0.3, -r * 0.22);
+      ctx.stroke();
+      ctx.fillStyle = trim;
+      ctx.beginPath();
+      ctx.arc(r * 0.33, -r * 0.26, r * 0.06, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    case "racket":
+      ctx.strokeStyle = dark;
+      ctx.lineWidth = r * 0.07;
+      ctx.beginPath();
+      ctx.ellipse(r * 0.2, -r * 0.1, r * 0.17, r * 0.23, -0.3, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(r * 0.12, r * 0.2);
+      ctx.lineTo(r * 0.24, -r * 0.3);
+      ctx.stroke();
+      break;
+    case "ball":
+      ctx.fillStyle = trim;
+      ctx.beginPath();
+      ctx.arc(r * 0.2, -r * 0.08, r * 0.12, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    case "whistle":
+      ctx.fillStyle = trim;
+      ctx.beginPath();
+      ctx.roundRect(r * 0.02, -r * 0.1, r * 0.2, r * 0.12, r * 0.04);
+      ctx.fill();
+      break;
+    case "cannon":
+      ctx.fillStyle = dark;
+      ctx.beginPath();
+      ctx.roundRect(-r * 0.02, -r * 0.14, r * 0.36, r * 0.18, r * 0.06);
+      ctx.fill();
+      ctx.fillStyle = trim;
+      ctx.fillRect(r * 0.28, -r * 0.09, r * 0.14, r * 0.08);
+      break;
+    case "wing":
+      ctx.fillStyle = trim;
+      ctx.beginPath();
+      ctx.ellipse(r * 0.16, -r * 0.05, r * 0.24, r * 0.1, -0.5, 0, Math.PI * 2);
+      ctx.fill();
+      break;
+    case "crystal":
+      ctx.fillStyle = trim;
+      ctx.beginPath();
+      ctx.moveTo(r * 0.14, -r * 0.35);
+      ctx.lineTo(r * 0.31, -r * 0.09);
+      ctx.lineTo(r * 0.15, r * 0.13);
+      ctx.lineTo(-r * 0.02, -r * 0.1);
+      ctx.closePath();
+      ctx.fill();
+      break;
+  }
+
+  ctx.restore();
+}
+
+function drawUnit(style: StyleConfig): DrawFn {
   return (ctx, cx, cy, r, col, t, ph) => {
-    const bodyY = drawBase(ctx, cx, cy, r, col, t, ph);
-    drawVariant(ctx, config.variant, cx, bodyY, r, col, t, ph);
-    drawFace(ctx, cx, bodyY, r, config.badge);
+    drawShadow(ctx, cx, cy, r, style.body === "hover" ? 1.15 : 1);
+    drawAura(ctx, style.aura, cx, cy, r, style.trim, t);
+    const y = drawBody(ctx, style.body, cx, cy, r, col, style.trim, t, ph);
+    drawHead(ctx, style.head, cx, y, r, col, style.trim, t);
+    drawItem(ctx, style.left, -1, cx, y, r, col, style.trim, t);
+    drawItem(ctx, style.right, 1, cx, y, r, col, style.trim, t);
+    const mood: "smile" | "stern" | "focus" = style.body === "bard" ? "smile" : style.body === "knight" ? "stern" : "focus";
+    drawFace(ctx, cx, y, r, mood);
   };
 }
 
-const EXPANSION_CONFIGS: ExpansionConfig[] = [
-  { id: "notebook", variant: "shield", badge: "NB" },
-  { id: "protractor", variant: "spear", badge: "PT" },
-  { id: "battery", variant: "orb", badge: "BT" },
-  { id: "graphpaper", variant: "turret", badge: "GP" },
-  { id: "paintbrush", variant: "flame", badge: "PB" },
-  { id: "drone", variant: "wing", badge: "DR" },
-  { id: "eng_01", variant: "gear", badge: "E1" },
-  { id: "eng_02", variant: "shield", badge: "E2" },
-  { id: "eng_03", variant: "turret", badge: "E3" },
-  { id: "eng_04", variant: "spear", badge: "E4" },
-  { id: "eng_05", variant: "wing", badge: "E5" },
-  { id: "eng_06", variant: "orb", badge: "E6" },
-  { id: "eng_07", variant: "gear", badge: "E7" },
-  { id: "eng_08", variant: "crystal", badge: "E8" },
-  { id: "eng_09", variant: "wave", badge: "E9" },
-  { id: "eng_10", variant: "flame", badge: "E10" },
-  { id: "nat_01", variant: "leaf", badge: "N1" },
-  { id: "nat_02", variant: "shield", badge: "N2" },
-  { id: "nat_03", variant: "spear", badge: "N3" },
-  { id: "nat_04", variant: "wing", badge: "N4" },
-  { id: "nat_05", variant: "leaf", badge: "N5" },
-  { id: "nat_06", variant: "orb", badge: "N6" },
-  { id: "nat_07", variant: "shield", badge: "N7" },
-  { id: "nat_08", variant: "flame", badge: "N8" },
-  { id: "nat_09", variant: "crystal", badge: "N9" },
-  { id: "nat_10", variant: "wave", badge: "N10" },
-  { id: "his_01", variant: "shield", badge: "H1" },
-  { id: "his_02", variant: "gear", badge: "H2" },
-  { id: "his_03", variant: "spear", badge: "H3" },
-  { id: "his_04", variant: "turret", badge: "H4" },
-  { id: "his_05", variant: "shield", badge: "H5" },
-  { id: "his_06", variant: "flame", badge: "H6" },
-  { id: "his_07", variant: "gear", badge: "H7" },
-  { id: "his_08", variant: "wave", badge: "H8" },
-  { id: "his_09", variant: "crystal", badge: "H9" },
-  { id: "his_10", variant: "orb", badge: "H10" },
-  { id: "mus_01", variant: "wave", badge: "M1" },
-  { id: "mus_02", variant: "shield", badge: "M2" },
-  { id: "mus_03", variant: "spear", badge: "M3" },
-  { id: "mus_04", variant: "wing", badge: "M4" },
-  { id: "mus_05", variant: "turret", badge: "M5" },
-  { id: "mus_06", variant: "orb", badge: "M6" },
-  { id: "mus_07", variant: "gear", badge: "M7" },
-  { id: "mus_08", variant: "flame", badge: "M8" },
-  { id: "mus_09", variant: "crystal", badge: "M9" },
-  { id: "mus_10", variant: "wave", badge: "M10" },
-  { id: "spo_01", variant: "wing", badge: "S1" },
-  { id: "spo_02", variant: "shield", badge: "S2" },
-  { id: "spo_03", variant: "spear", badge: "S3" },
-  { id: "spo_04", variant: "flame", badge: "S4" },
-  { id: "spo_05", variant: "gear", badge: "S5" },
-  { id: "spo_06", variant: "turret", badge: "S6" },
-  { id: "spo_07", variant: "shield", badge: "S7" },
-  { id: "spo_08", variant: "orb", badge: "S8" },
-  { id: "spo_09", variant: "crystal", badge: "S9" },
-  { id: "spo_10", variant: "wave", badge: "S10" },
+const STYLES: StyleConfig[] = [
+  { id: "notebook", body: "book", head: "cap", left: "shield", right: "book", aura: "grid", trim: "#94a3b8" },
+  { id: "protractor", body: "athlete", head: "cap", left: "bow", right: "spear", aura: "grid", trim: "#67e8f9" },
+  { id: "battery", body: "mech", head: "visor", left: "orb", right: "cannon", aura: "spark", trim: "#bef264" },
+  { id: "graphpaper", body: "mage", head: "hood", left: "cannon", right: "spear", aura: "grid", trim: "#c4b5fd" },
+  { id: "paintbrush", body: "mage", head: "hood", left: "book", right: "brush", aura: "flame", trim: "#f9a8d4" },
+  { id: "drone", body: "hover", head: "none", left: "propeller", right: "propeller", aura: "wind", trim: "#7dd3fc" },
+
+  { id: "eng_01", body: "mech", head: "visor", left: "blade", right: "gear", aura: "spark", trim: "#cbd5e1" },
+  { id: "eng_02", body: "mech", head: "helm", left: "shield", right: "none", aura: "none", trim: "#94a3b8" },
+  { id: "eng_03", body: "mech", head: "visor", left: "none", right: "cannon", aura: "grid", trim: "#67e8f9" },
+  { id: "eng_04", body: "mech", head: "helm", left: "hammer", right: "shield", aura: "none", trim: "#e2e8f0" },
+  { id: "eng_05", body: "mech", head: "cap", left: "blade", right: "wing", aura: "wind", trim: "#a5f3fc" },
+  { id: "eng_06", body: "mage", head: "hood", left: "staff", right: "orb", aura: "spark", trim: "#bae6fd" },
+  { id: "eng_07", body: "mech", head: "horn", left: "shield", right: "hammer", aura: "none", trim: "#e2e8f0" },
+  { id: "eng_08", body: "mech", head: "helm", left: "hammer", right: "crystal", aura: "flame", trim: "#fde68a" },
+  { id: "eng_09", body: "hover", head: "visor", left: "cannon", right: "staff", aura: "ice", trim: "#bfdbfe" },
+  { id: "eng_10", body: "hover", head: "none", left: "propeller", right: "propeller", aura: "spark", trim: "#bae6fd" },
+
+  { id: "nat_01", body: "beast", head: "leaf", left: "none", right: "blade", aura: "leaf", trim: "#bbf7d0" },
+  { id: "nat_02", body: "beast", head: "horn", left: "shield", right: "none", aura: "none", trim: "#d9f99d" },
+  { id: "nat_03", body: "beast", head: "leaf", left: "bow", right: "none", aura: "leaf", trim: "#dcfce7" },
+  { id: "nat_04", body: "beast", head: "horn", left: "blade", right: "spear", aura: "wind", trim: "#bbf7d0" },
+  { id: "nat_05", body: "beast", head: "leaf", left: "shield", right: "hammer", aura: "none", trim: "#ecfccb" },
+  { id: "nat_06", body: "mage", head: "leaf", left: "staff", right: "orb", aura: "leaf", trim: "#bbf7d0" },
+  { id: "nat_07", body: "beast", head: "crown", left: "shield", right: "spear", aura: "leaf", trim: "#dcfce7" },
+  { id: "nat_08", body: "beast", head: "horn", left: "hammer", right: "torch", aura: "flame", trim: "#fef9c3" },
+  { id: "nat_09", body: "beast", head: "leaf", left: "crystal", right: "bow", aura: "ice", trim: "#dcfce7" },
+  { id: "nat_10", body: "beast", head: "none", left: "wing", right: "wing", aura: "wind", trim: "#bbf7d0" },
+
+  { id: "his_01", body: "knight", head: "helm", left: "shield", right: "spear", aura: "none", trim: "#fde68a" },
+  { id: "his_02", body: "knight", head: "helm", left: "shield", right: "none", aura: "none", trim: "#e7e5e4" },
+  { id: "his_03", body: "knight", head: "crown", left: "spear", right: "blade", aura: "wind", trim: "#fde68a" },
+  { id: "his_04", body: "knight", head: "cap", left: "bow", right: "none", aura: "none", trim: "#fef3c7" },
+  { id: "his_05", body: "knight", head: "helm", left: "shield", right: "hammer", aura: "none", trim: "#e7e5e4" },
+  { id: "his_06", body: "knight", head: "hood", left: "torch", right: "staff", aura: "flame", trim: "#fed7aa" },
+  { id: "his_07", body: "knight", head: "horn", left: "hammer", right: "shield", aura: "none", trim: "#fde68a" },
+  { id: "his_08", body: "knight", head: "cap", left: "drum", right: "baton", aura: "music", trim: "#fdba74" },
+  { id: "his_09", body: "knight", head: "crown", left: "bow", right: "crystal", aura: "spark", trim: "#fde68a" },
+  { id: "his_10", body: "knight", head: "horn", left: "orb", right: "blade", aura: "ice", trim: "#fef3c7" },
+
+  { id: "mus_01", body: "bard", head: "cap", left: "baton", right: "none", aura: "music", trim: "#e9d5ff" },
+  { id: "mus_02", body: "bard", head: "helm", left: "shield", right: "drum", aura: "music", trim: "#ddd6fe" },
+  { id: "mus_03", body: "bard", head: "cap", left: "horn", right: "none", aura: "music", trim: "#f3e8ff" },
+  { id: "mus_04", body: "bard", head: "hood", left: "bow", right: "none", aura: "music", trim: "#e9d5ff" },
+  { id: "mus_05", body: "bard", head: "cap", left: "none", right: "drum", aura: "music", trim: "#ddd6fe" },
+  { id: "mus_06", body: "bard", head: "hood", left: "staff", right: "orb", aura: "music", trim: "#f5d0fe" },
+  { id: "mus_07", body: "bard", head: "helm", left: "shield", right: "baton", aura: "music", trim: "#e9d5ff" },
+  { id: "mus_08", body: "bard", head: "cap", left: "none", right: "hammer", aura: "music", trim: "#f3e8ff" },
+  { id: "mus_09", body: "bard", head: "crown", left: "bow", right: "horn", aura: "music", trim: "#ddd6fe" },
+  { id: "mus_10", body: "bard", head: "crown", left: "baton", right: "staff", aura: "music", trim: "#f5d0fe" },
+
+  { id: "spo_01", body: "athlete", head: "cap", left: "blade", right: "none", aura: "wind", trim: "#bfdbfe" },
+  { id: "spo_02", body: "athlete", head: "cap", left: "shield", right: "none", aura: "none", trim: "#dbeafe" },
+  { id: "spo_03", body: "athlete", head: "cap", left: "bow", right: "none", aura: "wind", trim: "#e0f2fe" },
+  { id: "spo_04", body: "athlete", head: "cap", left: "racket", right: "ball", aura: "wind", trim: "#dbeafe" },
+  { id: "spo_05", body: "athlete", head: "helm", left: "shield", right: "hammer", aura: "none", trim: "#bfdbfe" },
+  { id: "spo_06", body: "athlete", head: "cap", left: "cannon", right: "none", aura: "wind", trim: "#e0f2fe" },
+  { id: "spo_07", body: "athlete", head: "crown", left: "shield", right: "baton", aura: "none", trim: "#dbeafe" },
+  { id: "spo_08", body: "athlete", head: "cap", left: "hammer", right: "whistle", aura: "wind", trim: "#bfdbfe" },
+  { id: "spo_09", body: "athlete", head: "crown", left: "bow", right: "crystal", aura: "spark", trim: "#e0f2fe" },
+  { id: "spo_10", body: "athlete", head: "cap", left: "wing", right: "wing", aura: "wind", trim: "#dbeafe" },
 ];
 
 export const EXPANSION_RENDERERS: Record<string, DrawFn> = Object.fromEntries(
-  EXPANSION_CONFIGS.map((cfg) => [cfg.id, drawExpansion(cfg)]),
+  STYLES.map((style) => [style.id, drawUnit(style)]),
 );
-
