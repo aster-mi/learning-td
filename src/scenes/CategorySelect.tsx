@@ -27,7 +27,6 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
   // サブカテゴリ単体トグル
   const toggleSub = (subName: string) => {
     setSelected(prev => {
-      if (prev.size <= 1 && prev.has(subName)) return prev; // 最低1つ
       const next = new Set(prev);
       next.has(subName) ? next.delete(subName) : next.add(subName);
       return next;
@@ -41,10 +40,7 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
     setSelected(prev => {
       const next = new Set(prev);
       if (allOn) {
-        // 全OFF → ただし全体が1つになるなら最後の1つは残す
-        subs.forEach(s => {
-          if (next.size > 1) next.delete(s);
-        });
+        subs.forEach(s => next.delete(s));
       } else {
         subs.forEach(s => next.add(s));
       }
@@ -64,13 +60,14 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
   // 全選択 / 全解除
   const toggleAll = () => {
     if (selected.size === allSubs.length) {
-      setSelected(new Set([allSubs[0]]));
+      setSelected(new Set());
     } else {
       setSelected(new Set(allSubs));
     }
   };
 
   const isAllSelected = selected.size === allSubs.length;
+  const isEmpty = selected.size === 0;
 
   return (
     <div style={{
@@ -297,11 +294,13 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
       </div>
 
       {/* 選択中サマリー */}
-      <div style={{ marginTop: 16, fontSize: 12, color: "#64748b", textAlign: "center", maxWidth: 500 }}>
-        選択中：{[...selected].map(s => {
-          const def = SUB_CATEGORIES.find(d => d.name === s);
-          return def ? `${def.emoji}${s}` : s;
-        }).join("  ")}
+      <div style={{ marginTop: 16, fontSize: 12, color: isEmpty ? "#ef4444" : "#64748b", textAlign: "center", maxWidth: 500 }}>
+        {isEmpty
+          ? "⚠️ カテゴリを1つ以上選択してください"
+          : `選択中：${[...selected].map(s => {
+              const def = SUB_CATEGORIES.find(d => d.name === s);
+              return def ? `${def.emoji}${s}` : s;
+            }).join("  ")}`}
       </div>
 
       {/* 復習ボタン */}
@@ -335,17 +334,20 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
 
       {/* 決定ボタン */}
       <button
-        onClick={() => onConfirm([...selected], level)}
+        onClick={() => { if (!isEmpty) onConfirm([...selected], level); }}
+        disabled={isEmpty}
         style={{
           marginTop: wrongCount > 0 ? 10 : 20, padding: "14px 48px",
-          background: "#3b82f6", color: "#fff",
+          background: isEmpty ? "#334155" : "#3b82f6",
+          color: isEmpty ? "#64748b" : "#fff",
           border: "none", borderRadius: 10,
           fontWeight: "bold", fontSize: 18,
-          cursor: "pointer", boxShadow: "0 4px 16px #3b82f644",
-          transition: "transform 0.1s",
+          cursor: isEmpty ? "not-allowed" : "pointer",
+          boxShadow: isEmpty ? "none" : "0 4px 16px #3b82f644",
+          transition: "all 0.2s",
         }}
-        onMouseEnter={e => (e.currentTarget.style.transform = "scale(1.04)")}
-        onMouseLeave={e => (e.currentTarget.style.transform = "scale(1)")}
+        onMouseEnter={e => { if (!isEmpty) e.currentTarget.style.transform = "scale(1.04)"; }}
+        onMouseLeave={e => { if (!isEmpty) e.currentTarget.style.transform = "scale(1)"; }}
       >
         決定 → ステージ選択へ
       </button>
