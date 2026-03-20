@@ -2,12 +2,11 @@ import { useState, useRef, useCallback } from "react";
 import {
   GACHA_POOL_UNITS,
   RARITY_INFO,
+  SERIES_LIST,
   type UnitCatalogEntry,
   type Rarity,
 } from "../data/unitCatalog";
 import { UnitIcon } from "./UnitIcon";
-
-// ── Types ────────────────────────────────────────────────────────────────────
 
 export type GachaReward = {
   type: "unit" | "buff" | "coins";
@@ -27,20 +26,11 @@ interface Props {
   isMobile: boolean;
 }
 
-// ── Series tab definitions ───────────────────────────────────────────────────
-
-const SERIES_TABS: { key: string; label: string; emoji: string }[] = [
-  { key: "猫", label: "猫", emoji: "🐱" },
-  { key: "文房具", label: "文房具", emoji: "✏️" },
-  { key: "学校", label: "学校", emoji: "🏫" },
-  { key: "科学", label: "科学", emoji: "🔬" },
-  { key: "数学", label: "数学", emoji: "🧮" },
-  { key: "芸術", label: "芸術", emoji: "🎨" },
-];
-
 const BUFF_TAB_KEY = "__buff__";
+const SERIES_COST = 100;
+const BUFF_COST = 80;
 
-// ── Buff pool ────────────────────────────────────────────────────────────────
+const SERIES_ICON_CANDIDATES = ["🐱", "✏️", "🏫", "🔬", "🧮", "🎨", "🆕", "🎯", "🧩"];
 
 interface BuffDef {
   buffType: string;
@@ -61,8 +51,6 @@ const BUFF_POOL: BuffDef[] = [
   { buffType: "coin_boost", buffLabel: "コインブースト", buffDesc: "報酬コイン2倍", rarity: "rare", emoji: "💰" },
 ];
 
-// ── Rolling helpers ──────────────────────────────────────────────────────────
-
 const RARITY_WEIGHTS: Record<Rarity, number> = { common: 40, rare: 25, epic: 12, legendary: 3 };
 
 function weightedPick<T extends { rarity: Rarity }>(pool: T[]): T {
@@ -79,12 +67,7 @@ function weightedPick<T extends { rarity: Rarity }>(pool: T[]): T {
 function rollSeriesGacha(series: string, ownedUnitIds: string[]): GachaReward {
   const pool = GACHA_POOL_UNITS.filter((u) => u.series === series);
   const available = pool.filter((u) => !ownedUnitIds.includes(u.id));
-
-  if (available.length === 0) {
-    // Duplicate safety: give coins back
-    return { type: "coins", coins: 50, rarity: "common" };
-  }
-
+  if (available.length === 0) return { type: "coins", coins: 50, rarity: "common" };
   const pick = weightedPick(available);
   return { type: "unit", unitEntry: pick, rarity: pick.rarity };
 }
@@ -100,28 +83,38 @@ function rollBuffGacha(): GachaReward {
   };
 }
 
-// ── Costs ────────────────────────────────────────────────────────────────────
-
-const SERIES_COST = 100;
-const BUFF_COST = 80;
-
-// ── Component ────────────────────────────────────────────────────────────────
+type SelectorOption = {
+  key: string;
+  label: string;
+  emoji: string;
+  cost: number;
+};
 
 export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: Props) {
-  const [activeTab, setActiveTab] = useState<string>(SERIES_TABS[0].key);
+  const seriesOptions: SelectorOption[] = SERIES_LIST.map((series, i) => ({
+    key: series,
+    label: series,
+    emoji: SERIES_ICON_CANDIDATES[i % SERIES_ICON_CANDIDATES.length],
+    cost: SERIES_COST,
+  }));
+
+  const allOptions: SelectorOption[] = [
+    ...seriesOptions,
+    { key: BUFF_TAB_KEY, label: "バフガチャ", emoji: "⚡", cost: BUFF_COST },
+  ];
+
+  const [activeTab, setActiveTab] = useState<string>(allOptions[0]?.key ?? BUFF_TAB_KEY);
   const [phase, setPhase] = useState<"idle" | "rolling" | "reveal">("idle");
   const [reward, setReward] = useState<GachaReward | null>(null);
-  const [rollEmoji, setRollEmoji] = useState("❓");
+  const [rollEmoji, setRollEmoji] = useState("🎁");
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const isBuff = activeTab === BUFF_TAB_KEY;
   const cost = isBuff ? BUFF_COST : SERIES_COST;
-
-  // Series info
   const seriesPool = isBuff ? [] : GACHA_POOL_UNITS.filter((u) => u.series === activeTab);
   const seriesOwned = isBuff ? 0 : seriesPool.filter((u) => ownedUnitIds.includes(u.id)).length;
   const allOwned = !isBuff && seriesPool.length > 0 && seriesOwned === seriesPool.length;
-  const canPull = coins >= cost && !allOwned;
+  const canPull = coins >= cost && !allOwned && (isBuff || seriesPool.length > 0);
 
   const doPull = useCallback(() => {
     if (!canPull || phase === "rolling") return;
@@ -129,12 +122,11 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
     setReward(null);
 
     const result = isBuff ? rollBuffGacha() : rollSeriesGacha(activeTab, ownedUnitIds);
-
-    // Determine emojis for rolling animation
-    const emojiSource = isBuff
-      ? BUFF_POOL.map((b) => b.emoji)
-      : seriesPool.map((u) => u.emoji);
-    if (emojiSource.length === 0) return;
+    const emojiSource = isBuff ? BUFF_POOL.map((b) => b.emoji) : seriesPool.map((u) => u.emoji);
+    if (emojiSource.length === 0) {
+      setPhase("idle");
+      return;
+    }
 
     let count = 0;
     const maxRolls = 15 + Math.floor(Math.random() * 8);
@@ -152,7 +144,7 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
         setTimeout(() => setPhase("reveal"), 200);
       }
     }, 80);
-  }, [canPull, phase, isBuff, activeTab, ownedUnitIds, seriesPool, cost, onPull]);
+  }, [activeTab, canPull, cost, isBuff, onPull, ownedUnitIds, phase, seriesPool]);
 
   const handleTabChange = (key: string) => {
     if (phase === "rolling") return;
@@ -164,9 +156,8 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
   const isRevealed = phase === "reveal" && reward != null;
   const rInfo = reward ? RARITY_INFO[reward.rarity] : RARITY_INFO.common;
 
-  // Display emoji
   let displayEmoji = rollEmoji;
-  if (isRevealed) {
+  if (isRevealed && reward) {
     if (reward.type === "unit" && reward.unitEntry) displayEmoji = reward.unitEntry.emoji;
     else if (reward.type === "buff") {
       const bd = BUFF_POOL.find((b) => b.buffType === reward.buffType);
@@ -174,7 +165,8 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
     } else displayEmoji = "💰";
   }
 
-  const cardW = isMobile ? 300 : 380;
+  const cardW = isMobile ? 320 : 420;
+  const selectorCols = isMobile ? 2 : 3;
 
   return (
     <div style={{
@@ -182,16 +174,15 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
       display: "flex", flexDirection: "column", alignItems: "center",
       zIndex: 200, overflow: "hidden",
     }}>
-      {/* ── Header ── */}
       <div style={{
-        width: "100%", maxWidth: cardW + 40,
+        width: "100%", maxWidth: cardW + 64,
         display: "flex", alignItems: "center", justifyContent: "space-between",
         padding: "16px 20px 8px",
       }}>
-        <div style={{ fontSize: 20, fontWeight: "bold", color: "#e2e8f0", letterSpacing: 2 }}>
+        <div style={{ fontSize: 22, fontWeight: "bold", color: "#e2e8f0", letterSpacing: 1 }}>
           🎰 ガチャ
         </div>
-        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 14 }}>
           <div style={{
             fontSize: 15, fontWeight: "bold", color: "#fbbf24",
             background: "rgba(251,191,36,0.12)", borderRadius: 8, padding: "4px 12px",
@@ -207,53 +198,67 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
         </div>
       </div>
 
-      {/* ── Tabs ── */}
       <div style={{
-        width: "100%", maxWidth: cardW + 40,
-        overflowX: "auto", whiteSpace: "nowrap",
+        width: "100%", maxWidth: cardW + 64,
         padding: "6px 20px 10px",
-        WebkitOverflowScrolling: "touch",
-        scrollbarWidth: "none",
       }}>
-        <div style={{ display: "inline-flex", gap: 6 }}>
-          {SERIES_TABS.map((tab) => {
-            const active = activeTab === tab.key;
+        <div style={{
+          display: "grid",
+          gridTemplateColumns: `repeat(${selectorCols}, minmax(0, 1fr))`,
+          gap: 8,
+        }}>
+          {allOptions.map((opt) => {
+            const active = activeTab === opt.key;
+            const isOptBuff = opt.key === BUFF_TAB_KEY;
+            const optPool = isOptBuff ? [] : GACHA_POOL_UNITS.filter((u) => u.series === opt.key);
+            const optOwned = isOptBuff ? 0 : optPool.filter((u) => ownedUnitIds.includes(u.id)).length;
+            const subtitle = isOptBuff
+              ? `1回 ${opt.cost}コイン`
+              : `${optOwned}/${optPool.length} 所持`;
             return (
-              <button key={tab.key} onClick={() => handleTabChange(tab.key)} style={{
-                padding: "6px 14px", borderRadius: 8,
-                background: active ? "rgba(99,102,241,0.25)" : "rgba(255,255,255,0.05)",
-                border: active ? "1px solid #818cf8" : "1px solid #334155",
-                color: active ? "#a5b4fc" : "#94a3b8",
-                fontWeight: active ? "bold" : "normal",
-                fontSize: 13, cursor: phase === "rolling" ? "default" : "pointer",
-                whiteSpace: "nowrap", transition: "all 0.2s",
-              }}>
-                {tab.emoji} {tab.label}
+              <button
+                key={opt.key}
+                onClick={() => handleTabChange(opt.key)}
+                style={{
+                  borderRadius: 12,
+                  padding: "10px 10px",
+                  background: active
+                    ? (isOptBuff ? "rgba(234,179,8,0.25)" : "rgba(99,102,241,0.25)")
+                    : "rgba(255,255,255,0.05)",
+                  border: active
+                    ? (isOptBuff ? "1px solid #eab308" : "1px solid #818cf8")
+                    : "1px solid #334155",
+                  color: active ? "#e2e8f0" : "#94a3b8",
+                  textAlign: "left",
+                  cursor: phase === "rolling" ? "default" : "pointer",
+                  transition: "all 0.2s",
+                  minHeight: 72,
+                }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <span style={{ fontSize: 22, lineHeight: 1 }}>{opt.emoji}</span>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{
+                      fontSize: 13, fontWeight: 700, overflow: "hidden",
+                      textOverflow: "ellipsis", whiteSpace: "nowrap",
+                    }}>
+                      {opt.label}
+                    </div>
+                    <div style={{ fontSize: 11, opacity: 0.85 }}>{subtitle}</div>
+                  </div>
+                </div>
               </button>
             );
           })}
-          <button onClick={() => handleTabChange(BUFF_TAB_KEY)} style={{
-            padding: "6px 14px", borderRadius: 8,
-            background: activeTab === BUFF_TAB_KEY ? "rgba(234,179,8,0.2)" : "rgba(255,255,255,0.05)",
-            border: activeTab === BUFF_TAB_KEY ? "1px solid #eab308" : "1px solid #334155",
-            color: activeTab === BUFF_TAB_KEY ? "#fde047" : "#94a3b8",
-            fontWeight: activeTab === BUFF_TAB_KEY ? "bold" : "normal",
-            fontSize: 13, cursor: phase === "rolling" ? "default" : "pointer",
-            whiteSpace: "nowrap", transition: "all 0.2s",
-          }}>
-            ⚡ バフガチャ
-          </button>
         </div>
       </div>
 
-      {/* ── Main area ── */}
       <div style={{
         flex: 1, display: "flex", flexDirection: "column",
         alignItems: "center", justifyContent: "center",
-        width: "100%", maxWidth: cardW + 40,
+        width: "100%", maxWidth: cardW + 64,
         padding: "0 20px 20px", overflow: "auto",
       }}>
-        {/* Card */}
         <div style={{
           width: cardW, padding: "28px 24px",
           background: isRevealed ? rInfo.bg : "#0f172a",
@@ -263,18 +268,16 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
           transition: "all 0.5s ease",
           transform: isRevealed ? "scale(1)" : "scale(0.98)",
         }}>
-
-          {/* ── IDLE phase ── */}
           {phase === "idle" && !isBuff && (
             <div>
               <div style={{ fontSize: 48, marginBottom: 12 }}>
-                {SERIES_TABS.find((t) => t.key === activeTab)?.emoji}
+                {allOptions.find((o) => o.key === activeTab)?.emoji}
               </div>
-              <div style={{ fontSize: 18, fontWeight: "bold", color: "#e2e8f0", marginBottom: 4 }}>
-                {activeTab}シリーズ
+              <div style={{ fontSize: 19, fontWeight: "bold", color: "#e2e8f0", marginBottom: 4 }}>
+                {activeTab} シリーズ
               </div>
               <div style={{ fontSize: 13, color: "#94a3b8", marginBottom: 16 }}>
-                獲得済み: {seriesOwned} / {seriesPool.length} ユニット
+                所持: {seriesOwned} / {seriesPool.length} ユニット
               </div>
               {allOwned ? (
                 <div style={{
@@ -282,7 +285,7 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
                   background: "rgba(251,191,36,0.1)", borderRadius: 10, padding: "12px 20px",
                   border: "1px solid rgba(251,191,36,0.3)",
                 }}>
-                  全て獲得済み！
+                  このシリーズは全て所持済みです
                 </div>
               ) : (
                 <>
@@ -291,16 +294,14 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
                   </div>
                   <button onClick={doPull} disabled={!canPull} style={{
                     padding: "14px 36px", borderRadius: 12,
-                    background: canPull
-                      ? "linear-gradient(135deg, #6366f1, #8b5cf6)"
-                      : "#334155",
+                    background: canPull ? "linear-gradient(135deg, #6366f1, #8b5cf6)" : "#334155",
                     color: canPull ? "#fff" : "#64748b",
                     border: "none", fontWeight: "bold", fontSize: 17,
                     cursor: canPull ? "pointer" : "default",
                     boxShadow: canPull ? "0 4px 20px rgba(99,102,241,0.4)" : "none",
                     transition: "all 0.2s",
                   }}>
-                    ガチャを回す！
+                    ガチャを回す
                   </button>
                   {coins < SERIES_COST && (
                     <div style={{ fontSize: 12, color: "#ef4444", marginTop: 8 }}>
@@ -319,23 +320,21 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
                 バフガチャ
               </div>
               <div style={{ fontSize: 13, color: "#94a3b8", marginBottom: 16 }}>
-                ステージ開始時に使えるバフを獲得！
+                ステージ開始時に使えるバフを引けます
               </div>
               <div style={{ fontSize: 13, color: "#64748b", marginBottom: 12 }}>
                 1回 💰 {BUFF_COST} コイン
               </div>
               <button onClick={doPull} disabled={coins < BUFF_COST} style={{
                 padding: "14px 36px", borderRadius: 12,
-                background: coins >= BUFF_COST
-                  ? "linear-gradient(135deg, #eab308, #f59e0b)"
-                  : "#334155",
+                background: coins >= BUFF_COST ? "linear-gradient(135deg, #eab308, #f59e0b)" : "#334155",
                 color: coins >= BUFF_COST ? "#1a1a2e" : "#64748b",
                 border: "none", fontWeight: "bold", fontSize: 17,
                 cursor: coins >= BUFF_COST ? "pointer" : "default",
                 boxShadow: coins >= BUFF_COST ? "0 4px 20px rgba(234,179,8,0.4)" : "none",
                 transition: "all 0.2s",
               }}>
-                ガチャを回す！
+                ガチャを回す
               </button>
               {coins < BUFF_COST && (
                 <div style={{ fontSize: 12, color: "#ef4444", marginTop: 8 }}>
@@ -345,7 +344,6 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
             </div>
           )}
 
-          {/* ── ROLLING phase ── */}
           {phase === "rolling" && (
             <div>
               <div style={{
@@ -354,26 +352,20 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
               }}>
                 {rollEmoji}
               </div>
-              <div style={{
-                fontSize: 16, color: "#64748b", animation: "pulse 1s infinite",
-              }}>
+              <div style={{ fontSize: 16, color: "#64748b", animation: "pulse 1s infinite" }}>
                 ガチャ中...
               </div>
             </div>
           )}
 
-          {/* ── REVEAL phase ── */}
-          {isRevealed && (
+          {isRevealed && reward && (
             <div>
-              {/* Rarity label */}
               <div style={{
                 fontSize: 14, fontWeight: "bold", color: rInfo.color,
                 marginBottom: 6, animation: "gachaPop 0.5s ease",
               }}>
                 {rInfo.stars} {rInfo.label}
               </div>
-
-              {/* Icon */}
               <div style={{
                 marginBottom: 10,
                 animation: "gachaPop 0.5s ease",
@@ -390,8 +382,6 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
                   <span style={{ fontSize: 72, lineHeight: 1 }}>{displayEmoji}</span>
                 )}
               </div>
-
-              {/* Name */}
               <div style={{
                 fontSize: 22, fontWeight: "bold", color: "#fff", marginBottom: 4,
                 animation: "gachaPop 0.5s ease",
@@ -403,7 +393,6 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
                     : `${reward.coins} コイン`}
               </div>
 
-              {/* Unit series badge */}
               {reward.type === "unit" && reward.unitEntry && (
                 <div style={{
                   display: "inline-block", fontSize: 11, fontWeight: "bold",
@@ -412,11 +401,10 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
                   padding: "2px 10px", marginBottom: 10,
                   animation: "gachaPop 0.5s ease",
                 }}>
-                  {reward.unitEntry.series}シリーズ
+                  {reward.unitEntry.series} シリーズ
                 </div>
               )}
 
-              {/* Buff description */}
               {reward.type === "buff" && (
                 <div style={{
                   fontSize: 14, color: rInfo.color, marginBottom: 10,
@@ -426,19 +414,17 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
                 </div>
               )}
 
-              {/* Coins description */}
               {reward.type === "coins" && (
                 <div style={{
                   fontSize: 13, color: "#fbbf24", marginTop: 4, marginBottom: 10,
                   animation: "gachaPop 0.5s ease",
                 }}>
-                  重複ユニット → コインに変換
+                  重複分はコインで還元されました
                 </div>
               )}
 
-              {/* Unit stats grid */}
               {reward.type === "unit" && reward.unitEntry && (() => {
-                const u = reward.unitEntry!;
+                const u = reward.unitEntry;
                 const stats = [
                   { key: "HP", val: u.hp },
                   { key: "ATK", val: u.atk },
@@ -464,7 +450,6 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
                 );
               })()}
 
-              {/* Pull again / close buttons */}
               <div style={{
                 display: "flex", gap: 10, justifyContent: "center",
                 marginTop: 20, animation: "gachaPop 0.7s ease",
@@ -494,7 +479,6 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
         </div>
       </div>
 
-      {/* ── Keyframes ── */}
       <style>{`
         @keyframes gachaSpin {
           0% { transform: rotateY(0deg); }
