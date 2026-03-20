@@ -30,8 +30,6 @@ const BUFF_TAB_KEY = "__buff__";
 const SERIES_COST = 100;
 const BUFF_COST = 80;
 
-const SERIES_ICON_CANDIDATES = ["🐱", "✏️", "🏫", "🔬", "🧮", "🎨", "🆕", "🎯", "🧩"];
-
 interface BuffDef {
   buffType: string;
   buffLabel: string;
@@ -86,27 +84,26 @@ function rollBuffGacha(): GachaReward {
 type SelectorOption = {
   key: string;
   label: string;
-  emoji: string;
   cost: number;
 };
 
 export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: Props) {
-  const seriesOptions: SelectorOption[] = SERIES_LIST.map((series, i) => ({
+  const seriesOptions: SelectorOption[] = SERIES_LIST.map((series) => ({
     key: series,
     label: series,
-    emoji: SERIES_ICON_CANDIDATES[i % SERIES_ICON_CANDIDATES.length],
     cost: SERIES_COST,
   }));
 
   const allOptions: SelectorOption[] = [
     ...seriesOptions,
-    { key: BUFF_TAB_KEY, label: "バフガチャ", emoji: "⚡", cost: BUFF_COST },
+    { key: BUFF_TAB_KEY, label: "バフガチャ", cost: BUFF_COST },
   ];
 
   const [activeTab, setActiveTab] = useState<string>(allOptions[0]?.key ?? BUFF_TAB_KEY);
   const [phase, setPhase] = useState<"idle" | "rolling" | "reveal">("idle");
   const [reward, setReward] = useState<GachaReward | null>(null);
   const [rollEmoji, setRollEmoji] = useState("🎁");
+  const [rollingUnit, setRollingUnit] = useState<UnitCatalogEntry | null>(null);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const isBuff = activeTab === BUFF_TAB_KEY;
@@ -122,8 +119,9 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
     setReward(null);
 
     const result = isBuff ? rollBuffGacha() : rollSeriesGacha(activeTab, ownedUnitIds);
-    const emojiSource = isBuff ? BUFF_POOL.map((b) => b.emoji) : seriesPool.map((u) => u.emoji);
-    if (emojiSource.length === 0) {
+    const unitSource = isBuff ? [] : seriesPool;
+    const emojiSource = isBuff ? BUFF_POOL.map((b) => b.emoji) : [];
+    if ((isBuff && emojiSource.length === 0) || (!isBuff && unitSource.length === 0)) {
       setPhase("idle");
       return;
     }
@@ -133,12 +131,18 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
 
     if (intervalRef.current) clearInterval(intervalRef.current);
     intervalRef.current = setInterval(() => {
-      const idx = Math.floor(Math.random() * emojiSource.length);
-      setRollEmoji(emojiSource[idx]);
+      if (isBuff) {
+        const idx = Math.floor(Math.random() * emojiSource.length);
+        setRollEmoji(emojiSource[idx]);
+      } else {
+        const idx = Math.floor(Math.random() * unitSource.length);
+        setRollingUnit(unitSource[idx]);
+      }
       count++;
       if (count >= maxRolls) {
         if (intervalRef.current) clearInterval(intervalRef.current);
         intervalRef.current = null;
+        setRollingUnit(null);
         setReward(result);
         onPull(result, cost);
         setTimeout(() => setPhase("reveal"), 200);
@@ -151,6 +155,7 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
     setActiveTab(key);
     setPhase("idle");
     setReward(null);
+    setRollingUnit(null);
   };
 
   const isRevealed = phase === "reveal" && reward != null;
@@ -236,7 +241,18 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
                 }}
               >
                 <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  <span style={{ fontSize: 22, lineHeight: 1 }}>{opt.emoji}</span>
+                  {isOptBuff ? (
+                    <span style={{ fontSize: 22, lineHeight: 1 }}>⚡</span>
+                  ) : optPool[0] ? (
+                    <UnitIcon
+                      unitId={optPool[0].id}
+                      color={optPool[0].color}
+                      size={24}
+                      emoji={optPool[0].emoji}
+                    />
+                  ) : (
+                    <span style={{ fontSize: 22, lineHeight: 1 }}>?</span>
+                  )}
                   <div style={{ minWidth: 0 }}>
                     <div style={{
                       fontSize: 13, fontWeight: 700, overflow: "hidden",
@@ -271,7 +287,16 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
           {phase === "idle" && !isBuff && (
             <div>
               <div style={{ fontSize: 48, marginBottom: 12 }}>
-                {allOptions.find((o) => o.key === activeTab)?.emoji}
+                {seriesPool[0] ? (
+                  <UnitIcon
+                    unitId={seriesPool[0].id}
+                    color={seriesPool[0].color}
+                    size={64}
+                    emoji={seriesPool[0].emoji}
+                  />
+                ) : (
+                  "?"
+                )}
               </div>
               <div style={{ fontSize: 19, fontWeight: "bold", color: "#e2e8f0", marginBottom: 4 }}>
                 {activeTab} シリーズ
@@ -346,12 +371,30 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
 
           {phase === "rolling" && (
             <div>
-              <div style={{
-                fontSize: 72, marginBottom: 10,
-                animation: "gachaSpin 0.1s linear infinite",
-              }}>
-                {rollEmoji}
-              </div>
+              {isBuff ? (
+                <div style={{
+                  fontSize: 72, marginBottom: 10,
+                  animation: "gachaSpin 0.1s linear infinite",
+                }}>
+                  {rollEmoji}
+                </div>
+              ) : (
+                <div style={{
+                  marginBottom: 10, display: "flex", justifyContent: "center",
+                  animation: "gachaSpin 0.1s linear infinite",
+                }}>
+                  {rollingUnit ? (
+                    <UnitIcon
+                      unitId={rollingUnit.id}
+                      color={rollingUnit.color}
+                      size={84}
+                      emoji={rollingUnit.emoji}
+                    />
+                  ) : (
+                    <span style={{ fontSize: 72, lineHeight: 1 }}>?</span>
+                  )}
+                </div>
+              )}
               <div style={{ fontSize: 16, color: "#64748b", animation: "pulse 1s infinite" }}>
                 ガチャ中...
               </div>
