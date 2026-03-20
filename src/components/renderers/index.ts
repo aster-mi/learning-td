@@ -7,6 +7,7 @@ import { drawPencil, drawEraser, drawRuler, drawScissors, drawCompass, drawStapl
 import { drawTextbook, drawSchoolbag, drawBell, drawChalk, drawGlobe } from "./school";
 import { drawBeaker, drawMagnet, drawBulb, drawTelescope, drawTesttube, drawMicroscope } from "./science";
 import { drawAbacus, drawCalculator, drawPi, drawCrayon, drawPalette, drawNote } from "./mathArt";
+import { EXPANSION_RENDERERS } from "./expansion";
 
 export type UnitDrawFn = (
   ctx: CanvasRenderingContext2D,
@@ -47,4 +48,5 @@ export const UNIT_RENDERERS: Record<string, UnitDrawFn> = {
   crayon:    drawCrayon,
   palette:   drawPalette,
   note:      drawNote,
+  ...EXPANSION_RENDERERS,
 };
