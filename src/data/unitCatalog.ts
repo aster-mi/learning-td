@@ -186,6 +186,36 @@ export const UNIT_CATALOG: UnitCatalogEntry[] = [
     rarity: "rare", hp: 55, atk: 18, atkInterval: 800, speed: 95, range: 50,
     cost: 22, color: "#f0abfc", radius: 12, desc: "軽やかなメロディで連続攻撃",
   },
+  {
+    id: "notebook", label: "ノート騎士", emoji: "📘", series: "追加",
+    rarity: "common", hp: 140, atk: 19, atkInterval: 1300, speed: 52, range: 48,
+    cost: 24, color: "#60a5fa", radius: 16, desc: "堅実な前線を作るバランス型ユニット",
+  },
+  {
+    id: "protractor", label: "分度器レンジャー", emoji: "📐", series: "追加",
+    rarity: "rare", hp: 95, atk: 26, atkInterval: 1200, speed: 74, range: 95,
+    cost: 30, color: "#22d3ee", radius: 14, desc: "角度計算ショットで中距離を制圧",
+  },
+  {
+    id: "battery", label: "バッテリー兵", emoji: "🔋", series: "追加",
+    rarity: "common", hp: 180, atk: 12, atkInterval: 900, speed: 40, range: 40,
+    cost: 20, color: "#84cc16", radius: 17, desc: "継戦能力が高く前線を維持する",
+  },
+  {
+    id: "graphpaper", label: "方眼スナイパー", emoji: "🧾", series: "追加",
+    rarity: "rare", hp: 70, atk: 34, atkInterval: 2200, speed: 34, range: 145,
+    cost: 34, color: "#a78bfa", radius: 13, desc: "長射程の高火力で後方支援",
+  },
+  {
+    id: "paintbrush", label: "絵筆ウィザード", emoji: "🖌️", series: "追加",
+    rarity: "epic", hp: 120, atk: 46, atkInterval: 2500, speed: 30, range: 120,
+    cost: 44, color: "#f472b6", radius: 17, desc: "広い射程と重い一撃を両立",
+  },
+  {
+    id: "drone", label: "ドローン先生", emoji: "🚁", series: "追加",
+    rarity: "legendary", hp: 160, atk: 28, atkInterval: 900, speed: 105, range: 90,
+    cost: 52, color: "#38bdf8", radius: 16, desc: "高速機動しながら高頻度で攻撃する",
+  },
 ];
 
 // ── ヘルパー ──────────────────────────────────────────────────────────────
