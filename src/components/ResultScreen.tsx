@@ -41,7 +41,7 @@ export function ResultScreen({
   const accPct = totalQ > 0 ? Math.round(accuracy * 100) : 0;
 
   return (
-    <div style={{
+    <div role="status" aria-label="ステージ結果" style={{
       position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)",
       display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
       gap: 12, zIndex: 100, padding: 16,

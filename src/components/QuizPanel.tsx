@@ -353,6 +353,8 @@ export function QuizPanel({
       `}</style>
 
       <div
+        role="form"
+        aria-label="クイズ"
         style={{
           background: "#1c1028",
           borderTop: isPaused ? "2px solid #fbbf24" : "1px solid #2d1f40",
@@ -490,6 +492,7 @@ export function QuizPanel({
             {current.choices.map((choice, index) => (
               <button
                 key={choice}
+                aria-label={`選択肢${index + 1}: ${choice}`}
                 onClick={() => answer(choice)}
                 disabled={!!disabled || !!feedback}
                 style={getButtonStyle(choice)}

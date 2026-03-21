@@ -1323,6 +1323,8 @@ export function BattleCanvas({ state, playerBaseX, enemyBaseX, canvasWidth, them
       ref={canvasRef}
       width={canvasWidth}
       height={CANVAS_HEIGHT}
+      role="img"
+      aria-label="バトルフィールド"
       style={{
         display: "block", width: "100%",
         filter: isPaused ? "grayscale(45%) brightness(0.72)" : "none",

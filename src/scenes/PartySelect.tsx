@@ -465,6 +465,7 @@ export function PartySelect({ ownedUnitIds, currentParty, saveData, onConfirm, o
 
   return (
     <div
+      aria-label="編成"
       style={{
         minHeight: "100vh",
         background: "linear-gradient(135deg, #020617 0%, #0f172a 45%, #1e1b4b 100%)",
@@ -515,6 +516,8 @@ export function PartySelect({ ownedUnitIds, currentParty, saveData, onConfirm, o
 
         {/* ── party slots ── */}
         <div
+          role="group"
+          aria-label="パーティスロット"
           style={{
             background: "rgba(15,23,42,0.7)",
             border: "1px solid #334155",

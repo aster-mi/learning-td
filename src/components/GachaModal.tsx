@@ -183,7 +183,7 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
   const selectorCols = isMobile ? 2 : 3;
 
   return (
-    <div style={{
+    <div role="dialog" aria-label="ガチャ" style={{
       position: "fixed", inset: 0, background: "rgba(0,0,0,0.92)",
       display: "flex", flexDirection: "column", alignItems: "center",
       zIndex: 200, overflow: "hidden",

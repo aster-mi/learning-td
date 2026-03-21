@@ -220,7 +220,7 @@ function RadarChart({ data }: { data: CategoryInsight[] }) {
 
   return (
     <div style={{ display: "flex", justifyContent: "center", padding: "8px 0" }}>
-      <canvas ref={canvasRef} style={{ maxWidth: "100%" }} />
+      <canvas ref={canvasRef} aria-label="カテゴリ別正答率レーダーチャート" style={{ maxWidth: "100%" }} />
     </div>
   );
 }
