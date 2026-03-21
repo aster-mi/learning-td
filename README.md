@@ -1,73 +1,121 @@
-# React + TypeScript + Vite
+# Learning TD
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+学習クイズとタワーディフェンスを組み合わせた、ブラウザ向けの学習ゲームです。  
+問題に答えてエネルギーをため、ユニットを出撃させながらステージを攻略します。
 
-Currently, two official plugins are available:
+## アプリ概要
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+`Learning TD` は「勉強を続けたくなる導線」を重視した学習ゲームです。
 
-## React Compiler
+- クイズに正解すると戦況が有利になる
+- ステージ攻略で新しいユニットや報酬を獲得できる
+- ガチャ、図鑑、育成、ミッションで継続プレイの理由を作る
+- カテゴリ別の得意・苦手や直近の学習量を可視化できる
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+単なる問題集ではなく、遊びながら自然に反復学習できることを狙っています。
 
-## Expanding the ESLint configuration
+## 主な機能
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+- 学習カテゴリ選択
+  - なぞなぞ、雑学、ことわざ、歴史、理科、プログラミングなど複数カテゴリに対応
+- タワーディフェンスバトル
+  - 正解でエネルギー獲得、不正解でペナルティ
+  - コンボによるボーナスあり
+- ステージ進行
+  - 複数ワールド、複数ステージ構成
+  - ステージごとに背景テーマが変化
+- デイリー/ウィークリーミッション
+  - ログイン、正解数、クリア回数、コンボなどの達成目標を用意
+- デイリーチャレンジ
+  - 日替わり条件つきの特別プレイ
+- ガチャ
+  - コインでユニットや報酬を獲得
+- 図鑑 / 編成 / 育成
+  - 所持率の確認
+  - ユニット熟練度の蓄積
+  - HP / ATK 強化
+- 学習ダッシュボード
+  - カテゴリ別の正答率
+  - 直近7日の学習量グラフ
+  - 連続ログインや累計実績の可視化
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+## 遊び方
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+1. 学習カテゴリと難易度を選びます
+2. ステージを選んでバトル開始
+3. クイズに答えてエネルギーをためます
+4. エネルギーを使ってユニットを出撃させます
+5. 敵拠点を破壊できればクリアです
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+クリア報酬でコインや解放要素を集め、図鑑や育成を進めながら次のワールドへ挑戦できます。
+
+## このプロジェクトで重視していること
+
+- 問題文と選択肢の品質
+- 継続プレイしたくなるゲームループ
+- モバイルでも遊びやすいUI
+- 収集、成長、学習可視化の3軸での定着
+
+## 開発環境
+
+- React
+- TypeScript
+- Vite
+
+## セットアップ
+
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+開発サーバー起動後、ブラウザで表示して確認できます。
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## 利用可能なコマンド
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+ローカル開発サーバーを起動します。
+
+```bash
+npm run build
+```
+
+本番ビルドを作成します。
+
+```bash
+npm run preview
+```
+
+ビルド済み成果物をローカル確認します。
+
+```bash
+npm run quiz:validate
+```
+
+問題データの整合性チェックを行います。
+
+## ディレクトリ概要
+
+```text
+src/
+  components/   UIコンポーネント
+  data/         問題、ステージ、保存データ、進捗ロジック
+  domain/       バトルロジック
+  scenes/       画面単位の実装
+```
+
+## 今後の拡張候補
+
+- イベント限定ミッション
+- 育成素材や進化システム
+- より詳しい学習履歴分析
+- ソーシャル要素やランキング
+
+## 開発メモ
+
+- 問題データ追加時は `npm run quiz:validate` の実行を推奨
+- ステージや進捗機能はローカル保存を利用
+- GitHub Pages でのデプロイを前提に運用

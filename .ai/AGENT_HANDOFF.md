@@ -25,6 +25,24 @@ Next Step:
 
 ---
 
+## [2026-03-21 15:16 JST] Agent: Codex
+Summary:
+- `README.md` をテンプレート状態から全面更新し、アプリ概要、主な機能、遊び方、技術構成、開発コマンド、今後の拡張候補を整理した。
+- 学習ゲームとしての特徴と、ミッション・図鑑・育成・学習ダッシュボードなど現在の主要機能が分かる内容にした。
+
+Changed Files:
+- `README.md`
+- `.ai/AGENT_HANDOFF.md`
+
+Validation:
+- ドキュメント更新のみ
+
+Open Questions:
+- なし
+
+Next Step:
+- 必要なら README にスクリーンショットや GitHub Pages の公開URLを追加する。
+
 ## [2026-03-21 15:07 JST] Agent: Codex
 Summary:
 - 定着施策として、ホームにデイリー/ウィークリーミッション、連続ログイン、学習統計ダッシュボードを追加した。
