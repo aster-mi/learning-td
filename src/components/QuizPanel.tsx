@@ -7,7 +7,6 @@ import { sfxCorrect, sfxWrong } from "../audio/SoundManager";
 import { useWindowSize } from "../hooks/useWindowSize";
 
 interface Props {
-  energy: number;
   combo: number;
   subCategories: string[];
   selectedLevel: number;
@@ -72,7 +71,6 @@ function pickWeighted(
 }
 
 export function QuizPanel({
-  energy,
   combo,
   subCategories,
   selectedLevel,
@@ -418,8 +416,6 @@ export function QuizPanel({
                 <span style={{ color: "#4ade80" }}>正解 {correctCount}</span> / <span style={{ color: "#f87171" }}>不正解 {wrongCount}</span>
               </span>
             </div>
-
-            <span style={{ color: "#fbbf24", fontWeight: "bold", fontSize: 12, whiteSpace: "nowrap" }}>⚡{energy}</span>
           </div>
 
           <div

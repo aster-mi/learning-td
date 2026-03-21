@@ -425,7 +425,6 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
 
       {/* ── クイズ（下）：モバイルでは残り全部を使う ── */}
       <QuizPanel
-        energy={energy}
         combo={combo}
         subCategories={subCategories}
         selectedLevel={selectedLevel}
