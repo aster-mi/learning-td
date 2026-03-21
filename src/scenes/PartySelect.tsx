@@ -473,9 +473,10 @@ export function PartySelect({ ownedUnitIds, currentParty, saveData, onConfirm, o
         <div style={{ display: "grid", gap: 16 }}>
           <div
             style={{
-              display: "grid",
-              gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)",
-              gap: 12,
+              display: "flex",
+              flexWrap: "wrap",
+              gap: 8,
+              alignItems: "center",
             }}
           >
             {[
@@ -484,9 +485,9 @@ export function PartySelect({ ownedUnitIds, currentParty, saveData, onConfirm, o
               { label: "編成数", value: `${party.length}/${MAX_PARTY}`, color: "#22d3ee" },
               { label: "所持コイン", value: `${saveData.coins}`, color: "#fbbf24" },
             ].map((item) => (
-              <div key={item.label} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 10, padding: "5px 8px" }}>
-                <div style={{ fontSize: 8, color: "#94a3b8", marginBottom: 2, lineHeight: 1.1 }}>{item.label}</div>
-                <div style={{ fontSize: 13, fontWeight: 700, color: item.color, lineHeight: 1.1 }}>{item.value}</div>
+              <div key={item.label} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 999, padding: "5px 9px", display: "inline-flex", alignItems: "center", gap: 6 }}>
+                <div style={{ fontSize: 8, color: "#94a3b8", lineHeight: 1 }}>{item.label}</div>
+                <div style={{ fontSize: 12, fontWeight: 700, color: item.color, lineHeight: 1 }}>{item.value}</div>
               </div>
             ))}
           </div>

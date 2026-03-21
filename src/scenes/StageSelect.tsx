@@ -61,12 +61,16 @@ function SummaryCard({ label, value, color }: { label: string; value: string; co
       style={{
         background: "rgba(15,23,42,0.78)",
         border: "1px solid #334155",
-        borderRadius: 10,
-        padding: "5px 8px",
+        borderRadius: 999,
+        padding: "5px 9px",
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 6,
+        minWidth: 0,
       }}
     >
-      <div style={{ fontSize: 8, color: "#94a3b8", marginBottom: 2, lineHeight: 1.1 }}>{label}</div>
-      <div style={{ fontSize: 13, fontWeight: 700, color, lineHeight: 1.1 }}>{value}</div>
+      <div style={{ fontSize: 8, color: "#94a3b8", lineHeight: 1 }}>{label}</div>
+      <div style={{ fontSize: 12, fontWeight: 700, color, lineHeight: 1 }}>{value}</div>
     </div>
   );
 }
@@ -258,9 +262,10 @@ export function StageSelect({
 
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4, 1fr)",
-            gap: 12,
+            display: "flex",
+            flexWrap: "wrap",
+            gap: 8,
+            alignItems: "center",
           }}
         >
           <SummaryCard label="連続ログイン" value={`${saveData.login.streak}日`} color="#38bdf8" />
