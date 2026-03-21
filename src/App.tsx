@@ -13,6 +13,7 @@ import { claimMission, ensureLoginProgress } from "./data/progression";
 import { AchievementToast } from "./components/AchievementToast";
 import { AchievementList } from "./components/AchievementList";
 import { GachaModal, type GachaReward } from "./components/GachaModal";
+import { useWindowSize } from "./hooks/useWindowSize";
 import type { Achievement } from "./data/achievements";
 
 const STORAGE_KEY        = "learning_td_cleared";
@@ -49,6 +50,7 @@ function saveLevel(level: number) {
 }
 
 export default function App() {
+  const { isMobile } = useWindowSize();
   const [scene, setScene]                 = useState<"category" | "select" | "party" | "gacha" | "game" | "achievements">("category");
   const [activeStageId, setActiveStageId] = useState<number>(1);
   const [clearedStages, setClearedStages] = useState<Set<number>>(loadCleared);
@@ -226,7 +228,7 @@ export default function App() {
           ownedUnitIds={saveData.unlockedUnits}
           onPull={handleGachaPull}
           onClose={() => { setSaveData(loadSave()); setScene("select"); }}
-          isMobile={window.innerWidth < 768}
+          isMobile={isMobile}
         />
       )}
       {scene === "achievements" && (
