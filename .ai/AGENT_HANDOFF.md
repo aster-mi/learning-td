@@ -25,6 +25,24 @@ Next Step:
 
 ---
 
+## [2026-03-21 13:56 JST] Agent: Codex
+Summary:
+- ガチャ結果画面の `もう一度回す` を即ロール開始に変更した。
+- 待機画面へ戻ってから再度押す必要があった二度手間を解消した。
+
+Changed Files:
+- `src/components/GachaModal.tsx`
+- `.ai/AGENT_HANDOFF.md`
+
+Validation:
+- `npm run build` → success
+
+Open Questions:
+- なし
+
+Next Step:
+- 必要なら `10連` など連続ガチャ導線も同じ操作感で整理する。
+
 ## [2026-03-21 13:52 JST] Agent: Codex
 Summary:
 - ガチャ画面を二段構成に変更し、種類選択後の「回す/結果表示」を独立モーダル化した。

@@ -562,7 +562,7 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
                 marginTop: 20, animation: "gachaPop 0.7s ease",
               }}>
                 {coins >= cost && !allOwned && (
-                  <button onClick={() => { setPhase("idle"); setReward(null); }} style={{
+                  <button onClick={doPull} style={{
                     padding: "12px 24px", borderRadius: 10,
                     background: "rgba(255,255,255,0.08)",
                     border: "1px solid #475569", color: "#e2e8f0",
