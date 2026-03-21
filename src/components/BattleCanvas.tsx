@@ -2,6 +2,7 @@ import { useEffect, useRef } from "react";
 import type { GameState } from "../domain/GameEngine";
 import type { Unit } from "../domain/Unit";
 import type { Enemy } from "../domain/Enemy";
+import type { StageThemeKey } from "../data/stages";
 import { UNIT_RENDERERS } from "./renderers";
 
 interface Props {
@@ -9,6 +10,7 @@ interface Props {
   playerBaseX: number;
   enemyBaseX: number;
   canvasWidth: number;
+  themeKey: StageThemeKey;
   isPaused?: boolean;
   combo?: number;
   comboFlashKey?: number;  // changes when combo milestone hit
@@ -38,6 +40,129 @@ function lighter(hex: string, n: number) {
 interface HitEffect { x:number; y:number; t:number; dur:number; color:string; }
 interface Particle  { x:number; y:number; vx:number; vy:number; t:number; dur:number; color:string; r:number; }
 interface Angel     { x:number; y:number; t:number; dur:number; color:string; facingLeft:boolean; }
+interface StageTheme {
+  skyTop: string;
+  skyMid: string;
+  skyBottom: string;
+  starColor?: string;
+  celestial?: "sun" | "moon" | "none";
+  celestialColor?: string;
+  celestialGlow?: string;
+  farSilhouette: string;
+  nearSilhouette: string;
+  floraColor: string;
+  groundTop: string;
+  groundMid: string;
+  groundBottom: string;
+  lane: string;
+  laneEdge: string;
+  decor: "trees" | "dunes" | "ice" | "lava" | "ruins";
+  hazeColor?: string;
+}
+
+const STAGE_THEMES: Record<StageThemeKey, StageTheme> = {
+  meadowMorning: {
+    skyTop: "#5bb6ff", skyMid: "#87d7ff", skyBottom: "#d9f6ff",
+    celestial: "sun", celestialColor: "#fff2b3", celestialGlow: "rgba(255,232,148,0.55)",
+    farSilhouette: "#6cae80", nearSilhouette: "#4c875c", floraColor: "#315a25",
+    groundTop: "#6fc46b", groundMid: "#4f983f", groundBottom: "#2b5a1c",
+    lane: "#8b5a2b", laneEdge: "#b97938", decor: "trees",
+  },
+  meadowSunset: {
+    skyTop: "#ff9254", skyMid: "#ffb56d", skyBottom: "#ffe2ad",
+    celestial: "sun", celestialColor: "#fff1b8", celestialGlow: "rgba(255,207,120,0.5)",
+    farSilhouette: "#a1644f", nearSilhouette: "#6a5331", floraColor: "#524e20",
+    groundTop: "#9bc45f", groundMid: "#6c8d34", groundBottom: "#3d511a",
+    lane: "#8a5631", laneEdge: "#b06f42", decor: "trees", hazeColor: "rgba(255,180,120,0.14)",
+  },
+  meadowRuins: {
+    skyTop: "#6189b8", skyMid: "#88b4c8", skyBottom: "#dce8d4",
+    celestial: "sun", celestialColor: "#f7f1d0", celestialGlow: "rgba(255,234,175,0.45)",
+    farSilhouette: "#58775a", nearSilhouette: "#40553c", floraColor: "#2d4229",
+    groundTop: "#6a8a55", groundMid: "#4e6840", groundBottom: "#2f4128",
+    lane: "#76634d", laneEdge: "#95806a", decor: "ruins",
+  },
+  desertNoon: {
+    skyTop: "#5cb2f4", skyMid: "#9dd8ff", skyBottom: "#f7e2b0",
+    celestial: "sun", celestialColor: "#fff1b5", celestialGlow: "rgba(255,238,173,0.55)",
+    farSilhouette: "#d2a766", nearSilhouette: "#b88448", floraColor: "#8f6b2e",
+    groundTop: "#efc878", groundMid: "#d49f53", groundBottom: "#9b652e",
+    lane: "#a76836", laneEdge: "#ca854a", decor: "dunes",
+  },
+  desertSunset: {
+    skyTop: "#b94b3d", skyMid: "#f18a55", skyBottom: "#f9d392",
+    celestial: "sun", celestialColor: "#ffe39d", celestialGlow: "rgba(255,194,117,0.5)",
+    farSilhouette: "#9c5f43", nearSilhouette: "#6f432c", floraColor: "#6a4d22",
+    groundTop: "#dba65c", groundMid: "#b57735", groundBottom: "#6d411b",
+    lane: "#845127", laneEdge: "#ad6934", decor: "dunes", hazeColor: "rgba(255,140,80,0.12)",
+  },
+  desertStorm: {
+    skyTop: "#8c6a4d", skyMid: "#b58a60", skyBottom: "#d7bc8f",
+    celestial: "none", farSilhouette: "#876447", nearSilhouette: "#6e5037", floraColor: "#6a5438",
+    groundTop: "#b7905d", groundMid: "#926a41", groundBottom: "#5c3f27",
+    lane: "#7a4a26", laneEdge: "#9e673b", decor: "dunes", hazeColor: "rgba(222,184,135,0.22)",
+  },
+  glacierDawn: {
+    skyTop: "#89bfff", skyMid: "#b9ddff", skyBottom: "#f2fbff",
+    celestial: "sun", celestialColor: "#fff6cd", celestialGlow: "rgba(255,245,196,0.48)",
+    farSilhouette: "#9ad3e6", nearSilhouette: "#73b0cb", floraColor: "#a2e5ff",
+    groundTop: "#d9f8ff", groundMid: "#afe6f6", groundBottom: "#75bfd8",
+    lane: "#86a8b9", laneEdge: "#c1dce8", decor: "ice",
+  },
+  glacierNight: {
+    skyTop: "#08132b", skyMid: "#123560", skyBottom: "#2f5d88", starColor: "#d9f4ff",
+    celestial: "moon", celestialColor: "#eef7ff", celestialGlow: "rgba(226,244,255,0.25)",
+    farSilhouette: "#123658", nearSilhouette: "#0d2842", floraColor: "#88d0ff",
+    groundTop: "#9bd7f0", groundMid: "#5fa9ca", groundBottom: "#2c6078",
+    lane: "#5c7184", laneEdge: "#94adc0", decor: "ice",
+  },
+  glacierAurora: {
+    skyTop: "#081328", skyMid: "#113767", skyBottom: "#16305a", starColor: "#d7f9ff",
+    celestial: "moon", celestialColor: "#f3fbff", celestialGlow: "rgba(212,255,245,0.26)",
+    farSilhouette: "#15375d", nearSilhouette: "#0a2139", floraColor: "#8cf0d8",
+    groundTop: "#8ad2f8", groundMid: "#519bc5", groundBottom: "#204f71",
+    lane: "#56718c", laneEdge: "#84b7c8", decor: "ice", hazeColor: "rgba(86,255,196,0.12)",
+  },
+  volcanoForge: {
+    skyTop: "#30120f", skyMid: "#6e241b", skyBottom: "#d15c2b",
+    celestial: "none", farSilhouette: "#421615", nearSilhouette: "#250909", floraColor: "#ff8a3d",
+    groundTop: "#5f2218", groundMid: "#41110b", groundBottom: "#220605",
+    lane: "#3a2620", laneEdge: "#8f5a2f", decor: "lava", hazeColor: "rgba(255,120,60,0.15)",
+  },
+  volcanoAsh: {
+    skyTop: "#2b2026", skyMid: "#5a3d40", skyBottom: "#8e5a43",
+    celestial: "none", farSilhouette: "#3e2a2f", nearSilhouette: "#24161b", floraColor: "#ff9f6a",
+    groundTop: "#68413a", groundMid: "#432424", groundBottom: "#221010",
+    lane: "#41302a", laneEdge: "#8a5844", decor: "lava", hazeColor: "rgba(180,180,180,0.12)",
+  },
+  volcanoCitadel: {
+    skyTop: "#17080b", skyMid: "#421112", skyBottom: "#8f271e",
+    celestial: "none", farSilhouette: "#231012", nearSilhouette: "#120607", floraColor: "#ff7043",
+    groundTop: "#53211a", groundMid: "#2d0d0a", groundBottom: "#120304",
+    lane: "#342626", laneEdge: "#7d3b2c", decor: "lava", hazeColor: "rgba(255,60,30,0.12)",
+  },
+  ruinsCanal: {
+    skyTop: "#4a8ab5", skyMid: "#77b9c7", skyBottom: "#d9ead8",
+    celestial: "sun", celestialColor: "#fff0c6", celestialGlow: "rgba(255,230,164,0.45)",
+    farSilhouette: "#5c7a6b", nearSilhouette: "#43534d", floraColor: "#3b463a",
+    groundTop: "#6d8a6f", groundMid: "#4b624f", groundBottom: "#2a3830",
+    lane: "#8b765f", laneEdge: "#b19a7f", decor: "ruins",
+  },
+  ruinsNight: {
+    skyTop: "#090f24", skyMid: "#1b294d", skyBottom: "#304678", starColor: "#dbeafe",
+    celestial: "moon", celestialColor: "#f8fafc", celestialGlow: "rgba(255,255,255,0.18)",
+    farSilhouette: "#16233f", nearSilhouette: "#0d1528", floraColor: "#64748b",
+    groundTop: "#485468", groundMid: "#303a4a", groundBottom: "#1a2230",
+    lane: "#61554d", laneEdge: "#8f7f71", decor: "ruins",
+  },
+  ruinsSanctum: {
+    skyTop: "#0a1230", skyMid: "#1c2f61", skyBottom: "#31477e", starColor: "#efe6ff",
+    celestial: "moon", celestialColor: "#f7f2ff", celestialGlow: "rgba(199,163,255,0.25)",
+    farSilhouette: "#202e5a", nearSilhouette: "#101735", floraColor: "#a78bfa",
+    groundTop: "#5f6277", groundMid: "#3b3d52", groundBottom: "#202132",
+    lane: "#62545f", laneEdge: "#9a82a0", decor: "ruins", hazeColor: "rgba(167,139,250,0.12)",
+  },
+};
 
 // ── HP bar ─────────────────────────────────────────────────────────────────
 function drawHpBar(ctx: CanvasRenderingContext2D, cx:number, y:number, w:number, hp:number, maxHp:number) {
@@ -57,74 +182,79 @@ function drawBackground(
   ctx: CanvasRenderingContext2D,
   W: number,
   t: number,
+  themeKey: StageThemeKey,
   stars: { x: number; y: number; r: number }[],
 ) {
-  // Sky
+  const theme = STAGE_THEMES[themeKey];
+
   const sky = ctx.createLinearGradient(0, 0, 0, GROUND_Y);
-  sky.addColorStop(0,   "#04071a");
-  sky.addColorStop(0.6, "#0c1440");
-  sky.addColorStop(1,   "#1a1060");
+  sky.addColorStop(0, theme.skyTop);
+  sky.addColorStop(0.55, theme.skyMid);
+  sky.addColorStop(1, theme.skyBottom);
   ctx.fillStyle = sky;
   ctx.fillRect(0, 0, W, GROUND_Y);
 
-  // Stars with twinkle
-  for (const s of stars) {
-    const twinkle = 0.45 + 0.55 * Math.sin(t * 1.8 + s.x * 31);
-    ctx.globalAlpha = twinkle * 0.85;
-    ctx.fillStyle = "#fff";
-    ctx.beginPath();
-    ctx.arc(s.x * W, s.y, s.r, 0, Math.PI * 2);
-    ctx.fill();
+  if (theme.starColor) {
+    for (const s of stars) {
+      const twinkle = 0.45 + 0.55 * Math.sin(t * 1.8 + s.x * 31);
+      ctx.globalAlpha = twinkle * 0.85;
+      ctx.fillStyle = theme.starColor;
+      ctx.beginPath();
+      ctx.arc(s.x * W, s.y, s.r, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.globalAlpha = 1;
   }
-  ctx.globalAlpha = 1;
 
-  // Moon (crescent)
-  const mx = W * 0.84, my = 36;
-  ctx.fillStyle = "#fffbcc";
-  ctx.beginPath(); ctx.arc(mx, my, 17, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = "#04071a";
-  ctx.beginPath(); ctx.arc(mx + 8, my - 3, 14, 0, Math.PI * 2); ctx.fill();
+  if (theme.celestial && theme.celestial !== "none") {
+    const cx = W * 0.82;
+    const cy = theme.celestial === "sun" ? 48 : 38;
+    const radius = theme.celestial === "sun" ? 24 : 17;
+    if (theme.celestialGlow) {
+      ctx.fillStyle = theme.celestialGlow;
+      ctx.beginPath();
+      ctx.arc(cx, cy, radius * 1.8, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.fillStyle = theme.celestialColor ?? "#ffffff";
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.fill();
+    if (theme.celestial === "moon") {
+      ctx.fillStyle = theme.skyTop;
+      ctx.beginPath();
+      ctx.arc(cx + 8, cy - 3, radius * 0.82, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
 
-  // Far mountains (two silhouette layers)
   const mts1 = [0.06,0.18,0.32,0.46,0.58,0.72,0.88];
   const mth1 = [72, 85, 68, 92, 76, 88, 64];
-  ctx.fillStyle = "#0c0830";
+  ctx.fillStyle = theme.farSilhouette;
   drawMountainRange(ctx, W, GROUND_Y, mts1, mth1);
 
   const mts2 = [0.02,0.14,0.27,0.40,0.53,0.65,0.79,0.93];
   const mth2 = [48, 58, 44, 62, 50, 55, 42, 52];
-  ctx.fillStyle = "#160d3a";
+  ctx.fillStyle = theme.nearSilhouette;
   drawMountainRange(ctx, W, GROUND_Y, mts2, mth2);
 
-  // Trees
-  ctx.fillStyle = "#091508";
-  for (let i = 0; i < 16; i++) {
-    const tx = (i / 15) * W;
-    const th = 32 + Math.sin(i * 3.1) * 10;
-    drawTree(ctx, tx, GROUND_Y, th);
+  if (theme.hazeColor) {
+    ctx.fillStyle = theme.hazeColor;
+    ctx.fillRect(0, GROUND_Y * 0.28, W, GROUND_Y * 0.45);
   }
 
-  // Ground
   const grd = ctx.createLinearGradient(0, GROUND_Y, 0, CANVAS_HEIGHT);
-  grd.addColorStop(0,   "#1a3a0a");
-  grd.addColorStop(0.35, "#132d07");
-  grd.addColorStop(1,   "#091a04");
+  grd.addColorStop(0, theme.groundTop);
+  grd.addColorStop(0.35, theme.groundMid);
+  grd.addColorStop(1, theme.groundBottom);
   ctx.fillStyle = grd;
   ctx.fillRect(0, GROUND_Y, W, CANVAS_HEIGHT - GROUND_Y);
 
-  // Grass tufts on edge
-  ctx.fillStyle = "#2a5414";
-  for (let i = 0; i < 22; i++) {
-    const gx = (i / 21) * W;
-    ctx.beginPath();
-    ctx.ellipse(gx, GROUND_Y + 1, 5, 3.5, 0, 0, Math.PI * 2);
-    ctx.fill();
-  }
+  drawForegroundDecor(ctx, W, t, theme);
 
-  // Dirt path (unit lane)
-  ctx.fillStyle = "#2e1c0a";
+  ctx.fillStyle = theme.lane;
   ctx.fillRect(0, GROUND_Y + 4, W, 16);
-  ctx.fillStyle = "#3e2810";
+  ctx.fillStyle = theme.laneEdge;
   ctx.fillRect(0, GROUND_Y + 4, W, 2);
 }
 
@@ -150,6 +280,73 @@ function drawTree(ctx: CanvasRenderingContext2D, x:number, gY:number, h:number) 
   ctx.lineTo(x - h * 0.48, gY - h * 0.2);
   ctx.lineTo(x + h * 0.48, gY - h * 0.2);
   ctx.closePath(); ctx.fill();
+}
+
+function drawForegroundDecor(ctx: CanvasRenderingContext2D, W: number, t: number, theme: StageTheme) {
+  ctx.fillStyle = theme.floraColor;
+
+  if (theme.decor === "trees") {
+    for (let i = 0; i < 16; i++) {
+      const tx = (i / 15) * W;
+      const th = 28 + Math.sin(i * 3.1) * 10;
+      drawTree(ctx, tx, GROUND_Y, th);
+    }
+    for (let i = 0; i < 22; i++) {
+      const gx = (i / 21) * W;
+      ctx.beginPath();
+      ctx.ellipse(gx, GROUND_Y + 1, 5, 3.5, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    return;
+  }
+
+  if (theme.decor === "dunes") {
+    for (let i = 0; i < 6; i++) {
+      const x = (i / 5) * W;
+      const wave = Math.sin(t * 0.4 + i) * 4;
+      ctx.beginPath();
+      ctx.ellipse(x, GROUND_Y + 10 + wave, W * 0.12, 18, 0, Math.PI, Math.PI * 2);
+      ctx.fill();
+    }
+    return;
+  }
+
+  if (theme.decor === "ice") {
+    for (let i = 0; i < 14; i++) {
+      const x = 8 + (i / 13) * (W - 16);
+      const h = 12 + (i % 3) * 10;
+      ctx.beginPath();
+      ctx.moveTo(x, GROUND_Y + 4);
+      ctx.lineTo(x - 6, GROUND_Y + 4 + h);
+      ctx.lineTo(x + 6, GROUND_Y + 4 + h);
+      ctx.closePath();
+      ctx.fill();
+    }
+    return;
+  }
+
+  if (theme.decor === "lava") {
+    for (let i = 0; i < 10; i++) {
+      const x = 15 + (i / 9) * (W - 30);
+      const flicker = 0.65 + 0.35 * Math.sin(t * 5 + i);
+      const h = 7 + flicker * 10;
+      ctx.fillStyle = `rgba(255,145,66,${0.28 + flicker * 0.28})`;
+      ctx.beginPath();
+      ctx.ellipse(x, GROUND_Y + 5, 8, h, 0, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.fillStyle = theme.floraColor;
+    return;
+  }
+
+  if (theme.decor === "ruins") {
+    for (let i = 0; i < 5; i++) {
+      const x = 20 + (i / 4) * (W - 40);
+      const h = 18 + (i % 2) * 8;
+      ctx.fillRect(x - 5, GROUND_Y - h, 10, h);
+      ctx.fillRect(x - 11, GROUND_Y - h + 4, 22, 4);
+    }
+  }
 }
 
 // ── castles ────────────────────────────────────────────────────────────────
@@ -924,7 +1121,7 @@ function drawAngel(ctx: CanvasRenderingContext2D, a: Angel, now: number) {
 }
 
 // ── main component ─────────────────────────────────────────────────────────
-export function BattleCanvas({ state, playerBaseX, enemyBaseX, canvasWidth, isPaused, combo = 0, comboFlashKey = 0 }: Props) {
+export function BattleCanvas({ state, playerBaseX, enemyBaseX, canvasWidth, themeKey, isPaused, combo = 0, comboFlashKey = 0 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const starsRef       = useRef<{ x:number; y:number; r:number }[]>([]);
@@ -1022,7 +1219,7 @@ export function BattleCanvas({ state, playerBaseX, enemyBaseX, canvasWidth, isPa
 
     // ── draw ──────────────────────────────────────────────────────────────
     ctx.clearRect(0, 0, canvasWidth, CANVAS_HEIGHT);
-    drawBackground(ctx, canvasWidth, t, starsRef.current);
+    drawBackground(ctx, canvasWidth, t, themeKey, starsRef.current);
     drawPlayerCastle(ctx, playerBaseX, state.playerBaseHp, state.playerBaseMaxHp, t);
     drawEnemyCastle(ctx, enemyBaseX,   state.enemyBaseHp,  state.enemyBaseMaxHp,  t);
     const CAT_TYPES = new Set(["basic", "fast", "tank", "shooter", "bomber"]);

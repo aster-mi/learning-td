@@ -262,6 +262,7 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
           playerBaseX={engineRef.current.playerBaseX}
           enemyBaseX={engineRef.current.enemyBaseX}
           canvasWidth={engineRef.current.canvasWidth}
+          themeKey={stage.themeKey}
           isPaused={isPaused}
           combo={combo}
           comboFlashKey={comboFlashKey}

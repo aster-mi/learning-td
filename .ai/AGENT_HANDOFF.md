@@ -25,6 +25,28 @@ Next Step:
 
 ---
 
+## [2026-03-21 14:24 JST] Agent: Codex
+Summary:
+- ノーマルステージを 12 面構成まで拡張し、草原・砂漠・氷原・火山の 4 ワールド進行に再編した。
+- 各ステージに `themeKey` を持たせ、戦闘背景をステージごとに切り替えるようにした。空色、地形、前景装飾がテーマ別に変わる。
+- ステージ選択画面を固定3ワールド前提から動的ワールド生成に変更し、新ステージ数でも自然に並ぶようにした。
+
+Changed Files:
+- `src/data/stages.ts`
+- `src/scenes/StageSelect.tsx`
+- `src/scenes/GameScene.tsx`
+- `src/components/BattleCanvas.tsx`
+- `.ai/AGENT_HANDOFF.md`
+
+Validation:
+- `npm run build` success
+
+Open Questions:
+- なし
+
+Next Step:
+- 実機確認で各ワールド背景の見え方と、ステージ難度の上がり方が体感に合っているかを詰める。
+
 ## [2026-03-21 14:01 JST] Agent: Codex
 Summary:
 - ガチャ結果モーダルの `閉じる` を、親ガチャ画面ごと閉じるのではなく結果モーダルだけ閉じる動作に変更した。

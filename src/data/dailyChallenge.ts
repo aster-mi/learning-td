@@ -1,3 +1,5 @@
+import { normalStages } from "./stages";
+
 export interface DailyChallenge {
   id: string;              // "2026-03-20" format
   title: string;
@@ -130,8 +132,7 @@ export function getTodayChallenge(): DailyChallenge {
   const templateIdx = Math.floor(rng() * CHALLENGE_TEMPLATES.length);
   const template = CHALLENGE_TEMPLATES[templateIdx];
 
-  // Pick a stage (1-3)
-  const stageId = Math.floor(rng() * 3) + 1;
+  const stageId = normalStages[Math.floor(rng() * normalStages.length)]?.id ?? 1;
 
   return {
     id: dateStr,
