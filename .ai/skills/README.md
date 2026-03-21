@@ -1,23 +1,31 @@
 # Skills カタログ
 
-このディレクトリは、プロジェクト運用の標準手順（Skills）をまとめたものです。  
-基本は日本語で更新します。
+プロジェクト運用の標準手順をまとめたディレクトリ。
+作業開始前に該当Skillを読み、手順に沿って実施すること。
 
-## 既存Skills
-- `SKILL_QUESTION_ADD.md`: 問題追加
-- `SKILL_QUESTION_QC.md`: 問題品質チェック
-- `SKILL_GIT_WORKFLOW.md`: Git運用
-- `SKILL_DEPLOY_PAGES.md`: GitHub Pagesデプロイ
-- `SKILL_RELEASE_CHECK.md`: リリース前確認
-- `SKILL_AGENT_HANDOFF.md`: Codex/Claude引き継ぎ
+## 問題データ系
+| Skill | 概要 |
+|-------|------|
+| `SKILL_QUESTION_ADD.md` | 問題の追加・編集 |
+| `SKILL_QUESTION_QC.md` | 問題の品質レビュー |
 
-## Unit Skills
-- `SKILL_UNIT_ADD.md`: 仲間ユニット追加（名前準拠デザイン必須）
-- `SKILL_UNIT_BALANCE.md`: 仲間ユニットの数値調整
-- `../UNIT_POLICY.md`: ユニット追加ポリシー（同型使い回し禁止 / 絵文字頼み禁止）
+## ユニット系
+| Skill | 概要 |
+|-------|------|
+| `SKILL_UNIT_ADD.md` | 仲間ユニット追加（デザイン・実装・登録） |
+| `SKILL_UNIT_BALANCE.md` | ユニットパラメータ調整 |
+| `../UNIT_POLICY.md` | ユニット追加ポリシー（禁止事項） |
+
+## 運用系
+| Skill | 概要 |
+|-------|------|
+| `SKILL_GIT_WORKFLOW.md` | Git運用（コミット・プッシュ） |
+| `SKILL_DEPLOY_PAGES.md` | GitHub Pagesデプロイ |
+| `SKILL_RELEASE_CHECK.md` | リリース前チェックリスト |
+| `SKILL_AGENT_HANDOFF.md` | Codex/Claude引き継ぎ |
 
 ## 使い方
 1. 作業に対応するSkillを開く
-2. 手順どおりに実施する
-3. ビルドと目視確認を行う
-4. 必要なら `.ai/AGENT_HANDOFF.md` に共有事項を残す
+2. 手順どおりに実施する（コマンドはコピペで動くように書いてある）
+3. ビルド・バリデーションを通す
+4. `.ai/AGENT_HANDOFF.md` にハンドオフを記録する
