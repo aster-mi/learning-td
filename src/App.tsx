@@ -188,16 +188,16 @@ export default function App() {
   return (
     <>
       {scene === "category" && (
-        <CategorySelect
+        <div key="category" className="scene-enter"><CategorySelect
           initialSelected={subCategories}
           initialLevel={selectedLevel}
           onConfirm={handleCategoryConfirm}
           wrongCount={getWrongCount()}
           onReview={handleReviewStart}
-        />
+        /></div>
       )}
       {scene === "select" && (
-        <StageSelect
+        <div key="select" className="scene-enter"><StageSelect
           stageStars={saveData.stageStars}
           clearedStages={clearedStages}
           coins={saveData.coins}
@@ -209,10 +209,10 @@ export default function App() {
           onGacha={() => { setSaveData(loadSave()); setScene("gacha"); }}
           onSelect={handleStageSelect}
           onClaimMission={handleClaimMission}
-        />
+        /></div>
       )}
       {scene === "party" && (
-        <PartySelect
+        <div key="party" className="scene-enter"><PartySelect
           saveData={saveData}
           ownedUnitIds={saveData.unlockedUnits}
           currentParty={saveData.party}
@@ -222,25 +222,25 @@ export default function App() {
             setSaveData(next);
           }}
           onBack={() => setScene("select")}
-        />
+        /></div>
       )}
       {scene === "gacha" && (
-        <GachaModal
+        <div key="gacha" className="scene-enter"><GachaModal
           coins={saveData.coins}
           ownedUnitIds={saveData.unlockedUnits}
           onPull={handleGachaPull}
           onClose={() => { setSaveData(loadSave()); setScene("select"); }}
           isMobile={isMobile}
-        />
+        /></div>
       )}
       {scene === "achievements" && (
-        <AchievementList
+        <div key="achievements" className="scene-enter"><AchievementList
           unlockedIds={saveData.achievements}
           onClose={() => setScene("select")}
-        />
+        /></div>
       )}
       {scene === "game" && (
-        <GameScene
+        <div key="game" className="scene-enter"><GameScene
           key={gameKeyRef.current}
           stage={activeStage}
           subCategories={effectiveSubs}
@@ -252,7 +252,7 @@ export default function App() {
           party={saveData.party}
           isDailyChallenge={isDailyMode}
           saveData={saveData}
-        />
+        /></div>
       )}
 
       {/* Achievement toasts */}
