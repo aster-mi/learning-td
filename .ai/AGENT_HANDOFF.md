@@ -25,6 +25,24 @@ Next Step:
 
 ---
 
+## [2026-03-21 13:42 JST] Agent: Codex
+Summary:
+- ユーザー指示に合わせ、`pushは改修したら都度やる` を恒久ルールとして `CODEX.md` / `CLAUDE.md` に明記した。
+
+Changed Files:
+- `.codex/CODEX.md`
+- `.claude/CLAUDE.md`
+- `.ai/AGENT_HANDOFF.md`
+
+Validation:
+- ドキュメント変更のみ
+
+Open Questions:
+- なし
+
+Next Step:
+- 以後、Codex/Claude どちらも改修区切りごとに commit/push まで実施する。
+
 ## [2026-03-21 13:34 JST] Agent: Codex
 Summary:
 - なぞなぞ/雑学の品質観点を Skills に追加し、現行データをその観点で見直した。
