@@ -36,7 +36,7 @@ interface Props {
   saveData: SaveData;
 }
 
-const MAX_ENERGY           = 100;
+// エネルギー上限なし
 const ENERGY_PER_CORRECT   = 10;
 const ENERGY_PENALTY_WRONG = 5;
 const ACTIVE_DURATION_SEC  = 5;
@@ -226,7 +226,7 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
     const bonus = comboRef.current >= 5 ? 20
                 : comboRef.current >= 3 ? 15
                 : ENERGY_PER_CORRECT;
-    const next = Math.min(MAX_ENERGY, energyRef.current + bonus);
+    const next = energyRef.current + bonus;
     energyRef.current = next;
     setEnergy(next);
     activeRef.current = ACTIVE_DURATION_SEC;
@@ -426,7 +426,6 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
       {/* ── クイズ（下）：モバイルでは残り全部を使う ── */}
       <QuizPanel
         energy={energy}
-        maxEnergy={MAX_ENERGY}
         combo={combo}
         subCategories={subCategories}
         selectedLevel={selectedLevel}

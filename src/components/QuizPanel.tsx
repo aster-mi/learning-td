@@ -8,7 +8,6 @@ import { useWindowSize } from "../hooks/useWindowSize";
 
 interface Props {
   energy: number;
-  maxEnergy: number;
   combo: number;
   subCategories: string[];
   selectedLevel: number;
@@ -74,7 +73,6 @@ function pickWeighted(
 
 export function QuizPanel({
   energy,
-  maxEnergy,
   combo,
   subCategories,
   selectedLevel,
@@ -421,30 +419,7 @@ export function QuizPanel({
               </span>
             </div>
 
-            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-              <span style={{ color: "#fbbf24", fontWeight: "bold", fontSize: 12, whiteSpace: "nowrap" }}>EN {energy}</span>
-              <span style={{ color: "#64748b", fontSize: 11 }}>/ {maxEnergy}</span>
-              <div
-                style={{
-                  width: isMobile ? 70 : 100,
-                  height: 12,
-                  background: "#0f172a",
-                  borderRadius: 6,
-                  overflow: "hidden",
-                  border: "1px solid #334155",
-                }}
-              >
-                <div
-                  style={{
-                    width: `${(energy / maxEnergy) * 100}%`,
-                    height: "100%",
-                    background: energy > 60 ? "#22c55e" : energy > 30 ? "#f97316" : "#ef4444",
-                    borderRadius: 6,
-                    transition: "width 0.3s, background 0.3s",
-                  }}
-                />
-              </div>
-            </div>
+            <span style={{ color: "#fbbf24", fontWeight: "bold", fontSize: 12, whiteSpace: "nowrap" }}>⚡{energy}</span>
           </div>
 
           <div
