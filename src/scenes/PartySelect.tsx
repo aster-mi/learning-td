@@ -31,6 +31,17 @@ const ALL_FILTER = "すべて";
 const SERIES_TABS = [ALL_FILTER, ...SERIES_LIST];
 
 type DetailTab = "info" | "upgrade";
+type SortKey = "default" | "hp" | "atk" | "cost" | "speed" | "range" | "atkInterval";
+
+const SORT_OPTIONS: { key: SortKey; label: string; color: string; desc?: boolean }[] = [
+  { key: "default", label: "標準", color: "#94a3b8" },
+  { key: "hp", label: "HP", color: "#34d399" },
+  { key: "atk", label: "ATK", color: "#f87171" },
+  { key: "cost", label: "コスト", color: "#fbbf24", desc: false },
+  { key: "speed", label: "速度", color: "#38bdf8" },
+  { key: "range", label: "射程", color: "#a78bfa" },
+  { key: "atkInterval", label: "攻速", color: "#fb923c", desc: false },
+];
 
 /* ── sub-components ─────────────────────────────────────── */
 
@@ -381,6 +392,7 @@ export function PartySelect({ ownedUnitIds, currentParty, saveData, onConfirm, o
   const [seriesFilter, setSeriesFilter] = useState(ALL_FILTER);
   const [focusedUnitId, setFocusedUnitId] = useState<string>(() => currentParty[0] ?? ownedUnitIds[0] ?? "basic");
   const [showDetail, setShowDetail] = useState(false);
+  const [sortKey, setSortKey] = useState<SortKey>("default");
 
   const partySet = useMemo(() => new Set(party), [party]);
 
@@ -390,9 +402,19 @@ export function PartySelect({ ownedUnitIds, currentParty, saveData, onConfirm, o
       const entry = getCatalogEntry(id);
       if (entry) entries.push(entry);
     }
-    if (seriesFilter !== ALL_FILTER) return entries.filter((e) => e.series === seriesFilter);
-    return entries;
-  }, [ownedUnitIds, seriesFilter]);
+    let filtered = seriesFilter !== ALL_FILTER ? entries.filter((e) => e.series === seriesFilter) : entries;
+    if (sortKey !== "default") {
+      const opt = SORT_OPTIONS.find((o) => o.key === sortKey);
+      // desc: false means lower is better (cost, atkInterval), otherwise higher is better
+      const descending = opt?.desc !== false;
+      filtered = [...filtered].sort((a, b) => {
+        const av = a[sortKey as keyof UnitCatalogEntry] as number;
+        const bv = b[sortKey as keyof UnitCatalogEntry] as number;
+        return descending ? bv - av : av - bv;
+      });
+    }
+    return filtered;
+  }, [ownedUnitIds, seriesFilter, sortKey]);
 
   const removeUnit = useCallback((id: string) => {
     setParty((prev) => prev.filter((uid) => uid !== id));
@@ -539,8 +561,9 @@ export function PartySelect({ ownedUnitIds, currentParty, saveData, onConfirm, o
           </div>
         )}
 
-        {/* ── series filter + unit grid ── */}
+        {/* ── filters + sort + unit grid ── */}
         <div style={{ display: "grid", gap: 10 }}>
+          {/* series filter */}
           <div style={{ display: "flex", gap: 4, overflowX: "auto", paddingBottom: 2, WebkitOverflowScrolling: "touch" }}>
             {SERIES_TABS.map((series) => {
               const active = seriesFilter === series;
@@ -559,6 +582,31 @@ export function PartySelect({ ownedUnitIds, currentParty, saveData, onConfirm, o
                   }}
                 >
                   {series}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* sort buttons */}
+          <div style={{ display: "flex", gap: 4, overflowX: "auto", alignItems: "center", paddingBottom: 2 }}>
+            <span style={{ fontSize: 10, color: "#475569", flexShrink: 0, marginRight: 2 }}>並替</span>
+            {SORT_OPTIONS.map((opt) => {
+              const active = sortKey === opt.key;
+              return (
+                <button
+                  key={opt.key}
+                  onClick={() => setSortKey(active ? "default" : opt.key)}
+                  style={{
+                    flexShrink: 0,
+                    background: active ? `${opt.color}22` : "rgba(255,255,255,0.02)",
+                    border: active ? `1px solid ${opt.color}88` : "1px solid rgba(255,255,255,0.05)",
+                    borderRadius: 6, padding: "3px 10px",
+                    fontSize: 10, fontWeight: active ? 700 : 500,
+                    color: active ? opt.color : "#64748b",
+                    cursor: "pointer",
+                  }}
+                >
+                  {opt.label}{active && (opt.desc !== false ? "↓" : "↑")}
                 </button>
               );
             })}
