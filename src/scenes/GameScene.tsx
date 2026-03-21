@@ -1,14 +1,26 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { GameEngine, type GameState } from "../domain/GameEngine";
-import { getUnitDef } from "../domain/Unit";
+import { getUnitDef, type UnitDef } from "../domain/Unit";
 import { QuizPanel } from "../components/QuizPanel";
 import { BattleCanvas } from "../components/BattleCanvas";
 import { CommandPanel } from "../components/CommandPanel";
 import { ResultScreen } from "../components/ResultScreen";
 import { useWindowSize } from "../hooks/useWindowSize";
-import { calcStars, calcCoins, getNewUnlock, loadSave, saveSave } from "../data/saveData";
+import {
+  calcStars,
+  calcCoins,
+  getAtkMultiplier,
+  getHpMultiplier,
+  getNewUnlock,
+  getUpgrade,
+  loadSave,
+  saveSave,
+  type SaveData,
+} from "../data/saveData";
 import { getTodayChallenge, completeDailyChallenge } from "../data/dailyChallenge";
 import type { StageData } from "../data/stages";
+import type { Question } from "../data/questions";
+import { ensureLoginProgress, getDateKey } from "../data/progression";
 
 interface Props {
   stage: StageData;
@@ -20,6 +32,7 @@ interface Props {
   reviewMode?: boolean;
   party?: string[];              // 出陣デッキ
   isDailyChallenge?: boolean;
+  saveData: SaveData;
 }
 
 const MAX_ENERGY           = 100;
@@ -27,7 +40,7 @@ const ENERGY_PER_CORRECT   = 10;
 const ENERGY_PENALTY_WRONG = 5;
 const ACTIVE_DURATION_SEC  = 5;
 
-export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear, onRetry, reviewMode, party, isDailyChallenge }: Props) {
+export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear, onRetry, reviewMode, party, isDailyChallenge, saveData }: Props) {
   const activeParty = party && party.length > 0 ? party : ["basic", "fast"];
   const { isMobile } = useWindowSize();
   const engineRef    = useRef<GameEngine>(new GameEngine(stage, selectedLevel));
@@ -44,6 +57,7 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
   const correctCountRef = useRef(0);
   const wrongCountRef   = useRef(0);
   const maxComboRef     = useRef(0);
+  const sessionCategoryStatsRef = useRef<Record<string, { correct: number; wrong: number }>>({});
 
   // 表示用 state（React レンダーに反映）
   const [gameState, setGameState] = useState<GameState>(() => ({
@@ -93,7 +107,7 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
           const baseHpRatio = snap.playerBaseHp / snap.playerBaseMaxHp;
           const stars = calcStars(accuracy, baseHpRatio);
           const coins = calcCoins(stars, accuracy, maxComboRef.current);
-          const save = loadSave();
+          const save = ensureLoginProgress(loadSave());
           const newUnlock = getNewUnlock(stage.id, save.unlockedUnits);
 
           // セーブデータ更新
@@ -101,6 +115,28 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
           save.totalCorrect += correctCountRef.current;
           save.totalWrong += wrongCountRef.current;
           if (maxComboRef.current > save.maxCombo) save.maxCombo = maxComboRef.current;
+          for (const [sub, stats] of Object.entries(sessionCategoryStatsRef.current)) {
+            const prev = save.categoryStats[sub] ?? { correct: 0, wrong: 0 };
+            save.categoryStats[sub] = {
+              correct: prev.correct + stats.correct,
+              wrong: prev.wrong + stats.wrong,
+            };
+          }
+          const todayKey = getDateKey();
+          const prevDaily = save.dailyActivity[todayKey] ?? {
+            plays: 0, clears: 0, correct: 0, wrong: 0, bestCombo: 0, coinsEarned: 0,
+          };
+          save.dailyActivity[todayKey] = {
+            plays: prevDaily.plays + 1,
+            clears: prevDaily.clears + 1,
+            correct: prevDaily.correct + correctCountRef.current,
+            wrong: prevDaily.wrong + wrongCountRef.current,
+            bestCombo: Math.max(prevDaily.bestCombo, maxComboRef.current),
+            coinsEarned: prevDaily.coinsEarned + coins,
+          };
+          for (const unitId of activeParty) {
+            save.unitMastery[unitId] = (save.unitMastery[unitId] ?? 0) + correctCountRef.current + stars * 3;
+          }
           const prevStars = save.stageStars[stage.id] ?? 0;
           if (stars > prevStars) save.stageStars[stage.id] = stars;
           if (newUnlock && !save.unlockedUnits.includes(newUnlock)) {
@@ -125,6 +161,30 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
         }
         if (snap.status === "lose" && !clearedRef.current) {
           clearedRef.current = true;
+          const save = ensureLoginProgress(loadSave());
+          for (const [sub, stats] of Object.entries(sessionCategoryStatsRef.current)) {
+            const prev = save.categoryStats[sub] ?? { correct: 0, wrong: 0 };
+            save.categoryStats[sub] = {
+              correct: prev.correct + stats.correct,
+              wrong: prev.wrong + stats.wrong,
+            };
+          }
+          const todayKey = getDateKey();
+          const prevDaily = save.dailyActivity[todayKey] ?? {
+            plays: 0, clears: 0, correct: 0, wrong: 0, bestCombo: 0, coinsEarned: 0,
+          };
+          save.dailyActivity[todayKey] = {
+            plays: prevDaily.plays + 1,
+            clears: prevDaily.clears,
+            correct: prevDaily.correct + correctCountRef.current,
+            wrong: prevDaily.wrong + wrongCountRef.current,
+            bestCombo: Math.max(prevDaily.bestCombo, maxComboRef.current),
+            coinsEarned: prevDaily.coinsEarned,
+          };
+          for (const unitId of activeParty) {
+            save.unitMastery[unitId] = (save.unitMastery[unitId] ?? 0) + Math.max(1, Math.floor(correctCountRef.current / 2));
+          }
+          saveSave(save);
           const totalQ = correctCountRef.current + wrongCountRef.current;
           const accuracy = totalQ > 0 ? correctCountRef.current / totalQ : 0;
           const baseHpRatio = 0;
@@ -145,8 +205,10 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
     return () => cancelAnimationFrame(rafRef.current);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const handleCorrect = useCallback(() => {
+  const handleCorrect = useCallback((question: Question) => {
     correctCountRef.current += 1;
+    const prev = sessionCategoryStatsRef.current[question.sub] ?? { correct: 0, wrong: 0 };
+    sessionCategoryStatsRef.current[question.sub] = { ...prev, correct: prev.correct + 1 };
     comboRef.current += 1;
     if (comboRef.current > maxComboRef.current) maxComboRef.current = comboRef.current;
     setCombo(comboRef.current);
@@ -173,8 +235,10 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
     }
   }, []);
 
-  const handleWrong = useCallback(() => {
+  const handleWrong = useCallback((question: Question) => {
     wrongCountRef.current += 1;
+    const prev = sessionCategoryStatsRef.current[question.sub] ?? { correct: 0, wrong: 0 };
+    sessionCategoryStatsRef.current[question.sub] = { ...prev, wrong: prev.wrong + 1 };
     comboRef.current = 0;
     setCombo(0);
     // ペナルティ: エネルギー -5
@@ -191,14 +255,20 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
   }, []);
 
   const handleDeploy = useCallback((type: string) => {
-    const def = getUnitDef(type);
+    const baseDef = getUnitDef(type);
+    const upgrade = getUpgrade(saveData, type);
+    const def: UnitDef = {
+      ...baseDef,
+      hp: Math.round(baseDef.hp * getHpMultiplier(upgrade.hpLevel)),
+      atk: Math.round(baseDef.atk * getAtkMultiplier(upgrade.atkLevel)),
+    };
     const cost = def.cost;
     if (energyRef.current < cost) return;
     const next = energyRef.current - cost;
     energyRef.current = next;
     setEnergy(next);
-    engineRef.current.deployUnit(type);
-  }, []);
+    engineRef.current.deployUnit(type, def);
+  }, [saveData]);
 
   const isDone   = gameState.status !== "playing";
   const isPaused = !isDone && activeLeft <= 0;

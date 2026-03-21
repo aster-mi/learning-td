@@ -25,6 +25,33 @@ Next Step:
 
 ---
 
+## [2026-03-21 15:07 JST] Agent: Codex
+Summary:
+- 定着施策として、ホームにデイリー/ウィークリーミッション、連続ログイン、学習統計ダッシュボードを追加した。
+- カテゴリごとの正解/不正解、日次学習量、ユニット熟練度を保存するようにし、得意不得意グラフと直近7日の学習量グラフを表示した。
+- 編成画面を図鑑/育成ハブに拡張し、所持率サマリー、熟練度表示、HP/ATK強化を追加。育成値は実戦のユニット性能にも反映される。
+
+Changed Files:
+- `src/App.tsx`
+- `src/components/QuizPanel.tsx`
+- `src/data/saveData.ts`
+- `src/data/progression.ts`
+- `src/domain/Unit.ts`
+- `src/domain/GameEngine.ts`
+- `src/scenes/GameScene.tsx`
+- `src/scenes/StageSelect.tsx`
+- `src/scenes/PartySelect.tsx`
+- `.ai/AGENT_HANDOFF.md`
+
+Validation:
+- `npm run build` success
+
+Open Questions:
+- なし
+
+Next Step:
+- 実機でミッション報酬テンポ、育成コスト、学習グラフの見やすさを触って微調整する。
+
 ## [2026-03-21 14:24 JST] Agent: Codex
 Summary:
 - ノーマルステージを 12 面構成まで拡張し、草原・砂漠・氷原・火山の 4 ワールド進行に再編した。

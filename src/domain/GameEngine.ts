@@ -1,4 +1,4 @@
-import { Unit, type UnitType } from "./Unit";
+import { Unit, type UnitType, type UnitDef } from "./Unit";
 import { Enemy } from "./Enemy";
 import type { StageData } from "../data/stages";
 
@@ -55,8 +55,8 @@ export class GameEngine {
   }
 
   /** エネルギーは外部(QuizPanel)から渡す */
-  deployUnit(type: UnitType): boolean {
-    this.units.push(new Unit(type, PLAYER_BASE_X + 40));
+  deployUnit(type: UnitType, unitDefOverride?: UnitDef): boolean {
+    this.units.push(new Unit(type, PLAYER_BASE_X + 40, unitDefOverride));
     return true;
   }
 

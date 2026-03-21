@@ -9,6 +9,7 @@ import { getWrongCount } from "./data/wrongStore";
 import { loadSave, saveSave } from "./data/saveData";
 import { getNewAchievements } from "./data/achievements";
 import { getTodayChallenge } from "./data/dailyChallenge";
+import { claimMission, ensureLoginProgress } from "./data/progression";
 import { AchievementToast } from "./components/AchievementToast";
 import { AchievementList } from "./components/AchievementList";
 import { GachaModal, type GachaReward } from "./components/GachaModal";
@@ -55,7 +56,11 @@ export default function App() {
   const [selectedLevel, setSelectedLevel] = useState<number>(loadLevel);
   const [reviewMode, setReviewMode]       = useState(false);
   const [isDailyMode, setIsDailyMode]     = useState(false);
-  const [saveData, setSaveData]           = useState(() => loadSave());
+  const [saveData, setSaveData]           = useState(() => {
+    const next = ensureLoginProgress(loadSave());
+    saveSave(next);
+    return next;
+  });
   const gameKeyRef = useRef<number>(0);
 
   // Achievement toast
@@ -70,6 +75,14 @@ export default function App() {
       setSaveData(save);
       setNewAchievements(newOnes);
     }
+  }, []);
+
+  const updateSaveData = useCallback((updater: (current: ReturnType<typeof loadSave>) => ReturnType<typeof loadSave>) => {
+    const current = loadSave();
+    const next = updater(current);
+    saveSave(next);
+    setSaveData(next);
+    return next;
   }, []);
 
   const handleCategoryConfirm = (selected: string[], level: number) => {
@@ -108,10 +121,7 @@ export default function App() {
 
   // パーティ編成（ワールドマップから任意アクセス）
   const handlePartyConfirm = (party: string[]) => {
-    const save = loadSave();
-    save.party = party;
-    saveSave(save);
-    setSaveData(save);
+    updateSaveData(current => ({ ...current, party }));
     setScene("select");
   };
 
@@ -136,6 +146,10 @@ export default function App() {
     saveSave(save);
     setSaveData(save);
   };
+
+  const handleClaimMission = useCallback((missionId: string, rewardCoins: number) => {
+    updateSaveData(current => claimMission(current, missionId, rewardCoins));
+  }, [updateSaveData]);
 
   const handleClear = (stageId: number) => {
     setClearedStages(prev => {
@@ -183,19 +197,26 @@ export default function App() {
           clearedStages={clearedStages}
           stageStars={saveData.stageStars}
           coins={saveData.coins}
+          saveData={saveData}
           onSelect={handleStageSelect}
           onBack={() => { setSaveData(loadSave()); setScene("category"); }}
           onDaily={handleDailyChallenge}
           onAchievements={() => setScene("achievements")}
           onParty={() => setScene("party")}
           onGacha={() => { setSaveData(loadSave()); setScene("gacha"); }}
+          onClaimMission={handleClaimMission}
         />
       )}
       {scene === "party" && (
         <PartySelect
+          saveData={saveData}
           ownedUnitIds={saveData.unlockedUnits}
           currentParty={saveData.party}
           onConfirm={handlePartyConfirm}
+          onSaveData={next => {
+            saveSave(next);
+            setSaveData(next);
+          }}
           onBack={() => setScene("select")}
         />
       )}
@@ -226,6 +247,7 @@ export default function App() {
           reviewMode={reviewMode}
           party={saveData.party}
           isDailyChallenge={isDailyMode}
+          saveData={saveData}
         />
       )}
 

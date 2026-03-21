@@ -55,9 +55,9 @@ export class Unit {
   maxHp: number;
   lastAtkTime: number = 0;
 
-  constructor(type: string, startX: number) {
+  constructor(type: string, startX: number, defOverride?: UnitDef) {
     this.id = _unitId++;
-    this.def = getUnitDef(type);
+    this.def = defOverride ?? getUnitDef(type);
     this.x = startX;
     this.hp = this.def.hp;
     this.maxHp = this.def.hp;

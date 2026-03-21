@@ -10,8 +10,8 @@ interface Props {
   combo: number;
   subCategories: string[];
   selectedLevel: number;
-  onCorrect: () => void;
-  onWrong: () => void;
+  onCorrect: (question: Question) => void;
+  onWrong: (question: Question) => void;
   disabled?: boolean;
   isPaused?: boolean;
   reviewMode?: boolean;
@@ -110,7 +110,7 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
       if (choice === current.answer) {
         setFeedback("correct");
         setCorrectCount(n => n + 1);
-        onCorrect();
+        onCorrect(current);
         answeredCorrectRef.current.add(current.id);
         // 正解履歴をlocalStorageに記録（出題優先度を下げるため）
         recordCorrect(current.id);
@@ -119,7 +119,7 @@ export function QuizPanel({ energy, maxEnergy, combo, subCategories, selectedLev
       } else {
         setFeedback("wrong");
         setWrongCount(n => n + 1);
-        onWrong();
+        onWrong(current);
         // 間違えた問題を記録
         recordWrong(current.id);
       }

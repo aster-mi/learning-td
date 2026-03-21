@@ -1,9 +1,8 @@
 import { INITIAL_UNITS, DEFAULT_PARTY } from "../data/unitCatalog";
 
-// ── セーブデータ型定義 ────────────────────────────────────
 export interface UnitUpgrade {
-  hpLevel: number;   // 0 = no upgrade, max 5
-  atkLevel: number;  // 0 = no upgrade, max 5
+  hpLevel: number;
+  atkLevel: number;
 }
 
 export interface GachaItem {
@@ -11,17 +10,41 @@ export interface GachaItem {
   value: number;
 }
 
+export interface CategoryRecord {
+  correct: number;
+  wrong: number;
+}
+
+export interface DailyActivity {
+  plays: number;
+  clears: number;
+  correct: number;
+  wrong: number;
+  bestCombo: number;
+  coinsEarned: number;
+}
+
+export interface LoginState {
+  lastDate: string;
+  streak: number;
+}
+
 export interface SaveData {
   coins: number;
-  stageStars: Record<number, number>;        // stageId → 1|2|3
-  unitUpgrades: Record<string, UnitUpgrade>; // unitId → upgrade levels
-  unlockedUnits: string[];                   // 所持ユニットID[]
-  party: string[];                           // 出陣デッキ (最大5体)
+  stageStars: Record<number, number>;
+  unitUpgrades: Record<string, UnitUpgrade>;
+  unlockedUnits: string[];
+  party: string[];
   totalCorrect: number;
   totalWrong: number;
   maxCombo: number;
-  achievements: string[];                    // unlocked achievement IDs
-  gachaItems: GachaItem[];                   // stored gacha rewards for next game
+  achievements: string[];
+  gachaItems: GachaItem[];
+  categoryStats: Record<string, CategoryRecord>;
+  dailyActivity: Record<string, DailyActivity>;
+  missionClaims: string[];
+  unitMastery: Record<string, number>;
+  login: LoginState;
 }
 
 const STORAGE_KEY = "learning_td_save";
@@ -37,20 +60,24 @@ const DEFAULT_SAVE: SaveData = {
   maxCombo: 0,
   achievements: [],
   gachaItems: [],
+  categoryStats: {},
+  dailyActivity: {},
+  missionClaims: [],
+  unitMastery: {},
+  login: { lastDate: "", streak: 0 },
 };
 
-// ── ロード / セーブ ────────────────────────────────────────
 export function loadSave(): SaveData {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return { ...DEFAULT_SAVE, unlockedUnits: [...DEFAULT_SAVE.unlockedUnits] };
     const parsed = JSON.parse(raw) as Partial<SaveData>;
-    // 所持ユニットに初期ユニットが含まれているか確認
+
     const units = parsed.unlockedUnits ?? [...INITIAL_UNITS];
-    for (const u of INITIAL_UNITS) {
-      if (!units.includes(u)) units.push(u);
+    for (const unitId of INITIAL_UNITS) {
+      if (!units.includes(unitId)) units.push(unitId);
     }
-    // パーティのバリデーション（所持ユニットのみ）
+
     let party = parsed.party ?? [...DEFAULT_PARTY];
     party = party.filter((id: string) => units.includes(id));
     if (party.length === 0) party = units.slice(0, 5);
@@ -66,6 +93,11 @@ export function loadSave(): SaveData {
       maxCombo: parsed.maxCombo ?? 0,
       achievements: parsed.achievements ?? [],
       gachaItems: parsed.gachaItems ?? [],
+      categoryStats: parsed.categoryStats ?? {},
+      dailyActivity: parsed.dailyActivity ?? {},
+      missionClaims: parsed.missionClaims ?? [],
+      unitMastery: parsed.unitMastery ?? {},
+      login: parsed.login ?? { lastDate: "", streak: 0 },
     };
   } catch {
     return { ...DEFAULT_SAVE, unlockedUnits: [...DEFAULT_SAVE.unlockedUnits] };
@@ -76,14 +108,12 @@ export function saveSave(data: SaveData): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
 }
 
-// ── 星評価の計算 ────────────────────────────────────────────
 export function calcStars(accuracy: number, baseHpRatio: number): number {
   if (accuracy >= 0.8 && baseHpRatio >= 0.5) return 3;
   if (accuracy >= 0.5 && baseHpRatio >= 0.3) return 2;
   return 1;
 }
 
-// ── コイン報酬の計算 ────────────────────────────────────────
 export function calcCoins(stars: number, accuracy: number, maxCombo: number): number {
   const base = 50;
   const starBonus = stars * 20;
@@ -92,7 +122,6 @@ export function calcCoins(stars: number, accuracy: number, maxCombo: number): nu
   return base + starBonus + accuracyBonus + comboBonus;
 }
 
-// ── ユニット解放条件（ステージクリア報酬）────────────────────
 export const UNLOCK_TABLE: Record<number, string> = {
   2: "tank",
   4: "shooter",
@@ -105,7 +134,6 @@ export function getNewUnlock(stageId: number, currentUnlocks: string[]): string 
   return null;
 }
 
-// ── ユニット強化 ────────────────────────────────────────────
 const UPGRADE_COSTS = [100, 200, 350, 550, 800];
 const HP_BONUS_PER_LEVEL = 0.15;
 const ATK_BONUS_PER_LEVEL = 0.12;
