@@ -25,6 +25,51 @@ Next Step:
 
 ---
 
+## [2026-03-21 13:18 JST] Agent: Codex
+Summary:
+- `.ai/reviews/REVIEW_001_6UNIT_RENDERERS.md` の指摘を反映し、6ユニット描画を改善。
+- `notebook/graphpaper` の `col` 未使用を解消、脚+`ph`歩行を追加。
+- `paintbrush` に脚追加、`globalAlpha` を `save/restore` 管理へ変更。
+- `protractor` の脚アニメを `ph` ベースに変更。`battery` は歩行・パルス抑制・表情改善。`drone` はタッセル追加と回転位相に `ph` 反映。
+- `index.ts` で `battery/drone` を工学コメントブロックへ移動。
+
+Changed Files:
+- `src/components/renderers/mathArt.ts`
+- `src/components/renderers/engineering.ts`
+- `src/components/renderers/index.ts`
+- `.ai/AGENT_HANDOFF.md`
+
+Validation:
+- `npm run build` → success
+
+Open Questions:
+- なし
+
+Next Step:
+- 実機で6体の視認性（小サイズアイコン時）を確認し、必要なら線幅を微調整する。
+
+## [2026-03-21 13:05 JST] Agent: Codex
+Summary:
+- `.ai/prompts/PROMPT_RENDER_6UNITS.md` の指示を実施し、6ユニットの手描きCanvas2Dレンダラーを追加。
+- `notebook/protractor/graphpaper/paintbrush` を `mathArt.ts`、`battery/drone` を `engineering.ts` に実装。
+- `index.ts` に import/registry を追加し、emojiフォールバックから専用描画へ切り替え。
+
+Changed Files:
+- `src/components/renderers/mathArt.ts`
+- `src/components/renderers/engineering.ts`
+- `src/components/renderers/index.ts`
+- `.ai/AGENT_HANDOFF.md`
+
+Validation:
+- `npm run build` → success
+- Chunk size warning は継続（既知）
+
+Open Questions:
+- なし
+
+Next Step:
+- 必要なら6体の細部（アニメ速度・配色・線幅）を実機プレビューで微調整する。
+
 ## [2026-03-21 JST] Agent: Claude
 Summary:
 - Replaced all 50 expansion unit renderers (eng/nat/his/mus/spo × 10) with hand-drawn Canvas2D designs

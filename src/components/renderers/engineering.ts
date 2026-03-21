@@ -1467,3 +1467,202 @@ export function drawChronoMecha(
 
   ctx.restore();
 }
+
+/* ------------------------------------------------------------------ */
+/*  11. drawBattery  -  "バッテリー兵"                                  */
+/* ------------------------------------------------------------------ */
+export function drawBattery(
+  ctx: CanvasRenderingContext2D, cx: number, cy: number,
+  r: number, col: string, t: number, ph: number
+): void {
+  const s = r / 17;
+  const bob = Math.sin(t * 2.8 + ph) * 1.1 * s;
+  const y = cy + bob;
+  const legSwing = Math.sin(ph * Math.PI * 2) * 1.3 * s;
+
+  // shadow
+  ctx.fillStyle = "rgba(0,0,0,0.18)";
+  ctx.beginPath();
+  ctx.ellipse(cx, y + 13 * s, 10.5 * s, 2.8 * s, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // minus shoes
+  ctx.fillStyle = darker(col, 70);
+  ctx.fillRect(cx - 7.5 * s + legSwing, y + 10 * s, 5 * s, 3 * s);
+  ctx.fillRect(cx + 2.5 * s - legSwing, y + 10 * s, 5 * s, 3 * s);
+  ctx.fillStyle = "#0f172a";
+  ctx.fillRect(cx - 5.7 * s + legSwing, y + 11.1 * s, 1.4 * s, 0.6 * s);
+  ctx.fillRect(cx + 4.3 * s - legSwing, y + 11.1 * s, 1.4 * s, 0.6 * s);
+
+  // battery body (AA cylinder)
+  const bodyGrad = ctx.createLinearGradient(cx - 7 * s, y - 10 * s, cx + 7 * s, y + 10 * s);
+  bodyGrad.addColorStop(0, lighter(col, 24));
+  bodyGrad.addColorStop(0.6, col);
+  bodyGrad.addColorStop(1, darker(col, 28));
+  ctx.fillStyle = bodyGrad;
+  ctx.beginPath();
+  ctx.roundRect(cx - 7.5 * s, y - 9 * s, 15 * s, 19 * s, 4.5 * s);
+  ctx.fill();
+  ctx.strokeStyle = darker(col, 50);
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // plus terminal hat
+  ctx.fillStyle = "#e2e8f0";
+  ctx.beginPath();
+  ctx.roundRect(cx - 4 * s, y - 11.5 * s, 8 * s, 3 * s, 1.2 * s);
+  ctx.fill();
+  ctx.strokeStyle = "#94a3b8";
+  ctx.stroke();
+  ctx.fillStyle = "#1e293b";
+  ctx.fillRect(cx - 0.45 * s, y - 10.8 * s, 0.9 * s, 1.6 * s);
+  ctx.fillRect(cx - 1.2 * s, y - 10.1 * s, 2.4 * s, 0.9 * s);
+
+  // chest lightning mark
+  ctx.fillStyle = "#fef08a";
+  ctx.beginPath();
+  ctx.moveTo(cx - 1.2 * s, y - 2.5 * s);
+  ctx.lineTo(cx + 0.2 * s, y - 2.5 * s);
+  ctx.lineTo(cx - 0.6 * s, y + 0.7 * s);
+  ctx.lineTo(cx + 1.3 * s, y + 0.7 * s);
+  ctx.lineTo(cx - 0.4 * s, y + 4.5 * s);
+  ctx.lineTo(cx - 0.1 * s, y + 1.9 * s);
+  ctx.lineTo(cx - 1.5 * s, y + 1.9 * s);
+  ctx.closePath();
+  ctx.fill();
+
+  // charge pulse glow
+  const pulse = 0.18 + 0.17 * (0.5 + 0.5 * Math.sin(t * 5));
+  ctx.fillStyle = `rgba(190,242,100,${pulse})`;
+  ctx.beginPath();
+  ctx.ellipse(cx, y, 9 * s, 11 * s, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // face
+  ctx.fillStyle = "#0f172a";
+  ctx.beginPath();
+  ctx.arc(cx - 2.3 * s, y - 3 * s, 0.9 * s, 0, Math.PI * 2);
+  ctx.arc(cx + 2.3 * s, y - 3 * s, 0.9 * s, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = "#1f2937";
+  ctx.lineWidth = 0.8;
+  ctx.beginPath();
+  ctx.arc(cx, y + 0.9 * s, 2.2 * s, 0.15, Math.PI - 0.15);
+  ctx.stroke();
+}
+
+/* ------------------------------------------------------------------ */
+/*  12. drawDrone  -  "ドローン先生"                                    */
+/* ------------------------------------------------------------------ */
+export function drawDrone(
+  ctx: CanvasRenderingContext2D, cx: number, cy: number,
+  r: number, col: string, t: number, ph: number
+): void {
+  const s = r / 16;
+  const hover = Math.sin(t * 3.2 + ph) * 1.4 * s;
+  const y = cy + hover;
+  const spin = t * 14 + ph * Math.PI * 2;
+
+  // soft floating shadow
+  ctx.fillStyle = "rgba(0,0,0,0.2)";
+  ctx.beginPath();
+  ctx.ellipse(cx, y + 12.5 * s, 12 * s, 2.8 * s, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // arms to motors
+  ctx.strokeStyle = darker(col, 45);
+  ctx.lineWidth = 1.2;
+  const arms = [
+    [-7.5, -6], [7.5, -6], [-7.5, 6], [7.5, 6],
+  ];
+  arms.forEach(([ax, ay]) => {
+    ctx.beginPath();
+    ctx.moveTo(cx, y);
+    ctx.lineTo(cx + ax * s, y + ay * s);
+    ctx.stroke();
+  });
+
+  // rotors
+  arms.forEach(([ax, ay], i) => {
+    const mx = cx + ax * s;
+    const my = y + ay * s;
+    ctx.fillStyle = darker(col, 30);
+    ctx.beginPath();
+    ctx.arc(mx, my, 1.8 * s, 0, Math.PI * 2);
+    ctx.fill();
+
+    // spinning blades
+    ctx.save();
+    ctx.translate(mx, my);
+    ctx.rotate(spin + i * 0.6);
+    ctx.fillStyle = "rgba(148,163,184,0.55)";
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 4.2 * s, 0.65 * s, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.rotate(Math.PI / 2);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, 4.2 * s, 0.65 * s, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+  });
+
+  // central body
+  const bodyGrad = ctx.createRadialGradient(cx - 1.5 * s, y - 1.5 * s, 1, cx, y, 7 * s);
+  bodyGrad.addColorStop(0, lighter(col, 28));
+  bodyGrad.addColorStop(1, darker(col, 26));
+  ctx.fillStyle = bodyGrad;
+  ctx.beginPath();
+  ctx.ellipse(cx, y, 7 * s, 5.5 * s, 0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = darker(col, 50);
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // graduation cap (teacher)
+  ctx.fillStyle = "#0f172a";
+  ctx.beginPath();
+  ctx.moveTo(cx - 4.8 * s, y - 5.8 * s);
+  ctx.lineTo(cx + 4.8 * s, y - 5.8 * s);
+  ctx.lineTo(cx + 2.7 * s, y - 7.2 * s);
+  ctx.lineTo(cx - 2.7 * s, y - 7.2 * s);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = "#334155";
+  ctx.stroke();
+  // tassel
+  ctx.strokeStyle = "#fbbf24";
+  ctx.lineWidth = 0.9;
+  ctx.beginPath();
+  ctx.moveTo(cx + 2.8 * s, y - 6.9 * s);
+  ctx.lineTo(cx + 4.6 * s, y - 5.1 * s + Math.sin(t * 4 + ph) * 0.4 * s);
+  ctx.stroke();
+  ctx.fillStyle = "#f59e0b";
+  ctx.beginPath();
+  ctx.arc(cx + 4.7 * s, y - 5 * s + Math.sin(t * 4 + ph) * 0.4 * s, 0.5 * s, 0, Math.PI * 2);
+  ctx.fill();
+
+  // camera eye
+  ctx.fillStyle = "#111827";
+  ctx.beginPath();
+  ctx.arc(cx, y + 0.5 * s, 2.2 * s, 0, Math.PI * 2);
+  ctx.fill();
+  const lens = ctx.createRadialGradient(cx - 0.6 * s, y, 0, cx, y + 0.4 * s, 1.8 * s);
+  lens.addColorStop(0, "#93c5fd");
+  lens.addColorStop(1, "#1d4ed8");
+  ctx.fillStyle = lens;
+  ctx.beginPath();
+  ctx.arc(cx, y + 0.5 * s, 1.6 * s, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.fillStyle = "rgba(255,255,255,0.35)";
+  ctx.beginPath();
+  ctx.arc(cx - 0.5 * s, y - 0.1 * s, 0.45 * s, 0, Math.PI * 2);
+  ctx.fill();
+
+  // led indicators
+  const ledAlpha = 0.45 + 0.35 * (0.5 + 0.5 * Math.sin(t * 6));
+  ctx.fillStyle = `rgba(34,197,94,${ledAlpha})`;
+  ctx.beginPath();
+  ctx.arc(cx - 3.8 * s, y + 2.3 * s, 0.6 * s, 0, Math.PI * 2);
+  ctx.arc(cx + 3.8 * s, y + 2.3 * s, 0.6 * s, 0, Math.PI * 2);
+  ctx.fill();
+}

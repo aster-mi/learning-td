@@ -980,3 +980,395 @@ export function drawNote(
   ctx.arc(drawCx, drawCy, r * 1.2, 0, Math.PI * 2);
   ctx.fill();
 }
+
+/**
+ * drawNotebook - "ノート騎士"
+ * Open notebook body, ring-bind spine, page cape, pen sword, ruled armor lines.
+ */
+export function drawNotebook(
+  ctx: CanvasRenderingContext2D, cx: number, cy: number,
+  r: number, col: string, t: number, ph: number,
+): void {
+  const s = r / 16;
+  const bob = Math.sin(t * 2.8 + ph) * s * 1.2;
+  const y = cy + bob;
+  const legSwing = Math.sin(ph * Math.PI * 2) * 1.4 * s;
+
+  // shadow
+  ctx.fillStyle = "rgba(0,0,0,0.18)";
+  ctx.beginPath();
+  ctx.ellipse(cx, y + 12 * s, 12 * s, 3 * s, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // page cape
+  ctx.fillStyle = "rgba(147,197,253,0.45)";
+  ctx.beginPath();
+  ctx.moveTo(cx - 5 * s, y - 4 * s);
+  ctx.quadraticCurveTo(cx - 13 * s, y + 1 * s, cx - 8 * s, y + 10 * s);
+  ctx.lineTo(cx - 2 * s, y + 7 * s);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = "rgba(59,130,246,0.45)";
+  ctx.lineWidth = 0.7;
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx + 5 * s, y - 4 * s);
+  ctx.quadraticCurveTo(cx + 13 * s, y + 1 * s, cx + 8 * s, y + 10 * s);
+  ctx.lineTo(cx + 2 * s, y + 7 * s);
+  ctx.closePath();
+  ctx.fill();
+  ctx.stroke();
+
+  // notebook body (open pages)
+  const pageGrad = ctx.createLinearGradient(cx - 8 * s, y - 8 * s, cx + 8 * s, y + 8 * s);
+  pageGrad.addColorStop(0, lighter(col, 52));
+  pageGrad.addColorStop(1, darker(col, 12));
+  ctx.fillStyle = pageGrad;
+  ctx.beginPath();
+  ctx.roundRect(cx - 9 * s, y - 8 * s, 18 * s, 16 * s, 2 * s);
+  ctx.fill();
+  ctx.strokeStyle = darker(col, 24);
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // ring bind as spine
+  ctx.fillStyle = "#64748b";
+  ctx.fillRect(cx - 1.2 * s, y - 7.5 * s, 2.4 * s, 15 * s);
+  ctx.fillStyle = "#cbd5e1";
+  for (let i = 0; i < 6; i++) {
+    const ry = y - 6 * s + i * 2.4 * s;
+    ctx.beginPath();
+    ctx.arc(cx, ry, 0.75 * s, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  // ruled lines (armor pattern)
+  ctx.strokeStyle = "rgba(59,130,246,0.5)";
+  ctx.lineWidth = 0.8;
+  for (let i = 0; i < 5; i++) {
+    const ly = y - 5.5 * s + i * 2.7 * s;
+    ctx.beginPath();
+    ctx.moveTo(cx - 7.2 * s, ly);
+    ctx.lineTo(cx + 7.2 * s, ly);
+    ctx.stroke();
+  }
+
+  // legs (walk by ph)
+  ctx.strokeStyle = darker(col, 42);
+  ctx.lineWidth = 1.6;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(cx - 3.2 * s, y + 8 * s);
+  ctx.lineTo(cx - 3.2 * s + legSwing, y + 11.8 * s);
+  ctx.moveTo(cx + 3.2 * s, y + 8 * s);
+  ctx.lineTo(cx + 3.2 * s - legSwing, y + 11.8 * s);
+  ctx.stroke();
+
+  // pen sword
+  ctx.save();
+  ctx.translate(cx + 8.5 * s, y - 2 * s);
+  ctx.rotate(-0.45 + Math.sin(t * 3.5) * 0.1);
+  ctx.fillStyle = "#1e293b";
+  ctx.fillRect(-0.9 * s, -7 * s, 1.8 * s, 12 * s);
+  ctx.fillStyle = "#60a5fa";
+  ctx.beginPath();
+  ctx.moveTo(0, -8.6 * s);
+  ctx.lineTo(-1.6 * s, -6.2 * s);
+  ctx.lineTo(1.6 * s, -6.2 * s);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  // face
+  ctx.fillStyle = "#0f172a";
+  ctx.beginPath();
+  ctx.arc(cx - 3 * s, y - 1.2 * s, 1 * s, 0, Math.PI * 2);
+  ctx.arc(cx + 3 * s, y - 1.2 * s, 1 * s, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.strokeStyle = "#334155";
+  ctx.lineWidth = 0.8;
+  ctx.beginPath();
+  ctx.arc(cx, y + 2.4 * s, 2.2 * s, 0.2, Math.PI - 0.2);
+  ctx.stroke();
+}
+
+/**
+ * drawProtractor - "分度器レンジャー"
+ * Semi-circular body, engraved scale, angle-shot trail, slim silhouette.
+ */
+export function drawProtractor(
+  ctx: CanvasRenderingContext2D, cx: number, cy: number,
+  r: number, col: string, t: number, ph: number,
+): void {
+  const s = r / 14;
+  const y = cy + Math.sin(t * 4 + ph) * s * 0.8;
+  const bodyR = 8.5 * s;
+
+  ctx.fillStyle = "rgba(0,0,0,0.16)";
+  ctx.beginPath();
+  ctx.ellipse(cx, y + 9.8 * s, 9.5 * s, 2.7 * s, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // slim legs
+  ctx.strokeStyle = darker(col, 45);
+  ctx.lineWidth = 1.6 * s;
+  const legSwing = Math.sin(ph * Math.PI * 2) * 0.9 * s;
+  ctx.beginPath();
+  ctx.moveTo(cx - 3.2 * s, y + 6.8 * s);
+  ctx.lineTo(cx - 3.8 * s + legSwing, y + 11.5 * s);
+  ctx.moveTo(cx + 3.2 * s, y + 6.8 * s);
+  ctx.lineTo(cx + 3.8 * s - legSwing, y + 11.5 * s);
+  ctx.stroke();
+
+  // body
+  const grad = ctx.createLinearGradient(cx - bodyR, y - bodyR, cx + bodyR, y + bodyR);
+  grad.addColorStop(0, lighter(col, 36));
+  grad.addColorStop(1, darker(col, 20));
+  ctx.fillStyle = grad;
+  ctx.beginPath();
+  ctx.arc(cx, y + 1.2 * s, bodyR, Math.PI, Math.PI * 2);
+  ctx.lineTo(cx + bodyR, y + 1.2 * s);
+  ctx.lineTo(cx - bodyR, y + 1.2 * s);
+  ctx.closePath();
+  ctx.fill();
+
+  // center hole
+  ctx.fillStyle = "rgba(255,255,255,0.55)";
+  ctx.beginPath();
+  ctx.arc(cx, y + 1.2 * s, 1.8 * s, 0, Math.PI * 2);
+  ctx.fill();
+
+  // scale marks
+  ctx.strokeStyle = darker(col, 40);
+  ctx.lineWidth = 0.8;
+  for (let d = 0; d <= 18; d++) {
+    const a = Math.PI + (d / 18) * Math.PI;
+    const longTick = d % 3 === 0;
+    const r0 = bodyR - (longTick ? 2.2 * s : 1.1 * s);
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(a) * r0, y + 1.2 * s + Math.sin(a) * r0);
+    ctx.lineTo(cx + Math.cos(a) * bodyR, y + 1.2 * s + Math.sin(a) * bodyR);
+    ctx.stroke();
+  }
+
+  // angle-shot trail effect
+  ctx.strokeStyle = "rgba(34,211,238,0.55)";
+  ctx.lineWidth = 1;
+  for (let i = 0; i < 3; i++) {
+    const ang = -0.9 + i * 0.25 + Math.sin(t * 3 + i) * 0.08;
+    ctx.beginPath();
+    ctx.moveTo(cx + 5 * s, y - 2 * s);
+    ctx.lineTo(cx + 13 * s + Math.cos(ang) * 4 * s, y - 6 * s + Math.sin(ang) * 2 * s);
+    ctx.stroke();
+  }
+
+  // face
+  ctx.fillStyle = "#0f172a";
+  ctx.beginPath();
+  ctx.arc(cx - 2.2 * s, y - 1.3 * s, 1.08 * s, 0, Math.PI * 2);
+  ctx.arc(cx + 2.2 * s, y - 1.3 * s, 1.08 * s, 0, Math.PI * 2);
+  ctx.fill();
+}
+
+/**
+ * drawGraphpaper - "方眼スナイパー"
+ * Grid-paper humanoid with rolled-paper sniper and reticle eye.
+ */
+export function drawGraphpaper(
+  ctx: CanvasRenderingContext2D, cx: number, cy: number,
+  r: number, col: string, t: number, ph: number,
+): void {
+  const s = r / 13;
+  const y = cy + Math.sin(t * 2.6 + ph) * s * 0.8;
+  const legSwing = Math.sin(ph * Math.PI * 2) * 1.1 * s;
+
+  ctx.fillStyle = "rgba(0,0,0,0.17)";
+  ctx.beginPath();
+  ctx.ellipse(cx, y + 11 * s, 8.5 * s, 2.5 * s, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // slim body sheet (folded corners)
+  const paperGrad = ctx.createLinearGradient(cx - 5 * s, y - 8 * s, cx + 5 * s, y + 8 * s);
+  paperGrad.addColorStop(0, lighter(col, 54));
+  paperGrad.addColorStop(1, darker(col, 10));
+  ctx.fillStyle = paperGrad;
+  ctx.beginPath();
+  ctx.moveTo(cx - 4.8 * s, y - 8 * s);
+  ctx.lineTo(cx + 4 * s, y - 8 * s);
+  ctx.lineTo(cx + 5 * s, y - 6.8 * s);
+  ctx.lineTo(cx + 5 * s, y + 8 * s);
+  ctx.lineTo(cx - 5 * s, y + 8 * s);
+  ctx.lineTo(cx - 5 * s, y - 6.8 * s);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = darker(col, 20);
+  ctx.lineWidth = 0.9;
+  ctx.stroke();
+
+  // grid lines
+  ctx.strokeStyle = "rgba(139,92,246,0.45)";
+  ctx.lineWidth = 0.55;
+  for (let i = -4; i <= 4; i++) {
+    const gx = cx + i * 1.1 * s;
+    ctx.beginPath();
+    ctx.moveTo(gx, y - 7.5 * s);
+    ctx.lineTo(gx, y + 7.5 * s);
+    ctx.stroke();
+  }
+  for (let j = -6; j <= 6; j++) {
+    const gy = y + j * 1.2 * s;
+    ctx.beginPath();
+    ctx.moveTo(cx - 4.5 * s, gy);
+    ctx.lineTo(cx + 4.5 * s, gy);
+    ctx.stroke();
+  }
+
+  // legs
+  ctx.strokeStyle = darker(col, 38);
+  ctx.lineWidth = 1.4;
+  ctx.beginPath();
+  ctx.moveTo(cx - 2.7 * s, y + 8 * s);
+  ctx.lineTo(cx - 2.7 * s + legSwing, y + 11.2 * s);
+  ctx.moveTo(cx + 2.7 * s, y + 8 * s);
+  ctx.lineTo(cx + 2.7 * s - legSwing, y + 11.2 * s);
+  ctx.stroke();
+
+  // rolled-paper sniper rifle
+  ctx.save();
+  ctx.translate(cx + 2.8 * s, y - 1.5 * s);
+  ctx.rotate(-0.27 + Math.sin(t * 2.6) * 0.14);
+  ctx.fillStyle = "#ede9fe";
+  ctx.beginPath();
+  ctx.roundRect(-1 * s, -0.9 * s, 12 * s, 1.8 * s, 0.8 * s);
+  ctx.fill();
+  ctx.strokeStyle = "#a78bfa";
+  ctx.lineWidth = 0.8;
+  ctx.stroke();
+  // scope
+  ctx.beginPath();
+  ctx.arc(2 * s, -1.2 * s, 1.3 * s, 0, Math.PI * 2);
+  ctx.fillStyle = "#7c3aed";
+  ctx.fill();
+  ctx.fillStyle = "rgba(255,255,255,0.35)";
+  ctx.beginPath();
+  ctx.arc(1.65 * s, -1.55 * s + Math.sin(t * 4) * 0.12 * s, 0.4 * s, 0, Math.PI * 2);
+  ctx.fill();
+  // muzzle
+  ctx.fillStyle = "#6d28d9";
+  ctx.fillRect(10.8 * s, -0.55 * s, 1.4 * s, 1.1 * s);
+  ctx.restore();
+
+  // reticle eye
+  ctx.strokeStyle = "#6d28d9";
+  ctx.lineWidth = 0.8;
+  ctx.beginPath();
+  ctx.arc(cx - 1.7 * s, y - 2.2 * s, 1.4 * s, 0, Math.PI * 2);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(cx - 1.7 * s, y - 3.9 * s);
+  ctx.lineTo(cx - 1.7 * s, y - 0.5 * s);
+  ctx.moveTo(cx - 3.4 * s, y - 2.2 * s);
+  ctx.lineTo(cx, y - 2.2 * s);
+  ctx.stroke();
+}
+
+/**
+ * drawPaintbrush - "絵筆ウィザード"
+ * Palette body + brush wand with colorful magic splashes.
+ */
+export function drawPaintbrush(
+  ctx: CanvasRenderingContext2D, cx: number, cy: number,
+  r: number, col: string, t: number, ph: number,
+): void {
+  const s = r / 17;
+  const y = cy + Math.sin(t * 2.7 + ph) * s;
+  const legSwing = Math.sin(ph * Math.PI * 2) * 1.2 * s;
+
+  // shadow
+  ctx.fillStyle = "rgba(0,0,0,0.18)";
+  ctx.beginPath();
+  ctx.ellipse(cx, y + 13 * s, 11 * s, 3 * s, 0, 0, Math.PI * 2);
+  ctx.fill();
+
+  // canvas robe
+  ctx.fillStyle = "#fff7ed";
+  ctx.beginPath();
+  ctx.moveTo(cx - 8 * s, y + 10 * s);
+  ctx.quadraticCurveTo(cx - 9 * s, y - 6 * s, cx - 3 * s, y - 8 * s);
+  ctx.lineTo(cx + 4 * s, y - 8 * s);
+  ctx.quadraticCurveTo(cx + 9 * s, y - 4 * s, cx + 8 * s, y + 10 * s);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = "#fdba74";
+  ctx.lineWidth = 1;
+  ctx.stroke();
+
+  // palette body
+  const palGrad = ctx.createRadialGradient(cx - 2 * s, y - 2 * s, 1, cx, y, 10 * s);
+  palGrad.addColorStop(0, lighter(col, 34));
+  palGrad.addColorStop(1, darker(col, 24));
+  ctx.fillStyle = palGrad;
+  ctx.beginPath();
+  ctx.arc(cx, y, 9 * s, 0.2, Math.PI * 1.95);
+  ctx.lineTo(cx + 8 * s, y + 4 * s);
+  ctx.closePath();
+  ctx.fill();
+
+  // thumb hole
+  ctx.fillStyle = "#fff7ed";
+  ctx.beginPath();
+  ctx.arc(cx + 3.3 * s, y + 1 * s, 1.5 * s, 0, Math.PI * 2);
+  ctx.fill();
+
+  // paint blobs
+  const paints = ["#ef4444", "#f59e0b", "#22c55e", "#3b82f6", "#a855f7"];
+  paints.forEach((p, i) => {
+    const a = -2.2 + i * 0.52;
+    ctx.fillStyle = p;
+    ctx.beginPath();
+    ctx.arc(cx + Math.cos(a) * 6.4 * s, y + Math.sin(a) * 6.2 * s, 1.2 * s, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // brush wand
+  ctx.save();
+  ctx.translate(cx + 7 * s, y - 1 * s);
+  ctx.rotate(-0.5 + Math.sin(t * 2.2) * 0.1);
+  ctx.fillStyle = "#7c2d12";
+  ctx.fillRect(-0.8 * s, -7 * s, 1.6 * s, 11 * s);
+  ctx.fillStyle = "#d1d5db";
+  ctx.fillRect(-1.2 * s, -7.8 * s, 2.4 * s, 1.6 * s);
+  ctx.fillStyle = "#f43f5e";
+  ctx.beginPath();
+  ctx.moveTo(-1.3 * s, -9.5 * s);
+  ctx.lineTo(1.3 * s, -9.5 * s);
+  ctx.lineTo(0, -7.3 * s);
+  ctx.closePath();
+  ctx.fill();
+  ctx.restore();
+
+  // legs below robe
+  ctx.strokeStyle = darker(col, 44);
+  ctx.lineWidth = 1.5;
+  ctx.lineCap = "round";
+  ctx.beginPath();
+  ctx.moveTo(cx - 2.8 * s, y + 9.2 * s);
+  ctx.lineTo(cx - 2.8 * s + legSwing, y + 12.5 * s);
+  ctx.moveTo(cx + 2.8 * s, y + 9.2 * s);
+  ctx.lineTo(cx + 2.8 * s - legSwing, y + 12.5 * s);
+  ctx.stroke();
+
+  // colorful magic splashes
+  ctx.save();
+  for (let i = 0; i < 7; i++) {
+    const a = t * 2 + i * 0.9;
+    const sx = cx + 9 * s + Math.cos(a) * (3 + i * 0.3) * s;
+    const sy = y - 7 * s + Math.sin(a) * (2 + i * 0.2) * s;
+    ctx.fillStyle = paints[i % paints.length];
+    ctx.globalAlpha = 0.45 + 0.25 * Math.sin(t * 4 + i);
+    ctx.beginPath();
+    ctx.arc(sx, sy, (0.5 + (i % 3) * 0.25) * s, 0, Math.PI * 2);
+    ctx.fill();
+  }
+  ctx.restore();
+}

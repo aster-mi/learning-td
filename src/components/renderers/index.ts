@@ -6,8 +6,8 @@
 import { drawPencil, drawEraser, drawRuler, drawScissors, drawCompass, drawStapler, drawGlue, drawSharpener } from "./stationery";
 import { drawTextbook, drawSchoolbag, drawBell, drawChalk, drawGlobe } from "./school";
 import { drawBeaker, drawMagnet, drawBulb, drawTelescope, drawTesttube, drawMicroscope } from "./science";
-import { drawAbacus, drawCalculator, drawPi, drawCrayon, drawPalette, drawNote } from "./mathArt";
-import { drawGearLancer, drawRivetGuard, drawTurbineShooter, drawBoltHammer, drawServoRunner, drawArcCoil, drawForgeKnight, drawPistonBreaker, drawNeonRay, drawChronoMecha } from "./engineering";
+import { drawAbacus, drawCalculator, drawPi, drawCrayon, drawPalette, drawNote, drawNotebook, drawProtractor, drawGraphpaper, drawPaintbrush } from "./mathArt";
+import { drawGearLancer, drawRivetGuard, drawTurbineShooter, drawBoltHammer, drawServoRunner, drawArcCoil, drawForgeKnight, drawPistonBreaker, drawNeonRay, drawChronoMecha, drawBattery, drawDrone } from "./engineering";
 import { drawVineSoldier, drawLeafShield, drawWoodArcher, drawBindHound, drawMossKnight, drawSeedMage, drawForestLord, drawThunderOak, drawEmeraldFeather, drawWildZephyr } from "./nature";
 import { drawBronzeGuard, drawStoneSentinel, drawLanceRider, drawCrossbowman, drawIronShield, drawFlameTorch, drawWarHammer, drawRoyalDrummer, drawEmperorBow, drawOrichalcum } from "./history";
 import { drawRhythmFighter, drawBassDrumGuard, drawTrumpeter, drawVioletString, drawPianoForte, drawSymphonia, drawHarmonyGuard, drawMetronomeKnight, drawOperaArcher, drawStarConductor } from "./music";
@@ -48,11 +48,17 @@ export const UNIT_RENDERERS: Record<string, UnitDrawFn> = {
   abacus:    drawAbacus,
   calculator: drawCalculator,
   pi:        drawPi,
+  notebook:   drawNotebook,
+  protractor: drawProtractor,
+  graphpaper: drawGraphpaper,
   // 芸術シリーズ
   crayon:    drawCrayon,
   palette:   drawPalette,
   note:      drawNote,
+  paintbrush: drawPaintbrush,
   // 工学シリーズ
+  battery:    drawBattery,
+  drone:      drawDrone,
   eng_01:    drawGearLancer,
   eng_02:    drawRivetGuard,
   eng_03:    drawTurbineShooter,
