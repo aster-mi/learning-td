@@ -402,110 +402,102 @@ export function StageSelect({
         {/* ─────────────── PLAY TAB ─────────────── */}
         {hubView === "play" ? (
           <div style={{ display: "grid", gap: 16 }}>
-            {/* ── top row: daily + quick actions ── */}
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: isMobile ? "1fr" : "1fr auto",
-                gap: 12,
-                alignItems: "start",
-              }}
-            >
-              {/* daily challenge */}
+            {/* ── top row: party + gacha ── */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
               <button
-                onClick={onDaily}
-                disabled={dailyDone}
+                onClick={onParty}
                 style={{
-                  width: "100%",
-                  textAlign: "left",
-                  padding: "14px 18px",
-                  background: dailyDone
-                    ? "rgba(30,41,59,0.6)"
-                    : "linear-gradient(135deg, #312e81, #4c1d95)",
-                  border: `2px solid ${dailyDone ? "#334155" : "#818cf8"}`,
+                  background: "linear-gradient(135deg, #0d9488, #14b8a6)",
+                  border: "2px solid #2dd4bf",
                   borderRadius: 16,
-                  cursor: dailyDone ? "default" : "pointer",
+                  padding: isMobile ? "14px 12px" : "16px 20px",
                   color: "#fff",
-                  opacity: dailyDone ? 0.65 : 1,
-                  boxShadow: dailyDone ? "none" : "0 4px 20px #818cf844",
+                  cursor: "pointer",
+                  fontWeight: 800,
+                  fontSize: isMobile ? 15 : 16,
+                  boxShadow: "0 4px 12px rgba(20,184,166,0.25)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 10,
+                  whiteSpace: "nowrap",
                 }}
               >
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
-                  <div>
-                    <div
-                      style={{
-                        fontSize: 10,
-                        color: "#a5b4fc",
-                        fontWeight: "bold",
-                        letterSpacing: 1.2,
-                        marginBottom: 4,
-                      }}
-                    >
-                      TODAY&apos;S CHALLENGE
-                    </div>
-                    <div style={{ fontSize: 18, fontWeight: 800 }}>
-                      {daily.emoji} {daily.title}
-                    </div>
-                  </div>
+                <span style={{ fontSize: isMobile ? 22 : 24 }}>🛡</span>
+                パーティ
+              </button>
+              <button
+                onClick={onGacha}
+                style={{
+                  background: "linear-gradient(135deg, #b45309, #f59e0b)",
+                  border: "2px solid #fbbf24",
+                  borderRadius: 16,
+                  padding: isMobile ? "14px 12px" : "16px 20px",
+                  color: "#fff",
+                  cursor: "pointer",
+                  fontWeight: 800,
+                  fontSize: isMobile ? 15 : 16,
+                  boxShadow: "0 4px 16px rgba(251,191,36,0.3)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: 10,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                <span style={{ fontSize: isMobile ? 22 : 24 }}>🎯</span>
+                ガチャ
+              </button>
+            </div>
+
+            {/* ── daily challenge ── */}
+            <button
+              onClick={onDaily}
+              disabled={dailyDone}
+              style={{
+                width: "100%",
+                textAlign: "left",
+                padding: "14px 18px",
+                background: dailyDone
+                  ? "rgba(30,41,59,0.6)"
+                  : "linear-gradient(135deg, #312e81, #4c1d95)",
+                border: `2px solid ${dailyDone ? "#334155" : "#818cf8"}`,
+                borderRadius: 16,
+                cursor: dailyDone ? "default" : "pointer",
+                color: "#fff",
+                opacity: dailyDone ? 0.65 : 1,
+                boxShadow: dailyDone ? "none" : "0 4px 20px #818cf844",
+              }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: 12, flexWrap: "wrap" }}>
+                <div>
                   <div
                     style={{
-                      fontSize: 13,
-                      color: dailyDone ? "#86efac" : "#fbbf24",
-                      fontWeight: 700,
-                      whiteSpace: "nowrap",
+                      fontSize: 10,
+                      color: "#a5b4fc",
+                      fontWeight: "bold",
+                      letterSpacing: 1.2,
+                      marginBottom: 4,
                     }}
                   >
-                    {dailyDone ? "クリア済み" : `+${daily.bonusCoins} コイン`}
+                    TODAY&apos;S CHALLENGE
+                  </div>
+                  <div style={{ fontSize: 18, fontWeight: 800 }}>
+                    {daily.emoji} {daily.title}
                   </div>
                 </div>
-              </button>
-
-              {/* quick action buttons */}
-              <div style={{ display: "flex", gap: 8, flexDirection: isMobile ? "row" : "column" }}>
-                <button
-                  onClick={onParty}
+                <div
                   style={{
-                    background: "linear-gradient(135deg, #0d9488, #14b8a6)",
-                    border: "2px solid #2dd4bf",
-                    borderRadius: 14,
-                    padding: isMobile ? "10px 16px" : "12px 20px",
-                    color: "#fff",
-                    cursor: "pointer",
-                    fontWeight: 800,
                     fontSize: 13,
-                    boxShadow: "0 4px 12px rgba(20,184,166,0.25)",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
+                    color: dailyDone ? "#86efac" : "#fbbf24",
+                    fontWeight: 700,
                     whiteSpace: "nowrap",
                   }}
                 >
-                  <span style={{ fontSize: 18 }}>🛡</span>
-                  パーティ
-                </button>
-                <button
-                  onClick={onGacha}
-                  style={{
-                    background: "linear-gradient(135deg, #b45309, #f59e0b)",
-                    border: "2px solid #fbbf24",
-                    borderRadius: 14,
-                    padding: isMobile ? "10px 16px" : "12px 20px",
-                    color: "#fff",
-                    cursor: "pointer",
-                    fontWeight: 800,
-                    fontSize: 13,
-                    boxShadow: "0 4px 16px rgba(251,191,36,0.3)",
-                    display: "flex",
-                    alignItems: "center",
-                    gap: 8,
-                    whiteSpace: "nowrap",
-                  }}
-                >
-                  <span style={{ fontSize: 18 }}>🎯</span>
-                  ガチャ
-                </button>
+                  {dailyDone ? "クリア済み" : `+${daily.bonusCoins} コイン`}
+                </div>
               </div>
-            </div>
+            </button>
 
             {/* ── world cards ── */}
             <div style={{ display: "grid", gap: 12 }}>
