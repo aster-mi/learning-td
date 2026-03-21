@@ -115,7 +115,7 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
           const accuracy = totalQ > 0 ? correctCountRef.current / totalQ : 0;
           const baseHpRatio = snap.playerBaseHp / snap.playerBaseMaxHp;
           const stars = calcStars(accuracy, baseHpRatio);
-          const coins = calcCoins(stars, accuracy, maxComboRef.current);
+          const coins = calcCoins(stars, accuracy, maxComboRef.current, stage.id, selectedLevel);
           const save = ensureLoginProgress(loadSave());
           const newUnlock = getNewUnlock(stage.id, save.unlockedUnits);
 

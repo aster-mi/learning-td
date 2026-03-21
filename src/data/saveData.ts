@@ -236,12 +236,34 @@ export function calcStars(accuracy: number, baseHpRatio: number): number {
   return 1;
 }
 
-export function calcCoins(stars: number, accuracy: number, maxCombo: number): number {
+/**
+ * コイン報酬を計算する。
+ * stageId: ステージ番号（ワールドが進むほど報酬UP）
+ * selectedLevel: 選択難易度（1-10）。高いほど報酬UP。0は標準(7)扱い。
+ */
+export function calcCoins(
+  stars: number, accuracy: number, maxCombo: number,
+  stageId: number = 1, selectedLevel: number = 7,
+): number {
   const base = 50;
-  const starBonus = stars * 20;
+  const starBonus = stars * 25;                       // 20→25
   const accuracyBonus = Math.floor(accuracy * 50);
-  const comboBonus = Math.min(maxCombo * 2, 30);
-  return base + starBonus + accuracyBonus + comboBonus;
+  const comboBonus = Math.min(maxCombo * 3, 45);      // 2→3, cap 30→45
+  const raw = base + starBonus + accuracyBonus + comboBonus;
+
+  // ステージ進行ボーナス: ワールドが進むほど +15% ずつ
+  // id 1-3 → world1(×1.0), 4-6 → world2(×1.15), 7-9 → world3(×1.30),
+  // 10-12 → world4(×1.45), EX(101+) → ×1.60
+  const worldTier = stageId >= 100 ? 5 : Math.ceil(stageId / 3);
+  const stageMult = 1 + (worldTier - 1) * 0.15;
+
+  // 難易度ボーナス: Lv.1→×0.6, Lv.7(標準)→×1.0, Lv.10→×1.3
+  const lv = selectedLevel <= 0 ? 7 : Math.max(1, Math.min(10, selectedLevel));
+  const levelMult = lv <= 7
+    ? 0.6 + (lv - 1) * (0.4 / 6)    // Lv.1~7: 0.60→1.00
+    : 1.0 + (lv - 7) * (0.3 / 3);   // Lv.8~10: 1.00→1.30
+
+  return Math.round(raw * stageMult * levelMult);
 }
 
 export const UNLOCK_TABLE: Record<number, string> = {

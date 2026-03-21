@@ -39,6 +39,22 @@ describe("calcCoins", () => {
     const coins3 = calcCoins(3, 0.5, 5);
     expect(coins3).toBeGreaterThan(coins1);
   });
+
+  it("higher difficulty level gives more coins", () => {
+    const coinsLv1 = calcCoins(3, 0.9, 10, 1, 1);
+    const coinsLv7 = calcCoins(3, 0.9, 10, 1, 7);
+    const coinsLv10 = calcCoins(3, 0.9, 10, 1, 10);
+    expect(coinsLv7).toBeGreaterThan(coinsLv1);
+    expect(coinsLv10).toBeGreaterThan(coinsLv7);
+  });
+
+  it("later stages give more coins than early stages", () => {
+    const coinsW1 = calcCoins(3, 0.9, 10, 1, 7);
+    const coinsW3 = calcCoins(3, 0.9, 10, 7, 7);
+    const coinsEX = calcCoins(3, 0.9, 10, 101, 7);
+    expect(coinsW3).toBeGreaterThan(coinsW1);
+    expect(coinsEX).toBeGreaterThan(coinsW3);
+  });
 });
 
 describe("getUpgradeCost", () => {
