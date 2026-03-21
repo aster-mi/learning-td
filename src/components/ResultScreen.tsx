@@ -44,8 +44,9 @@ export function ResultScreen({
   return (
     <div role="status" aria-label="ステージ結果" style={{
       position: "fixed", inset: 0, background: "rgba(0,0,0,0.85)",
-      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "safe center",
       gap: 12, zIndex: 100, padding: 16,
+      overflowY: "auto",
     }}>
       {/* メインカード */}
       <div style={{
@@ -55,6 +56,8 @@ export function ResultScreen({
         maxWidth: 420, width: "100%",
         border: `2px solid ${isWin ? "#22c55e" : "#ef4444"}`,
         boxShadow: `0 0 40px ${isWin ? "#22c55e33" : "#ef444433"}`,
+        margin: "auto 0",
+        flexShrink: 0,
       }}>
         {/* タイトル */}
         <div style={{
