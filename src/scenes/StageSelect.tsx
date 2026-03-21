@@ -191,6 +191,8 @@ export function StageSelect({
     setSelectedWorldId(worldId);
   };
 
+  const isWorldSelectionView = hubView === "play" && stageTab === "normal" && showWorldSelector;
+
   return (
     <div
       style={{
@@ -317,7 +319,9 @@ export function StageSelect({
 
         {hubView === "play" ? (
           <>
-            <div
+            {!isWorldSelectionView && (
+              <>
+                <div
               style={{
                 display: "grid",
                 gridTemplateColumns: isMobile ? "1fr" : "1.1fr 0.9fr",
@@ -441,6 +445,8 @@ export function StageSelect({
                 EX {!allNormalCleared && "🔒"}
               </button>
             </div>
+              </>
+            )}
 
             {stageTab === "normal" ? (
               !showWorldSelector ? (
