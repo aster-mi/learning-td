@@ -62,11 +62,11 @@ function SummaryCard({ label, value, color }: { label: string; value: string; co
         background: "rgba(15,23,42,0.78)",
         border: "1px solid #334155",
         borderRadius: 14,
-        padding: "14px 16px",
+        padding: "12px 14px",
       }}
     >
-      <div style={{ fontSize: 12, color: "#94a3b8", marginBottom: 8 }}>{label}</div>
-      <div style={{ fontSize: 28, fontWeight: 800, color }}>{value}</div>
+      <div style={{ fontSize: 11, color: "#94a3b8", marginBottom: 6 }}>{label}</div>
+      <div style={{ fontSize: 22, fontWeight: 800, color }}>{value}</div>
     </div>
   );
 }
@@ -142,6 +142,7 @@ export function StageSelect({
   const { isMobile } = useWindowSize();
   const [hubView, setHubView] = useState<HubView>("play");
   const [stageTab, setStageTab] = useState<StageTab>("normal");
+  const [showWorldSelector, setShowWorldSelector] = useState(false);
   const [selectedWorldId, setSelectedWorldId] = useState<number | null>(null);
 
   const daily = getTodayChallenge();
@@ -182,6 +183,7 @@ export function StageSelect({
     const targetWorld = worlds.find((world) => world.id === worldId);
     if (!targetWorld?.unlocked) return;
     setStageTab("normal");
+    setShowWorldSelector(true);
     setSelectedWorldId(worldId);
   };
 
@@ -360,6 +362,7 @@ export function StageSelect({
                   shadow="0 4px 16px rgba(14,165,233,0.28)"
                   onClick={() => {
                     setStageTab("normal");
+                    setShowWorldSelector(true);
                     setSelectedWorldId(null);
                   }}
                 />
@@ -430,6 +433,37 @@ export function StageSelect({
             </div>
 
             {stageTab === "normal" ? (
+              !showWorldSelector ? (
+                <div
+                  style={{
+                    background: "rgba(15,23,42,0.78)",
+                    border: "1px solid #334155",
+                    borderRadius: 16,
+                    padding: isMobile ? "16px" : "22px",
+                    textAlign: "center",
+                  }}
+                >
+                  <div style={{ fontSize: 34, marginBottom: 10 }}>🗺</div>
+                  <div style={{ fontSize: 20, fontWeight: 800, marginBottom: 8 }}>ワールドを選択してください</div>
+                  <div style={{ fontSize: 13, color: "#94a3b8", lineHeight: 1.7, marginBottom: 16 }}>
+                    準備メニューの「ワールド選択」から、挑戦したいワールドを選ぶとステージ一覧へ進みます。
+                  </div>
+                  <button
+                    onClick={() => setShowWorldSelector(true)}
+                    style={{
+                      padding: "12px 18px",
+                      borderRadius: 12,
+                      border: "2px solid #60a5fa",
+                      background: "linear-gradient(135deg, #2563eb, #0ea5e9)",
+                      color: "#fff",
+                      fontWeight: 800,
+                      cursor: "pointer",
+                    }}
+                  >
+                    ワールド選択を開く
+                  </button>
+                </div>
+              ) : (
               selectedWorld == null ? (
                 <div
                   style={{
@@ -649,6 +683,7 @@ export function StageSelect({
                     );
                   })}
                 </div>
+              )
               )
             ) : (
               <div
