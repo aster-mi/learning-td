@@ -235,27 +235,33 @@ export function StageSelect({
                 background: "rgba(129,140,248,0.15)",
                 border: "1px solid #818cf866",
                 color: "#818cf8",
-                borderRadius: 8,
-                padding: "8px 12px",
+                borderRadius: 999,
+                padding: "7px 12px",
                 cursor: "pointer",
                 fontSize: 13,
                 fontWeight: "bold",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
               }}
             >
-              実績
+              📘 実績
             </button>
             <div
               style={{
                 background: "rgba(251,191,36,0.15)",
                 border: "1px solid rgba(251,191,36,0.3)",
-                borderRadius: 10,
-                padding: "6px 14px",
+                borderRadius: 999,
+                padding: "6px 12px",
                 fontSize: 14,
                 fontWeight: "bold",
                 color: "#fbbf24",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
               }}
             >
-              コイン {coins}
+              🪙 {coins}
             </div>
           </div>
         </div>
@@ -278,34 +284,33 @@ export function StageSelect({
           style={{
             background: "rgba(15,23,42,0.78)",
             border: "1px solid #334155",
-            borderRadius: 16,
-            padding: isMobile ? "12px" : "14px",
+            borderRadius: 14,
+            padding: 6,
             display: "flex",
             gap: 8,
-            flexWrap: "wrap",
+            flexWrap: "nowrap",
           }}
         >
           {[
-            { key: "play", label: "プレイ", desc: "ステージ攻略とデイリー", color: "#3b82f6" },
-            { key: "growth", label: "成長", desc: "ミッションと学習状況", color: "#8b5cf6" },
+            { key: "play", label: "プレイ", color: "#3b82f6" },
+            { key: "growth", label: "成長", color: "#8b5cf6" },
           ].map((item) => (
             <button
               key={item.key}
               onClick={() => setHubView(item.key as HubView)}
               style={{
-                flex: isMobile ? "1 1 100%" : 1,
+                flex: 1,
                 minWidth: 0,
-                padding: "12px 14px",
-                borderRadius: 12,
-                border: `2px solid ${hubView === item.key ? item.color : "#334155"}`,
-                background: hubView === item.key ? `${item.color}22` : "#0f172a",
-                color: "#fff",
+                padding: isMobile ? "10px 12px" : "11px 14px",
+                borderRadius: 10,
+                border: hubView === item.key ? `1px solid ${item.color}` : "1px solid transparent",
+                background: hubView === item.key ? `${item.color}22` : "transparent",
+                color: hubView === item.key ? "#fff" : "#94a3b8",
                 cursor: "pointer",
-                textAlign: "left",
+                textAlign: "center",
               }}
             >
-              <div style={{ fontWeight: 800, marginBottom: 4 }}>{item.label}</div>
-              <div style={{ fontSize: 12, color: "#94a3b8" }}>{item.desc}</div>
+              <div style={{ fontWeight: 800 }}>{item.label}</div>
             </button>
           ))}
         </div>
