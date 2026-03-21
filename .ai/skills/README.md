@@ -23,6 +23,12 @@
 | `SKILL_DEPLOY_PAGES.md` | GitHub Pagesデプロイ |
 | `SKILL_RELEASE_CHECK.md` | リリース前チェックリスト |
 | `SKILL_AGENT_HANDOFF.md` | Codex/Claude引き継ぎ |
+| `SKILL_KNOWLEDGE_UPDATE.md` | ナレッジ自動更新（毎セッション終了時） |
+
+## 失敗パターン集
+| ファイル | 概要 |
+|---------|------|
+| `../lessons/` | 過去の失敗と対策のアーカイブ |
 
 ## 使い方
 1. 作業に対応するSkillを開く
