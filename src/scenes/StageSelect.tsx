@@ -71,6 +71,61 @@ function SummaryCard({ label, value, color }: { label: string; value: string; co
   );
 }
 
+function MenuButton({
+  title,
+  desc,
+  icon,
+  gradient,
+  borderColor,
+  shadow,
+  onClick,
+}: {
+  title: string;
+  desc: string;
+  icon: string;
+  gradient: string;
+  borderColor: string;
+  shadow: string;
+  onClick: () => void;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      style={{
+        width: "100%",
+        padding: "14px 16px",
+        background: gradient,
+        border: `2px solid ${borderColor}`,
+        borderRadius: 14,
+        color: "#fff",
+        cursor: "pointer",
+        textAlign: "left",
+        boxShadow: shadow,
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+        <div
+          style={{
+            width: 36,
+            height: 36,
+            borderRadius: 10,
+            background: "rgba(255,255,255,0.14)",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            fontSize: 18,
+            flexShrink: 0,
+          }}
+        >
+          {icon}
+        </div>
+        <div style={{ fontSize: 16, fontWeight: 800 }}>{title}</div>
+      </div>
+      <div style={{ fontSize: 12, color: "rgba(255,255,255,0.85)", lineHeight: 1.5 }}>{desc}</div>
+    </button>
+  );
+}
+
 export function StageSelect({
   clearedStages,
   stageStars,
@@ -87,6 +142,7 @@ export function StageSelect({
   const { isMobile } = useWindowSize();
   const [hubView, setHubView] = useState<HubView>("play");
   const [stageTab, setStageTab] = useState<StageTab>("normal");
+  const [selectedWorldId, setSelectedWorldId] = useState<number | null>(null);
 
   const daily = getTodayChallenge();
   const dailyDone = isDailyChallengeCompleted(daily.id);
@@ -101,13 +157,33 @@ export function StageSelect({
       new Set(normalStages.map((stage) => stage.world).filter((world): world is number => world !== undefined)),
     )
       .sort((a, b) => a - b)
-      .map((worldId) => ({
-        ...WORLD_THEME_META[worldId],
-        stages: normalStages.filter((stage) => stage.world === worldId),
-      }));
-  }, []);
+      .map((worldId, worldIndex, worldIds) => {
+        const stages = normalStages.filter((stage) => stage.world === worldId);
+        const previousWorldStages =
+          worldIndex === 0
+            ? []
+            : normalStages.filter((stage) => stage.world === worldIds[worldIndex - 1]);
+        const unlocked =
+          worldIndex === 0 || previousWorldStages.every((stage) => clearedStages.has(stage.id));
 
+        return {
+          ...WORLD_THEME_META[worldId],
+          stages,
+          unlocked,
+        };
+      });
+  }, [clearedStages]);
+
+  const selectedWorld =
+    selectedWorldId == null ? null : worlds.find((world) => world.id === selectedWorldId) ?? null;
   const allNormalCleared = normalStages.every((stage) => clearedStages.has(stage.id));
+
+  const openWorld = (worldId: number) => {
+    const targetWorld = worlds.find((world) => world.id === worldId);
+    if (!targetWorld?.unlocked) return;
+    setStageTab("normal");
+    setSelectedWorldId(worldId);
+  };
 
   return (
     <div
@@ -121,14 +197,7 @@ export function StageSelect({
         color: "#fff",
       }}
     >
-      <div
-        style={{
-          width: "100%",
-          maxWidth: 920,
-          display: "grid",
-          gap: 16,
-        }}
-      >
+      <div style={{ width: "100%", maxWidth: 920, display: "grid", gap: 16 }}>
         <div
           style={{
             display: "flex",
@@ -278,47 +347,40 @@ export function StageSelect({
                   borderRadius: 16,
                   padding: "16px",
                   display: "grid",
-                  gap: 10,
+                  gap: 12,
                 }}
               >
                 <div style={{ fontSize: 18, fontWeight: 800 }}>準備メニュー</div>
-                <button
+                <MenuButton
+                  title="ワールド選択"
+                  desc="ワールドごとに背景や攻略状況を見ながら、挑戦先を選べます。"
+                  icon="🗺"
+                  gradient="linear-gradient(135deg, #2563eb, #0ea5e9)"
+                  borderColor="#7dd3fc"
+                  shadow="0 4px 16px rgba(14,165,233,0.28)"
+                  onClick={() => {
+                    setStageTab("normal");
+                    setSelectedWorldId(null);
+                  }}
+                />
+                <MenuButton
+                  title="パーティ編成 / 図鑑"
+                  desc="出撃メンバーの調整や育成状況の確認を行います。"
+                  icon="🛡"
+                  gradient="linear-gradient(135deg, #0d9488, #14b8a6)"
+                  borderColor="#2dd4bf"
+                  shadow="0 4px 12px rgba(20,184,166,0.3)"
                   onClick={onParty}
-                  style={{
-                    width: "100%",
-                    padding: "12px 14px",
-                    background: "linear-gradient(135deg, #0d9488, #14b8a6)",
-                    border: "2px solid #2dd4bf",
-                    borderRadius: 12,
-                    color: "#fff",
-                    fontWeight: "bold",
-                    fontSize: 15,
-                    cursor: "pointer",
-                    boxShadow: "0 4px 12px rgba(20,184,166,0.3)",
-                  }}
-                >
-                  パーティ編成 / 図鑑
-                </button>
-                <button
+                />
+                <MenuButton
+                  title="ガチャ"
+                  desc="新しいユニットや報酬を獲得して戦力を強化します。"
+                  icon="🎴"
+                  gradient="linear-gradient(135deg, #b45309, #f59e0b)"
+                  borderColor="#fbbf24"
+                  shadow="0 4px 16px rgba(251,191,36,0.35)"
                   onClick={onGacha}
-                  style={{
-                    width: "100%",
-                    padding: "12px 14px",
-                    background: "linear-gradient(135deg, #b45309, #f59e0b)",
-                    border: "2px solid #fbbf24",
-                    borderRadius: 12,
-                    color: "#fff",
-                    fontWeight: "bold",
-                    fontSize: 15,
-                    cursor: "pointer",
-                    boxShadow: "0 4px 16px rgba(251,191,36,0.35)",
-                  }}
-                >
-                  ガチャ
-                </button>
-                <div style={{ fontSize: 12, color: "#94a3b8", lineHeight: 1.6 }}>
-                  ステージに出る前の準備はここにまとめています。編成や収集要素を別導線に分けて、攻略一覧を見やすくしています。
-                </div>
+                />
               </div>
             </div>
 
@@ -367,183 +429,289 @@ export function StageSelect({
               </button>
             </div>
 
-            <div style={{ width: "100%" }}>
-              {stageTab === "normal" ? (
-                worlds.map((world, worldIndex) => {
-                  const previousWorldStages = worlds[worldIndex - 1]?.stages ?? [];
-                  const worldUnlocked =
-                    worldIndex === 0 || previousWorldStages.every((stage) => clearedStages.has(stage.id));
-
-                  return (
-                    <div key={world.id} style={{ marginBottom: 20, opacity: worldUnlocked ? 1 : 0.45 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 8, paddingLeft: 4 }}>
-                        <span style={{ fontSize: 24 }}>{world.emoji}</span>
-                        <span style={{ fontSize: 16, fontWeight: "bold", color: world.accent }}>
-                          ワールド {world.id}: {world.name}
-                        </span>
-                        {!worldUnlocked && <span style={{ fontSize: 14 }}>🔒</span>}
-                      </div>
-
-                      <div
-                        style={{
-                          background: `${world.bg}dd`,
-                          borderRadius: 12,
-                          padding: "12px",
-                          border: `2px solid ${world.accent}44`,
-                          position: "relative",
-                        }}
-                      >
-                        {world.stages.map((stage, stageIndex) => {
-                          const prevCleared =
-                            stageIndex === 0
-                              ? worldIndex === 0 || previousWorldStages.every((prevStage) => clearedStages.has(prevStage.id))
-                              : clearedStages.has(world.stages[stageIndex - 1].id);
-                          const unlocked = worldUnlocked && prevCleared;
-                          const cleared = clearedStages.has(stage.id);
-                          const stars = stageStars[stage.id] ?? 0;
-
-                          return (
-                            <div key={stage.id}>
-                              {stageIndex > 0 && (
-                                <div
-                                  style={{
-                                    width: 3,
-                                    height: 16,
-                                    background: cleared ? world.accent : "#334155",
-                                    marginLeft: 28,
-                                    marginTop: -4,
-                                    marginBottom: -4,
-                                  }}
-                                />
-                              )}
-                              <button
-                                onClick={() => {
-                                  if (unlocked) onSelect(stage.id);
-                                }}
-                                disabled={!unlocked}
-                                style={{
-                                  width: "100%",
-                                  display: "flex",
-                                  alignItems: "center",
-                                  gap: 12,
-                                  padding: "10px 14px",
-                                  background: cleared ? `${world.accent}18` : unlocked ? "#0f172a88" : "#0f172a44",
-                                  border: `2px solid ${cleared ? world.accent : unlocked ? "#475569" : "#1e293b"}`,
-                                  borderRadius: 10,
-                                  cursor: unlocked ? "pointer" : "not-allowed",
-                                  color: "#fff",
-                                  textAlign: "left",
-                                }}
-                              >
-                                <div
-                                  style={{
-                                    width: 36,
-                                    height: 36,
-                                    borderRadius: "50%",
-                                    background: cleared ? world.accent : unlocked ? "#334155" : "#1e293b",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    fontSize: 16,
-                                    fontWeight: "bold",
-                                    flexShrink: 0,
-                                    boxShadow: cleared ? `0 0 12px ${world.accent}66` : "none",
-                                  }}
-                                >
-                                  {!unlocked ? "🔒" : cleared ? "✓" : `${stage.id}`}
-                                </div>
-
-                                <div style={{ flex: 1, minWidth: 0 }}>
-                                  <div
-                                    style={{
-                                      fontSize: 15,
-                                      fontWeight: "bold",
-                                      color: unlocked ? "#fff" : "#475569",
-                                      overflow: "hidden",
-                                      textOverflow: "ellipsis",
-                                      whiteSpace: "nowrap",
-                                    }}
-                                  >
-                                    {stage.name}
-                                  </div>
-                                  <div style={{ fontSize: 11, color: "#94a3b8", display: "flex", gap: 12 }}>
-                                    <span>敵HP {stage.enemyBaseHp}</span>
-                                    <span>出現 {stage.spawnTable.length}</span>
-                                  </div>
-                                </div>
-
-                                <div style={{ flexShrink: 0 }}>{cleared ? <StarDisplay count={stars} /> : unlocked ? "挑戦" : ""}</div>
-                              </button>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  );
-                })
-              ) : (
+            {stageTab === "normal" ? (
+              selectedWorld == null ? (
                 <div
                   style={{
-                    background: "rgba(192,132,252,0.05)",
-                    borderRadius: 12,
-                    padding: 12,
-                    border: "2px solid #c084fc44",
+                    display: "grid",
+                    gridTemplateColumns: isMobile ? "1fr" : "repeat(2, minmax(0, 1fr))",
+                    gap: 14,
                   }}
                 >
-                  <div style={{ fontSize: 14, fontWeight: "bold", color: "#c084fc", marginBottom: 12, textAlign: "center" }}>
-                    EXステージ: すべてのノーマルをクリア後に開放
-                  </div>
-                  {exStages.map((stage) => {
-                    const cleared = clearedStages.has(stage.id);
-                    const stars = stageStars[stage.id] ?? 0;
+                  {worlds.map((world) => {
+                    const clearedCount = world.stages.filter((stage) => clearedStages.has(stage.id)).length;
+                    const starCount = world.stages.reduce((sum, stage) => sum + (stageStars[stage.id] ?? 0), 0);
+
                     return (
                       <button
-                        key={stage.id}
-                        onClick={() => onSelect(stage.id)}
+                        key={world.id}
+                        onClick={() => openWorld(world.id)}
+                        disabled={!world.unlocked}
                         style={{
-                          width: "100%",
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 12,
-                          padding: "12px 14px",
-                          marginBottom: 8,
-                          background: cleared ? "rgba(192,132,252,0.1)" : "#0f172a88",
-                          border: `2px solid ${cleared ? "#c084fc" : "#475569"}`,
-                          borderRadius: 10,
-                          cursor: "pointer",
-                          color: "#fff",
                           textAlign: "left",
+                          padding: "18px",
+                          borderRadius: 18,
+                          border: `2px solid ${world.unlocked ? `${world.accent}88` : "#334155"}`,
+                          background: world.unlocked
+                            ? `linear-gradient(135deg, ${world.bg}, rgba(15,23,42,0.92))`
+                            : "rgba(15,23,42,0.6)",
+                          color: "#fff",
+                          cursor: world.unlocked ? "pointer" : "not-allowed",
+                          opacity: world.unlocked ? 1 : 0.5,
+                          boxShadow: world.unlocked ? `0 8px 30px ${world.accent}22` : "none",
                         }}
                       >
+                        <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "start" }}>
+                          <div>
+                            <div style={{ fontSize: 12, letterSpacing: 1, color: world.accent, fontWeight: 800, marginBottom: 8 }}>
+                              WORLD {world.id}
+                            </div>
+                            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
+                              <span style={{ fontSize: 28 }}>{world.emoji}</span>
+                              <span style={{ fontSize: 22, fontWeight: 800 }}>{world.name}</span>
+                            </div>
+                            <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.6 }}>
+                              背景テーマと攻略状況を見ながら、挑戦するステージ群を選べます。
+                            </div>
+                          </div>
+                          <div style={{ fontSize: 20 }}>{world.unlocked ? "→" : "🔒"}</div>
+                        </div>
+
                         <div
                           style={{
-                            width: 36,
-                            height: 36,
-                            borderRadius: "50%",
-                            background: cleared ? "#c084fc" : "#334155",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
-                            fontSize: 16,
-                            fontWeight: "bold",
-                            flexShrink: 0,
+                            marginTop: 16,
+                            display: "grid",
+                            gridTemplateColumns: "repeat(3, minmax(0, 1fr))",
+                            gap: 10,
                           }}
                         >
-                          {cleared ? "✓" : "EX"}
-                        </div>
-                        <div style={{ flex: 1 }}>
-                          <div style={{ fontSize: 15, fontWeight: "bold" }}>{stage.name}</div>
-                          <div style={{ fontSize: 11, color: "#94a3b8" }}>
-                            敵HP {stage.enemyBaseHp} / 出現 {stage.spawnTable.length}
+                          <div
+                            style={{
+                              background: "rgba(15,23,42,0.45)",
+                              borderRadius: 12,
+                              padding: "10px 12px",
+                            }}
+                          >
+                            <div style={{ fontSize: 11, color: "#94a3b8" }}>進行</div>
+                            <div style={{ fontSize: 18, fontWeight: 800 }}>
+                              {clearedCount}/{world.stages.length}
+                            </div>
+                          </div>
+                          <div
+                            style={{
+                              background: "rgba(15,23,42,0.45)",
+                              borderRadius: 12,
+                              padding: "10px 12px",
+                            }}
+                          >
+                            <div style={{ fontSize: 11, color: "#94a3b8" }}>スター</div>
+                            <div style={{ fontSize: 18, fontWeight: 800 }}>{starCount}</div>
+                          </div>
+                          <div
+                            style={{
+                              background: "rgba(15,23,42,0.45)",
+                              borderRadius: 12,
+                              padding: "10px 12px",
+                            }}
+                          >
+                            <div style={{ fontSize: 11, color: "#94a3b8" }}>状態</div>
+                            <div style={{ fontSize: 18, fontWeight: 800 }}>{world.unlocked ? "OPEN" : "LOCK"}</div>
                           </div>
                         </div>
-                        <div>{cleared ? <StarDisplay count={stars} /> : "挑戦"}</div>
                       </button>
                     );
                   })}
                 </div>
-              )}
-            </div>
+              ) : (
+                <div
+                  style={{
+                    background: `${selectedWorld.bg}dd`,
+                    borderRadius: 16,
+                    padding: "14px",
+                    border: `2px solid ${selectedWorld.accent}55`,
+                  }}
+                >
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      gap: 10,
+                      marginBottom: 12,
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                      <span style={{ fontSize: 26 }}>{selectedWorld.emoji}</span>
+                      <div>
+                        <div style={{ fontSize: 12, letterSpacing: 1, color: selectedWorld.accent, fontWeight: 800 }}>
+                          WORLD {selectedWorld.id}
+                        </div>
+                        <div style={{ fontSize: 18, fontWeight: 800 }}>{selectedWorld.name}</div>
+                      </div>
+                    </div>
+                    <button
+                      onClick={() => setSelectedWorldId(null)}
+                      style={{
+                        background: "#0f172a",
+                        border: "1px solid #334155",
+                        color: "#cbd5e1",
+                        borderRadius: 10,
+                        padding: "8px 12px",
+                        cursor: "pointer",
+                        fontWeight: 700,
+                      }}
+                    >
+                      ワールド一覧へ
+                    </button>
+                  </div>
+                  {selectedWorld.stages.map((stage, stageIndex) => {
+                    const prevCleared =
+                      stageIndex === 0 ? true : clearedStages.has(selectedWorld.stages[stageIndex - 1].id);
+                    const unlocked = selectedWorld.unlocked && prevCleared;
+                    const cleared = clearedStages.has(stage.id);
+                    const stars = stageStars[stage.id] ?? 0;
+
+                    return (
+                      <div key={stage.id}>
+                        {stageIndex > 0 && (
+                          <div
+                            style={{
+                              width: 3,
+                              height: 16,
+                              background: cleared ? selectedWorld.accent : "#334155",
+                              marginLeft: 28,
+                              marginTop: -4,
+                              marginBottom: -4,
+                            }}
+                          />
+                        )}
+                        <button
+                          onClick={() => {
+                            if (unlocked) onSelect(stage.id);
+                          }}
+                          disabled={!unlocked}
+                          style={{
+                            width: "100%",
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 12,
+                            padding: "10px 14px",
+                            background: cleared ? `${selectedWorld.accent}18` : unlocked ? "#0f172acc" : "#0f172a66",
+                            border: `2px solid ${cleared ? selectedWorld.accent : unlocked ? "#475569" : "#1e293b"}`,
+                            borderRadius: 12,
+                            cursor: unlocked ? "pointer" : "not-allowed",
+                            color: "#fff",
+                            textAlign: "left",
+                            marginBottom: 8,
+                          }}
+                        >
+                          <div
+                            style={{
+                              width: 38,
+                              height: 38,
+                              borderRadius: "50%",
+                              background: cleared ? selectedWorld.accent : unlocked ? "#334155" : "#1e293b",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              fontSize: 16,
+                              fontWeight: "bold",
+                              flexShrink: 0,
+                              boxShadow: cleared ? `0 0 12px ${selectedWorld.accent}66` : "none",
+                            }}
+                          >
+                            {!unlocked ? "🔒" : cleared ? "✓" : `${stage.id}`}
+                          </div>
+
+                          <div style={{ flex: 1, minWidth: 0 }}>
+                            <div
+                              style={{
+                                fontSize: 15,
+                                fontWeight: "bold",
+                                color: unlocked ? "#fff" : "#475569",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                                whiteSpace: "nowrap",
+                              }}
+                            >
+                              {stage.name}
+                            </div>
+                            <div style={{ fontSize: 11, color: "#94a3b8", display: "flex", gap: 12 }}>
+                              <span>敵HP {stage.enemyBaseHp}</span>
+                              <span>出現 {stage.spawnTable.length}</span>
+                            </div>
+                          </div>
+
+                          <div style={{ flexShrink: 0 }}>{cleared ? <StarDisplay count={stars} /> : unlocked ? "挑戦" : ""}</div>
+                        </button>
+                      </div>
+                    );
+                  })}
+                </div>
+              )
+            ) : (
+              <div
+                style={{
+                  background: "rgba(192,132,252,0.05)",
+                  borderRadius: 12,
+                  padding: 12,
+                  border: "2px solid #c084fc44",
+                }}
+              >
+                <div style={{ fontSize: 14, fontWeight: "bold", color: "#c084fc", marginBottom: 12, textAlign: "center" }}>
+                  EXステージ: すべてのノーマルをクリア後に開放
+                </div>
+                {exStages.map((stage) => {
+                  const cleared = clearedStages.has(stage.id);
+                  const stars = stageStars[stage.id] ?? 0;
+                  return (
+                    <button
+                      key={stage.id}
+                      onClick={() => onSelect(stage.id)}
+                      style={{
+                        width: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        gap: 12,
+                        padding: "12px 14px",
+                        marginBottom: 8,
+                        background: cleared ? "rgba(192,132,252,0.1)" : "#0f172a88",
+                        border: `2px solid ${cleared ? "#c084fc" : "#475569"}`,
+                        borderRadius: 10,
+                        cursor: "pointer",
+                        color: "#fff",
+                        textAlign: "left",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: 36,
+                          height: 36,
+                          borderRadius: "50%",
+                          background: cleared ? "#c084fc" : "#334155",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontSize: 16,
+                          fontWeight: "bold",
+                          flexShrink: 0,
+                        }}
+                      >
+                        {cleared ? "✓" : "EX"}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: 15, fontWeight: "bold" }}>{stage.name}</div>
+                        <div style={{ fontSize: 11, color: "#94a3b8" }}>
+                          敵HP {stage.enemyBaseHp} / 出現 {stage.spawnTable.length}
+                        </div>
+                      </div>
+                      <div>{cleared ? <StarDisplay count={stars} /> : "挑戦"}</div>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </>
         ) : (
           <div
