@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: 運用メモ / 連携ルール
+    url: https://github.com/aster-mi/learning-td/blob/main/.codex/CODEX.md
+    about: エージェント運用や共同作業ルールはこちら

@@ -1,0 +1,76 @@
+name: Bug report
+description: 不具合や想定外の挙動を報告する
+title: "[bug] "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: 概要
+      description: 何が起きているかを簡潔に書いてください
+      placeholder: ガチャ結果モーダルを閉じると親モーダルまで閉じてしまう
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: 再現手順
+      description: できるだけ具体的に書いてください
+      placeholder: |
+        1. ステージ選択からガチャを開く
+        2. どれかのガチャを回す
+        3. 結果モーダルの「閉じる」を押す
+        4. 想定外の挙動を確認
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期待する挙動
+      placeholder: 結果モーダルだけ閉じて、ガチャ一覧画面に戻ってほしい
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: 実際の挙動
+      placeholder: ガチャ画面自体が閉じてステージ選択へ戻ってしまう
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 優先度
+      options:
+        - P1
+        - P2
+        - P3
+    validations:
+      required: true
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: 領域
+      options:
+        - ui
+        - bug
+        - balance
+        - stage
+        - unit
+        - gacha
+        - data
+        - docs
+    validations:
+      required: true
+
+  - type: textarea
+    id: note
+    attributes:
+      label: 補足
+      description: スクリーンショット、発生端末、気づいたことなど

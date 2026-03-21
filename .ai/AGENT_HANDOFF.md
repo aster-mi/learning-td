@@ -25,6 +25,33 @@ Next Step:
 
 ---
 
+## [2026-03-21 15:28 JST] Agent: Codex
+Summary:
+- GitHub Issue ベースで課題管理できるように、Issue template を追加した。
+- `bug` / `feature` / `question-quality` の3種類を作り、運用ルールを Skill とエージェント向けドキュメントに反映した。
+- README にも Issue 運用方針を追記し、リポジトリ利用者から見ても課題起票の流れが分かるようにした。
+
+Changed Files:
+- `.github/ISSUE_TEMPLATE/bug_report.yml`
+- `.github/ISSUE_TEMPLATE/feature_request.yml`
+- `.github/ISSUE_TEMPLATE/question_quality.yml`
+- `.github/ISSUE_TEMPLATE/config.yml`
+- `.ai/skills/SKILL_ISSUE_WORKFLOW.md`
+- `.ai/skills/README.md`
+- `.codex/CODEX.md`
+- `.claude/CLAUDE.md`
+- `README.md`
+- `.ai/AGENT_HANDOFF.md`
+
+Validation:
+- ドキュメント / template 更新のみ
+
+Open Questions:
+- なし
+
+Next Step:
+- 必要なら GitHub 上で labels も初期作成し、既知課題を初回 Issue として登録する。
+
 ## [2026-03-21 15:16 JST] Agent: Codex
 Summary:
 - `README.md` をテンプレート状態から全面更新し、アプリ概要、主な機能、遊び方、技術構成、開発コマンド、今後の拡張候補を整理した。

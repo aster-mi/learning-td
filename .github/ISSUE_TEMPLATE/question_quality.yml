@@ -1,0 +1,67 @@
+name: Question quality
+description: 問題文や選択肢の品質課題を報告する
+title: "[question-quality] "
+labels:
+  - question-quality
+body:
+  - type: input
+    id: question_id
+    attributes:
+      label: 問題ID
+      description: 分かる場合だけ
+      placeholder: nz940
+
+  - type: textarea
+    id: question
+    attributes:
+      label: 該当の問題
+      description: 問題文と選択肢、答えが分かるように書いてください
+      placeholder: |
+        問題文:
+        選択肢:
+        正解:
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: problem_type
+    attributes:
+      label: 問題の種類
+      options:
+        - label: 正解が複数成立している
+        - label: 問題文が不自然・意味不明
+        - label: 選択肢が答えのヒントになりすぎている
+        - label: 問題文と答えの対応が弱い
+        - label: 既存問題と重複・類似している
+        - label: 難易度設定が不適切
+        - label: 文字化け・データ破損
+        - label: その他
+    validations:
+      required: true
+
+  - type: textarea
+    id: why_bad
+    attributes:
+      label: どこが問題か
+      description: できるだけ具体的に書いてください
+      placeholder: イスもテーブルも成立していて、正解が1つに絞れない
+    validations:
+      required: true
+
+  - type: textarea
+    id: ideal
+    attributes:
+      label: 望ましい修正方針
+      description: 差し替え、削除、言い換えなど
+      placeholder: 問題文をテーブルにだけ成立する表現へ変える
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 優先度
+      options:
+        - P1
+        - P2
+        - P3
+    validations:
+      required: true

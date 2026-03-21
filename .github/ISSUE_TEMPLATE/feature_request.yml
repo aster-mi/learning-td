@@ -1,0 +1,63 @@
+name: Feature request
+description: 新機能や改善案を提案する
+title: "[feature] "
+labels:
+  - feature
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: 提案内容
+      description: 追加・改善したいことを書いてください
+      placeholder: ユーザーの継続率を上げるために、週間ミッションを追加したい
+    validations:
+      required: true
+
+  - type: textarea
+    id: purpose
+    attributes:
+      label: 目的
+      description: 何の課題を解決したいのか
+      placeholder: 毎日遊ぶ理由はあるが、週単位の目標がなく中期の継続動機が弱い
+    validations:
+      required: true
+
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 実現イメージ
+      description: UIや仕様のイメージ、期待する体験
+      placeholder: ログイン、正解数、クリア回数を週ごとに集計して報酬を出す
+    validations:
+      required: true
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 優先度
+      options:
+        - P1
+        - P2
+        - P3
+    validations:
+      required: true
+
+  - type: dropdown
+    id: type
+    attributes:
+      label: 種別
+      options:
+        - feature
+        - ux
+        - balance
+        - content
+        - retention
+        - docs
+    validations:
+      required: true
+
+  - type: textarea
+    id: note
+    attributes:
+      label: 補足
+      description: 参考例、関連Issue、懸念点など

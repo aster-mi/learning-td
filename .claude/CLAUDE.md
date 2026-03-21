@@ -78,6 +78,13 @@ Next Step:
 - Keep one intent per commit.
 - Scopes: `quiz`, `render`, `unit`, `feat`, `fix`, `refactor`, `docs`, `ci`, `chore`
 
+## Issue Workflow
+- 継続して追跡したい課題は GitHub Issue として管理する
+- 不具合は `bug`、問題品質は `question-quality`、改善案は `feature` / `ux` / `balance` / `content` を使い分ける
+- 優先度は `P1 / P2 / P3` を本文またはラベルで明記する
+- セッションをまたぐ作業では Issue 番号で会話すると引き継ぎしやすい
+- 関連 Skill: `.ai/skills/SKILL_ISSUE_WORKFLOW.md`
+
 ## Operating Principles
 - Keep updates short and factual.
 - If unexpected local changes are detected, pause and ask the user.

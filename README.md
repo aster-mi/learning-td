@@ -114,6 +114,19 @@ src/
 - より詳しい学習履歴分析
 - ソーシャル要素やランキング
 
+## Issue運用
+
+このリポジトリでは、バグや改善案、問題品質課題を GitHub Issue で管理できます。
+
+- 不具合: `bug`
+- 改善案 / 新機能: `feature`
+- 問題文や選択肢の品質: `question-quality`
+- バランス調整: `balance`
+- UI/UX改善: `ux`
+
+テンプレートは `.github/ISSUE_TEMPLATE/` に用意しています。  
+課題を見つけたら Issue に起票し、対応コミットや PR で `Closes #番号` を付けて消化していく運用を想定しています。
+
 ## 開発メモ
 
 - 問題データ追加時は `npm run quiz:validate` の実行を推奨
