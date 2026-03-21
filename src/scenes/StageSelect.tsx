@@ -61,12 +61,12 @@ function SummaryCard({ label, value, color }: { label: string; value: string; co
       style={{
         background: "rgba(15,23,42,0.78)",
         border: "1px solid #334155",
-        borderRadius: 14,
-        padding: "10px 12px",
+        borderRadius: 12,
+        padding: "8px 10px",
       }}
     >
-      <div style={{ fontSize: 10, color: "#94a3b8", marginBottom: 4 }}>{label}</div>
-      <div style={{ fontSize: 18, fontWeight: 800, color }}>{value}</div>
+      <div style={{ fontSize: 9, color: "#94a3b8", marginBottom: 3 }}>{label}</div>
+      <div style={{ fontSize: 16, fontWeight: 800, color }}>{value}</div>
     </div>
   );
 }
