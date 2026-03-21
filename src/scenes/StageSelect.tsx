@@ -104,8 +104,10 @@ function RadarChart({ data }: { data: CategoryInsight[] }) {
     if (!ctx) return;
 
     const dpr = window.devicePixelRatio || 1;
-    const W = 280;
-    const H = 280;
+    const margin = 60; // space for labels around the chart
+    const R = 90;
+    const W = R * 2 + margin * 2;
+    const H = W;
     canvas.width = W * dpr;
     canvas.height = H * dpr;
     canvas.style.width = `${W}px`;
@@ -114,7 +116,6 @@ function RadarChart({ data }: { data: CategoryInsight[] }) {
 
     const cx = W / 2;
     const cy = H / 2;
-    const R = 100;
     const n = items.length;
     const angleStep = (Math.PI * 2) / n;
     const startAngle = -Math.PI / 2; // top
@@ -195,21 +196,23 @@ function RadarChart({ data }: { data: CategoryInsight[] }) {
       ctx.stroke();
 
       // label
-      const labelR = R + 22;
+      const labelR = R + 16;
       const lx = cx + Math.cos(angle) * labelR;
       const ly = cy + Math.sin(angle) * labelR;
       ctx.font = "bold 11px system-ui";
       ctx.fillStyle = items[i].color;
-      ctx.textAlign = Math.abs(Math.cos(angle)) < 0.1 ? "center" : Math.cos(angle) > 0 ? "left" : "right";
-      ctx.textBaseline = Math.abs(Math.sin(angle)) < 0.1 ? "middle" : Math.sin(angle) > 0 ? "top" : "bottom";
+      const cosA = Math.cos(angle);
+      const sinA = Math.sin(angle);
+      ctx.textAlign = Math.abs(cosA) < 0.15 ? "center" : cosA > 0 ? "left" : "right";
+      ctx.textBaseline = Math.abs(sinA) < 0.15 ? "middle" : sinA > 0 ? "top" : "bottom";
       ctx.fillText(`${items[i].emoji}${items[i].name}`, lx, ly);
 
-      // accuracy value
+      // accuracy value below/above label
       const total = items[i].correct + items[i].wrong;
       if (total > 0) {
         ctx.font = "10px system-ui";
         ctx.fillStyle = "#e2e8f0";
-        const valY = Math.sin(angle) > 0 ? ly + 14 : ly - 14;
+        const valY = sinA >= 0 ? ly + 13 : ly - 13;
         ctx.fillText(`${Math.round(items[i].accuracy * 100)}%`, lx, valY);
       }
     }
