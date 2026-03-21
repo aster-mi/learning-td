@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 import { CategorySelect } from "./scenes/CategorySelect";
 import { StageSelect } from "./scenes/StageSelect";
-import { WorldSelect } from "./scenes/WorldSelect";
+// WorldSelect is now nested inside StageSelect
 import { GameScene } from "./scenes/GameScene";
 import { PartySelect } from "./scenes/PartySelect";
 import { stages } from "./data/stages";
@@ -52,7 +52,7 @@ function saveLevel(level: number) {
 
 export default function App() {
   const { isMobile } = useWindowSize();
-  const [scene, setScene]                 = useState<"category" | "select" | "worldSelect" | "party" | "gacha" | "game" | "achievements">("category");
+  const [scene, setScene]                 = useState<"category" | "select" | "party" | "gacha" | "game" | "achievements">("category");
   const [activeStageId, setActiveStageId] = useState<number>(1);
   const [clearedStages, setClearedStages] = useState<Set<number>>(loadCleared);
   const [subCategories, setSubCategories] = useState<string[]>(loadSubCategories);
@@ -198,6 +198,7 @@ export default function App() {
       {scene === "select" && (
         <StageSelect
           stageStars={saveData.stageStars}
+          clearedStages={clearedStages}
           coins={saveData.coins}
           saveData={saveData}
           onBack={() => { setSaveData(loadSave()); setScene("category"); }}
@@ -205,16 +206,8 @@ export default function App() {
           onAchievements={() => setScene("achievements")}
           onParty={() => setScene("party")}
           onGacha={() => { setSaveData(loadSave()); setScene("gacha"); }}
-          onWorldSelect={() => setScene("worldSelect")}
-          onClaimMission={handleClaimMission}
-        />
-      )}
-      {scene === "worldSelect" && (
-        <WorldSelect
-          clearedStages={clearedStages}
-          stageStars={saveData.stageStars}
           onSelect={handleStageSelect}
-          onBack={() => setScene("select")}
+          onClaimMission={handleClaimMission}
         />
       )}
       {scene === "party" && (
