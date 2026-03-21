@@ -3,46 +3,78 @@
 This repository can be edited by both Codex and Claude in alternating sessions.
 Use this file as the shared operating contract.
 
-## Goals
-- Keep work continuous across agent switches.
-- Avoid duplicate edits and conflicting assumptions.
-- Leave clear context for the next agent and the human.
+---
 
-## Required Workflow
-1. Read `.ai/AGENT_HANDOFF.md` before starting work.
-2. Check `.ai/TODO.md` and `.ai/DECISIONS.md` for current priorities and decisions.
-3. Use `.ai/SESSION_TEMPLATE.md` when writing handoff notes.
-4. Do the requested task.
-5. Append a new entry to `.ai/AGENT_HANDOFF.md` before ending your turn.
+## セッション開始時（必須・最初に必ず実行）
 
-## Shared Planning Files
-- `.ai/AGENT_HANDOFF.md`: agent-to-agent handoff log
-- `.ai/TODO.md`: shared prioritized tasks
-- `.ai/DECISIONS.md`: decision rationale and outcomes
-- `.ai/SESSION_TEMPLATE.md`: handoff and commit templates
-- `.ai/skills/`: project-specific reusable work skills
+以下を **作業開始前に必ず読む**。読まずにコード編集を始めないこと。
+
+```bash
+head -80 .ai/AGENT_HANDOFF.md   # 最新の引き継ぎ（Open Questions / Next Step を優先確認）
+cat .ai/TODO.md                  # 共有タスクリスト
+cat .ai/DECISIONS.md             # 過去の判断記録
+git status --short               # 未コミットの変更がないか確認
+```
+
+## セッション終了時（必須・プッシュ前に必ず実行）
+
+**コード変更をプッシュする前に、必ず `.ai/AGENT_HANDOFF.md` の先頭にハンドオフを追記する。**
+ハンドオフを書かずにセッションを終了しないこと。
+
+### ハンドオフテンプレート
+`.ai/AGENT_HANDOFF.md` の `---` 直後に追記:
+
+```
+## [YYYY-MM-DD HH:mm JST] Agent: Codex
+Summary:
+- 何をしたか（1〜3行）
+
+Changed Files:
+- 変更ファイルをリスト
+
+Validation:
+- npm run build → 成功/失敗
+- npm run quiz:validate → 成功/失敗（問題データ変更時）
+
+Open Questions:
+- 未解決の判断・質問
+
+Next Step:
+- 次にやるべきこと
+```
+
+### 併せて更新するファイル
+- `.ai/TODO.md` — 完了タスクを `done` に、新タスクを追加
+- `.ai/DECISIONS.md` — 重要な判断があれば記録
+
+---
+
+## Shared Files
+| ファイル | 用途 |
+|---------|------|
+| `.claude/CLAUDE.md` | Claude側の運用ルール |
+| `.ai/AGENT_HANDOFF.md` | 引き継ぎログ（先頭に追記） |
+| `.ai/TODO.md` | 共有タスクリスト |
+| `.ai/DECISIONS.md` | 判断記録 |
+| `.ai/SESSION_TEMPLATE.md` | ハンドオフテンプレート |
+| `.ai/skills/` | タスク別の標準手順（コマンド付き） |
+| `.ai/UNIT_POLICY.md` | ユニット追加ポリシー |
 
 ## Commit Convention
 - Format: `<scope>: <short summary>`
-- Keep commits small and scoped to one intent.
+- Keep one intent per commit.
+- Scopes: `quiz`, `render`, `unit`, `feat`, `fix`, `refactor`, `docs`, `ci`, `chore`
 
-## Previous Notes
-- Confirm current scope from the latest handoff entry.
-- If something is unverified, say it explicitly.
-- If you detect unexpected local changes, pause and ask the human.
+## Operating Principles
+- Keep updates short and factual.
+- If unexpected local changes are detected, pause and ask the human.
+- Do not delete or overwrite another agent's notes without reason.
+- `tmp_*` 等の一時ファイルはコミットしない。
 
-## Handoff Entry Rules
-- Use JST timestamps.
-- Include agent name (`Codex` or `Claude`).
-- Include: summary, changed files, validation, open questions, next step.
-- Keep entries short and factual.
-
-## Conflict Prevention
-- Do not rewrite the other agent's in-progress plan without reason.
-- If you need to change direction, explain why in the handoff.
-- If you detect unexpected local changes, pause and ask the human.
-
-## Branch and Commit Notes
-- Prefer small, scoped commits.
-- Mention handoff-relevant context in commit messages when useful.
-- Never include secrets or tokens in handoff notes.
+## Key Commands
+```bash
+npm run build          # TypeScript型チェック + Viteビルド
+npm run quiz:validate  # 問題データのバリデーション
+npm run dev            # 開発サーバー起動
+npm run lint           # ESLintチェック
+```
