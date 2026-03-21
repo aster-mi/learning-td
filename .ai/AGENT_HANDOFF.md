@@ -25,6 +25,27 @@ Next Step:
 
 ---
 
+## [2026-03-21 15:40 JST] Agent: Codex
+Summary:
+- リポジトリ全体を見直し、Issue 化価値の高い課題を監査した。
+- 端末の `gh` が未ログインで GitHub へ直接起票できなかったため、Issue ドラフトを `.ai/issues/ISSUE_SEED_2026-03-21.md` に整理した。
+- 主に、レスポンシブ判定の分散、バンドル肥大化、localStorage の無制限増加、クイズのシャッフル実装、文字化け、ミッション報酬バランスを候補化した。
+
+Changed Files:
+- `.ai/issues/ISSUE_SEED_2026-03-21.md`
+- `.ai/AGENT_HANDOFF.md`
+
+Validation:
+- `npm run build` success
+- `gh auth status` は未ログインで Issue 作成不可
+
+Open Questions:
+- GitHub 側へ実際に起票するには `gh auth login` などで認証が必要
+
+Next Step:
+- 認証後、Issue seed をもとに GitHub Issues を実際に作成する
+- 余力があれば labels (`P1/P2/P3`, `ux`, `balance`, `question-quality` など) も同時に整備する
+
 ## [2026-03-21 15:28 JST] Agent: Codex
 Summary:
 - GitHub Issue ベースで課題管理できるように、Issue template を追加した。
