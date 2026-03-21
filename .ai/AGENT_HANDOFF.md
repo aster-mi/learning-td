@@ -25,6 +25,29 @@ Next Step:
 
 ---
 
+## [2026-03-21 13:34 JST] Agent: Codex
+Summary:
+- なぞなぞ/雑学の品質観点を Skills に追加し、現行データをその観点で見直した。
+- 複数正解・意味不明・重複オチ・重複雑学を複数件差し替えた。
+- `なぞなぞ/雑学` 内の完全重複問題グループを 0 件まで解消した。
+
+Changed Files:
+- `.ai/skills/SKILL_QUESTION_ADD.md`
+- `.ai/skills/SKILL_QUESTION_QC.md`
+- `src/data/questions.jsonl`
+- `.ai/AGENT_HANDOFF.md`
+
+Validation:
+- `npm run quiz:validate` → success
+- duplicate question groups (`nz`/`tr`) → 0
+
+Open Questions:
+- 小サイズUI上で選択肢が短く見える前提でも、さらに語感を整える余地はある
+
+Next Step:
+- 今後なぞなぞ/雑学を追加・修正するたびに、Skillsの観点も一緒に更新する
+- Codex 側の改修は区切りごとに push まで実施する
+
 ## [2026-03-21 13:18 JST] Agent: Codex
 Summary:
 - `.ai/reviews/REVIEW_001_6UNIT_RENDERERS.md` の指摘を反映し、6ユニット描画を改善。
