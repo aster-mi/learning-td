@@ -217,7 +217,7 @@ function DetailPanel({
       <div style={{ display: "flex", borderBottom: "1px solid #334155" }}>
         {[
           { key: "info" as const, label: "情報" },
-          { key: "upgrade" as const, label: "育成" },
+          { key: "upgrade" as const, label: "強化" },
         ].map((t) => (
           <button
             key={t.key}
@@ -257,6 +257,20 @@ function DetailPanel({
                     <span style={{ fontSize: 20, fontWeight: 800, color: s.color }}>{s.boosted}</span>
                     {s.lv > 0 && <span style={{ fontSize: 10, color: "#64748b" }}>({s.base}+{s.boosted - s.base})</span>}
                   </div>
+                </div>
+              ))}
+            </div>
+
+            {/* secondary stats */}
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
+              {[
+                { label: "攻撃速度", value: `${(entry.atkInterval / 1000).toFixed(1)}s`, color: "#fbbf24" },
+                { label: "移動速度", value: `${entry.speed}`, color: "#38bdf8" },
+                { label: "射程", value: `${entry.range}`, color: "#a78bfa" },
+              ].map((s) => (
+                <div key={s.label} style={{ background: "rgba(255,255,255,0.04)", borderRadius: 8, padding: "6px 8px", textAlign: "center" }}>
+                  <div style={{ fontSize: 9, color: "#64748b", marginBottom: 2 }}>{s.label}</div>
+                  <div style={{ fontSize: 14, fontWeight: 700, color: s.color }}>{s.value}</div>
                 </div>
               ))}
             </div>
@@ -500,79 +514,8 @@ export function PartySelect({ ownedUnitIds, currentParty, saveData, onConfirm, o
           </div>
         </div>
 
-        {/* ── main content ── */}
-        <div
-          style={{
-            display: "grid",
-            gridTemplateColumns: isMobile ? "1fr" : (showDetail && selectedEntry ? "1fr 280px" : "1fr"),
-            gap: 12,
-            alignItems: "start",
-          }}
-        >
-          {/* left: grid */}
-          <div style={{ display: "grid", gap: 10 }}>
-            {/* series filter */}
-            <div style={{ display: "flex", gap: 4, overflowX: "auto", paddingBottom: 2, WebkitOverflowScrolling: "touch" }}>
-              {SERIES_TABS.map((series) => {
-                const active = seriesFilter === series;
-                return (
-                  <button
-                    key={series}
-                    onClick={() => setSeriesFilter(series)}
-                    style={{
-                      flexShrink: 0,
-                      background: active ? "rgba(129,140,248,0.18)" : "rgba(255,255,255,0.03)",
-                      border: active ? "1px solid #818cf8" : "1px solid rgba(255,255,255,0.06)",
-                      borderRadius: 8, padding: "5px 12px",
-                      fontSize: 11, fontWeight: active ? 700 : 500,
-                      color: active ? "#c7d2fe" : "#64748b",
-                      cursor: "pointer",
-                    }}
-                  >
-                    {series}
-                  </button>
-                );
-              })}
-            </div>
-
-            {/* unit grid */}
-            <div style={{ display: "grid", gridTemplateColumns: `repeat(${gridCols}, 1fr)`, gap: isMobile ? 6 : 8 }}>
-              {ownedEntries.map((entry) => (
-                <UnitCard
-                  key={entry.id}
-                  entry={entry}
-                  inParty={partySet.has(entry.id)}
-                  partyFull={partyFull}
-                  isMobile={isMobile}
-                  isSelected={entry.id === focusedUnitId && showDetail}
-                  onToggle={() => toggleUnit(entry.id)}
-                  onFocus={() => focusUnit(entry.id)}
-                />
-              ))}
-            </div>
-          </div>
-
-          {/* right: detail panel (desktop) */}
-          {!isMobile && showDetail && selectedEntry && (
-            <div style={{ position: "relative" }}>
-              <button
-                onClick={() => setShowDetail(false)}
-                style={{
-                  position: "absolute", top: 8, right: 8, zIndex: 1,
-                  background: "rgba(255,255,255,0.08)", border: "none", borderRadius: 6,
-                  width: 24, height: 24, color: "#94a3b8", cursor: "pointer",
-                  fontSize: 14, lineHeight: "24px", textAlign: "center",
-                }}
-              >
-                ×
-              </button>
-              <DetailPanel entry={selectedEntry} saveData={saveData} isMobile={false} applyUpgrade={applyUpgrade} />
-            </div>
-          )}
-        </div>
-
-        {/* mobile detail panel (bottom sheet style) */}
-        {isMobile && showDetail && selectedEntry && (
+        {/* ── detail panel (above grid) ── */}
+        {showDetail && selectedEntry && (
           <div style={{ position: "relative" }}>
             <button
               onClick={() => setShowDetail(false)}
@@ -585,9 +528,50 @@ export function PartySelect({ ownedUnitIds, currentParty, saveData, onConfirm, o
             >
               ×
             </button>
-            <DetailPanel entry={selectedEntry} saveData={saveData} isMobile={true} applyUpgrade={applyUpgrade} />
+            <DetailPanel entry={selectedEntry} saveData={saveData} isMobile={isMobile} applyUpgrade={applyUpgrade} />
           </div>
         )}
+
+        {/* ── series filter + unit grid ── */}
+        <div style={{ display: "grid", gap: 10 }}>
+          <div style={{ display: "flex", gap: 4, overflowX: "auto", paddingBottom: 2, WebkitOverflowScrolling: "touch" }}>
+            {SERIES_TABS.map((series) => {
+              const active = seriesFilter === series;
+              return (
+                <button
+                  key={series}
+                  onClick={() => setSeriesFilter(series)}
+                  style={{
+                    flexShrink: 0,
+                    background: active ? "rgba(129,140,248,0.18)" : "rgba(255,255,255,0.03)",
+                    border: active ? "1px solid #818cf8" : "1px solid rgba(255,255,255,0.06)",
+                    borderRadius: 8, padding: "5px 12px",
+                    fontSize: 11, fontWeight: active ? 700 : 500,
+                    color: active ? "#c7d2fe" : "#64748b",
+                    cursor: "pointer",
+                  }}
+                >
+                  {series}
+                </button>
+              );
+            })}
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: `repeat(${gridCols}, 1fr)`, gap: isMobile ? 6 : 8 }}>
+            {ownedEntries.map((entry) => (
+              <UnitCard
+                key={entry.id}
+                entry={entry}
+                inParty={partySet.has(entry.id)}
+                partyFull={partyFull}
+                isMobile={isMobile}
+                isSelected={entry.id === focusedUnitId && showDetail}
+                onToggle={() => toggleUnit(entry.id)}
+                onFocus={() => focusUnit(entry.id)}
+              />
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   );
