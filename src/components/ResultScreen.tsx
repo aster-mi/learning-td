@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { getCatalogEntry } from "../data/unitCatalog";
+import { sfxStar, sfxCoin, sfxUnlock } from "../audio/SoundManager";
 
 interface Props {
   isWin: boolean;
@@ -29,11 +30,11 @@ export function ResultScreen({
   // 順番にアニメーション表示
   useEffect(() => {
     if (!isWin) return;
-    const t1 = setTimeout(() => setShowStars(1), 300);
-    const t2 = setTimeout(() => setShowStars(2), 600);
-    const t3 = setTimeout(() => setShowStars(3), 900);
-    const t4 = setTimeout(() => setShowCoins(true), 1200);
-    const t5 = setTimeout(() => setShowUnlock(true), 1800);
+    const t1 = setTimeout(() => { setShowStars(1); if (stars >= 1) sfxStar(); }, 300);
+    const t2 = setTimeout(() => { setShowStars(2); if (stars >= 2) sfxStar(); }, 600);
+    const t3 = setTimeout(() => { setShowStars(3); if (stars >= 3) sfxStar(); }, 900);
+    const t4 = setTimeout(() => { setShowCoins(true); sfxCoin(); }, 1200);
+    const t5 = setTimeout(() => { setShowUnlock(true); if (newUnlock) sfxUnlock(); }, 1800);
     return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5); };
   }, [isWin]);
 

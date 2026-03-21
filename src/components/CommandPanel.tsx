@@ -2,6 +2,7 @@ import { getUnitDef } from "../domain/Unit";
 import { getCatalogEntry, RARITY_INFO } from "../data/unitCatalog";
 import { useWindowSize } from "../hooks/useWindowSize";
 import { UnitIcon } from "./UnitIcon";
+import { sfxDeploy } from "../audio/SoundManager";
 
 interface Props {
   energy: number;
@@ -49,7 +50,7 @@ export function CommandPanel({ energy, party, onDeploy, disabled }: Props) {
         return (
           <button
             key={unitId}
-            onClick={() => canAfford && onDeploy(unitId)}
+            onClick={() => { if (canAfford) { sfxDeploy(); onDeploy(unitId); } }}
             disabled={!canAfford}
             title={`HP:${def.hp}  ATK:${def.atk}  射程:${def.range}  SPD:${def.speed}  COST:${def.cost}`}
             style={{

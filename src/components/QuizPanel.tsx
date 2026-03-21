@@ -3,6 +3,7 @@ import { loadQuestions } from "../data/questions";
 import { LEVEL_ALL, LEVEL_DEFS, SUB_CATEGORIES, type Question } from "../data/questionMeta";
 import { recordWrong, removeWrong, getWrongIds } from "../data/wrongStore";
 import { recordCorrect, getCorrectMap } from "../data/correctStore";
+import { sfxCorrect, sfxWrong } from "../audio/SoundManager";
 import { useWindowSize } from "../hooks/useWindowSize";
 
 interface Props {
@@ -157,11 +158,13 @@ export function QuizPanel({
         answeredCorrectRef.current.add(current.id);
         recordCorrect(current.id);
         if (reviewMode) removeWrong(current.id);
+        sfxCorrect();
       } else {
         setFeedback("wrong");
         setWrongCount((count) => count + 1);
         onWrong(current);
         recordWrong(current.id);
+        sfxWrong();
       }
 
       window.setTimeout(() => {

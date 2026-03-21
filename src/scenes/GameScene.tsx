@@ -21,6 +21,7 @@ import { getTodayChallenge, completeDailyChallenge } from "../data/dailyChalleng
 import type { StageData } from "../data/stages";
 import type { Question } from "../data/questions";
 import { ensureLoginProgress, getDateKey } from "../data/progression";
+import { bgmStart, bgmStop, sfxStageClear, sfxDefeat, sfxComboSkill } from "../audio/SoundManager";
 
 interface Props {
   stage: StageData;
@@ -80,6 +81,12 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
     elapsedSec: number; baseHpRatio: number; newUnlock: string | null;
   } | null>(null);
 
+  // BGM: start on mount, stop on unmount
+  useEffect(() => {
+    bgmStart();
+    return () => bgmStop();
+  }, []);
+
   // ゲームループ（依存なし＝マウント時に1回だけ登録）
   useEffect(() => {
     const loop = () => {
@@ -101,6 +108,8 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
 
         if (snap.status === "win" && !clearedRef.current) {
           clearedRef.current = true;
+          bgmStop();
+          sfxStageClear();
           // リザルト計算
           const totalQ = correctCountRef.current + wrongCountRef.current;
           const accuracy = totalQ > 0 ? correctCountRef.current / totalQ : 0;
@@ -161,6 +170,8 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
         }
         if (snap.status === "lose" && !clearedRef.current) {
           clearedRef.current = true;
+          bgmStop();
+          sfxDefeat();
           const save = ensureLoginProgress(loadSave());
           for (const [sub, stats] of Object.entries(sessionCategoryStatsRef.current)) {
             const prev = save.categoryStats[sub] ?? { correct: 0, wrong: 0 };
@@ -231,6 +242,7 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
       // 10コンボ以上: 必殺技 - 全敵にダメージ
       if (comboRef.current >= 10) {
         engineRef.current.damageAllEnemies(30);
+        sfxComboSkill();
       }
     }
   }, []);

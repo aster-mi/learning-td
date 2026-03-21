@@ -6,6 +6,7 @@ import type { SaveData } from "../data/saveData";
 import { exStages, normalStages, WORLD_THEME_META } from "../data/stages";
 import { UNIT_CATALOG } from "../data/unitCatalog";
 import { useWindowSize } from "../hooks/useWindowSize";
+import { MuteButton } from "../components/MuteButton";
 
 interface Props {
   stageStars: Record<number, number>;
@@ -297,20 +298,23 @@ export function StageSelect({
             flexWrap: "wrap",
           }}
         >
-          <button
-            onClick={onBack}
-            style={{
-              background: "#1e293b",
-              border: "1px solid #334155",
-              color: "#94a3b8",
-              borderRadius: 8,
-              padding: "8px 14px",
-              cursor: "pointer",
-              fontSize: 13,
-            }}
-          >
-            戻る
-          </button>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <button
+              onClick={onBack}
+              style={{
+                background: "#1e293b",
+                border: "1px solid #334155",
+                color: "#94a3b8",
+                borderRadius: 8,
+                padding: "8px 14px",
+                cursor: "pointer",
+                fontSize: 13,
+              }}
+            >
+              戻る
+            </button>
+            <MuteButton />
+          </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
             <button
               onClick={onAchievements}

@@ -7,6 +7,7 @@ import {
   type Rarity,
 } from "../data/unitCatalog";
 import { UnitIcon } from "./UnitIcon";
+import { sfxGachaRoll, sfxGachaReveal } from "../audio/SoundManager";
 
 export type GachaReward = {
   type: "unit" | "buff" | "coins";
@@ -139,6 +140,7 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
         const idx = Math.floor(Math.random() * unitSource.length);
         setRollingUnit(unitSource[idx]);
       }
+      sfxGachaRoll();
       count++;
       if (count >= maxRolls) {
         if (intervalRef.current) clearInterval(intervalRef.current);
@@ -146,6 +148,7 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
         setRollingUnit(null);
         setReward(result);
         onPull(result, cost);
+        sfxGachaReveal();
         setTimeout(() => setPhase("reveal"), 200);
       }
     }, 80);
