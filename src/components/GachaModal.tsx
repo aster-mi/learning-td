@@ -99,7 +99,7 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
     { key: BUFF_TAB_KEY, label: "バフガチャ", cost: BUFF_COST },
   ];
 
-  const [activeTab, setActiveTab] = useState<string>(allOptions[0]?.key ?? BUFF_TAB_KEY);
+  const [activeTab, setActiveTab] = useState<string | null>(null);
   const [phase, setPhase] = useState<"idle" | "rolling" | "reveal">("idle");
   const [reward, setReward] = useState<GachaReward | null>(null);
   const [rollEmoji, setRollEmoji] = useState("🎁");
@@ -107,11 +107,12 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   const isBuff = activeTab === BUFF_TAB_KEY;
+  const hasSelection = activeTab !== null;
   const cost = isBuff ? BUFF_COST : SERIES_COST;
-  const seriesPool = isBuff ? [] : GACHA_POOL_UNITS.filter((u) => u.series === activeTab);
+  const seriesPool = !hasSelection || isBuff ? [] : GACHA_POOL_UNITS.filter((u) => u.series === activeTab);
   const seriesOwned = isBuff ? 0 : seriesPool.filter((u) => ownedUnitIds.includes(u.id)).length;
   const allOwned = !isBuff && seriesPool.length > 0 && seriesOwned === seriesPool.length;
-  const canPull = coins >= cost && !allOwned && (isBuff || seriesPool.length > 0);
+  const canPull = hasSelection && coins >= cost && !allOwned && (isBuff || seriesPool.length > 0);
 
   const doPull = useCallback(() => {
     if (!canPull || phase === "rolling") return;
@@ -153,6 +154,14 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
   const handleTabChange = (key: string) => {
     if (phase === "rolling") return;
     setActiveTab(key);
+    setPhase("idle");
+    setReward(null);
+    setRollingUnit(null);
+  };
+
+  const closePullModal = () => {
+    if (phase === "rolling") return;
+    setActiveTab(null);
     setPhase("idle");
     setReward(null);
     setRollingUnit(null);
@@ -270,20 +279,75 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
       </div>
 
       <div style={{
-        flex: 1, display: "flex", flexDirection: "column",
-        alignItems: "center", justifyContent: "center",
-        width: "100%", maxWidth: cardW + 64,
-        padding: "0 20px 20px", overflow: "auto",
+        flex: 1,
+        width: "100%",
+        maxWidth: cardW + 64,
+        padding: "0 20px 20px",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
       }}>
         <div style={{
-          width: cardW, padding: "28px 24px",
+          color: "#64748b",
+          fontSize: 14,
+          textAlign: "center",
+          padding: "24px 20px",
+        }}>
+          上のガチャ種類を選ぶと、回すためのモーダルが開きます
+        </div>
+      </div>
+
+      {hasSelection && (
+        <div style={{
+          position: "fixed",
+          inset: 0,
+          background: "rgba(2,6,23,0.7)",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "20px",
+          zIndex: 220,
+        }}>
+        <div style={{
+          width: cardW, maxWidth: "100%", padding: "28px 24px",
           background: isRevealed ? rInfo.bg : "#0f172a",
           border: `3px solid ${isRevealed ? rInfo.border : "#1e293b"}`,
           borderRadius: 16, textAlign: "center",
-          boxShadow: isRevealed ? `0 0 50px ${rInfo.glow}` : "0 4px 24px rgba(0,0,0,0.5)",
+          boxShadow: isRevealed ? `0 0 50px ${rInfo.glow}` : "0 18px 54px rgba(0,0,0,0.55)",
           transition: "all 0.5s ease",
           transform: isRevealed ? "scale(1)" : "scale(0.98)",
+          maxHeight: "calc(100vh - 40px)",
+          overflowY: "auto",
         }}>
+          <div style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "space-between",
+            marginBottom: 16,
+            gap: 12,
+          }}>
+            <div style={{ textAlign: "left" }}>
+              <div style={{ fontSize: 18, fontWeight: "bold", color: "#e2e8f0" }}>
+                {isBuff ? "バフガチャ" : `${activeTab} ガチャ`}
+              </div>
+              <div style={{ fontSize: 12, color: "#94a3b8" }}>
+                {isBuff ? `1回 ${BUFF_COST} コイン` : `1回 ${SERIES_COST} コイン`}
+              </div>
+            </div>
+            <button onClick={closePullModal} style={{
+              background: "rgba(255,255,255,0.08)",
+              border: "1px solid #475569",
+              borderRadius: 8,
+              color: "#94a3b8",
+              fontSize: 18,
+              width: 36,
+              height: 36,
+              cursor: phase === "rolling" ? "default" : "pointer",
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}>✕</button>
+          </div>
           {phase === "idle" && !isBuff && (
             <div>
               <div style={{ fontSize: 48, marginBottom: 12 }}>
@@ -520,7 +584,8 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
             </div>
           )}
         </div>
-      </div>
+        </div>
+      )}
 
       <style>{`
         @keyframes gachaSpin {

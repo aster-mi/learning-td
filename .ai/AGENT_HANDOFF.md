@@ -25,6 +25,24 @@ Next Step:
 
 ---
 
+## [2026-03-21 13:52 JST] Agent: Codex
+Summary:
+- ガチャ画面を二段構成に変更し、種類選択後の「回す/結果表示」を独立モーダル化した。
+- 画面下部に押し込まれて見切れていたガチャ実行UIを、中央前面のモーダルとして表示するよう修正した。
+
+Changed Files:
+- `src/components/GachaModal.tsx`
+- `.ai/AGENT_HANDOFF.md`
+
+Validation:
+- `npm run build` → success
+
+Open Questions:
+- なし
+
+Next Step:
+- 実機でモバイル表示時の余白・スクロール量を確認して、必要ならモーダル寸法を微調整する。
+
 ## [2026-03-21 13:42 JST] Agent: Codex
 Summary:
 - ユーザー指示に合わせ、`pushは改修したら都度やる` を恒久ルールとして `CODEX.md` / `CLAUDE.md` に明記した。
