@@ -23,13 +23,18 @@ function load(): CorrectMap {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     return raw ? pruneMap(JSON.parse(raw) as CorrectMap) : {};
-  } catch {
+  } catch (e) {
+    console.warn("[CorrectStore] Failed to load:", e);
     return {};
   }
 }
 
 function save(map: CorrectMap) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(pruneMap(map)));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(pruneMap(map)));
+  } catch (e) {
+    console.warn("[CorrectStore] Failed to save:", e);
+  }
 }
 
 function pruneMap(map: CorrectMap): CorrectMap {

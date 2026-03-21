@@ -23,13 +23,18 @@ function load(): WrongMap {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     return raw ? pruneMap(JSON.parse(raw) as WrongMap) : {};
-  } catch {
+  } catch (e) {
+    console.warn("[WrongStore] Failed to load:", e);
     return {};
   }
 }
 
 function save(map: WrongMap) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(pruneMap(map)));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(pruneMap(map)));
+  } catch (e) {
+    console.warn("[WrongStore] Failed to save:", e);
+  }
 }
 
 function pruneMap(map: WrongMap): WrongMap {

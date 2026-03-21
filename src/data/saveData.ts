@@ -146,40 +146,86 @@ export function loadSave(): SaveData {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return { ...DEFAULT_SAVE, unlockedUnits: [...DEFAULT_SAVE.unlockedUnits] };
     const parsed = JSON.parse(raw) as Partial<SaveData>;
-
-    const units = parsed.unlockedUnits ?? [...INITIAL_UNITS];
-    for (const unitId of INITIAL_UNITS) {
-      if (!units.includes(unitId)) units.push(unitId);
-    }
-
-    let party = parsed.party ?? [...DEFAULT_PARTY];
-    party = party.filter((id: string) => units.includes(id));
-    if (party.length === 0) party = units.slice(0, 5);
-
-    return sanitizeSaveData({
-      coins: parsed.coins ?? DEFAULT_SAVE.coins,
-      stageStars: parsed.stageStars ?? {},
-      unitUpgrades: parsed.unitUpgrades ?? {},
-      unlockedUnits: units,
-      party,
-      totalCorrect: parsed.totalCorrect ?? 0,
-      totalWrong: parsed.totalWrong ?? 0,
-      maxCombo: parsed.maxCombo ?? 0,
-      achievements: parsed.achievements ?? [],
-      gachaItems: parsed.gachaItems ?? [],
-      categoryStats: parsed.categoryStats ?? {},
-      dailyActivity: parsed.dailyActivity ?? {},
-      missionClaims: parsed.missionClaims ?? [],
-      unitMastery: parsed.unitMastery ?? {},
-      login: parsed.login ?? { lastDate: "", streak: 0 },
-    });
-  } catch {
+    return loadSaveFrom(parsed);
+  } catch (e) {
+    console.warn("[SaveData] Failed to load save, using defaults:", e);
     return { ...DEFAULT_SAVE, unlockedUnits: [...DEFAULT_SAVE.unlockedUnits] };
   }
 }
 
 export function saveSave(data: SaveData): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(sanitizeSaveData(data)));
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(sanitizeSaveData(data)));
+  } catch (e) {
+    if (e instanceof DOMException && e.name === "QuotaExceededError") {
+      console.warn("[SaveData] localStorage quota exceeded – pruning old data");
+      // Aggressive prune: keep only 30 days of activity
+      const pruned = {
+        ...sanitizeSaveData(data),
+        dailyActivity: Object.fromEntries(
+          Object.entries(data.dailyActivity)
+            .filter(([key]) => isValidDateKey(key))
+            .sort(([a], [b]) => sortDateKeysDesc(a, b))
+            .slice(0, 30),
+        ),
+      };
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(pruned));
+      } catch {
+        console.error("[SaveData] Still over quota after pruning");
+      }
+    } else {
+      console.error("[SaveData] Failed to save:", e);
+    }
+  }
+}
+
+/** Export save data as JSON string for backup */
+export function exportSave(): string {
+  return localStorage.getItem(STORAGE_KEY) ?? JSON.stringify(DEFAULT_SAVE);
+}
+
+/** Import save data from JSON string, returns true on success */
+export function importSave(json: string): boolean {
+  try {
+    const parsed = JSON.parse(json) as Partial<SaveData>;
+    if (!parsed || typeof parsed !== "object") return false;
+    // Validate minimum structure
+    if (!Array.isArray(parsed.unlockedUnits)) return false;
+    const full = loadSaveFrom(parsed);
+    saveSave(full);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function loadSaveFrom(parsed: Partial<SaveData>): SaveData {
+  const units = parsed.unlockedUnits ?? [...INITIAL_UNITS];
+  for (const unitId of INITIAL_UNITS) {
+    if (!units.includes(unitId)) units.push(unitId);
+  }
+  let party = parsed.party ?? [...DEFAULT_PARTY];
+  party = party.filter((id: string) => units.includes(id));
+  if (party.length === 0) party = units.slice(0, 5);
+
+  return sanitizeSaveData({
+    coins: parsed.coins ?? DEFAULT_SAVE.coins,
+    stageStars: parsed.stageStars ?? {},
+    unitUpgrades: parsed.unitUpgrades ?? {},
+    unlockedUnits: units,
+    party,
+    totalCorrect: parsed.totalCorrect ?? 0,
+    totalWrong: parsed.totalWrong ?? 0,
+    maxCombo: parsed.maxCombo ?? 0,
+    achievements: parsed.achievements ?? [],
+    gachaItems: parsed.gachaItems ?? [],
+    categoryStats: parsed.categoryStats ?? {},
+    dailyActivity: parsed.dailyActivity ?? {},
+    missionClaims: parsed.missionClaims ?? [],
+    unitMastery: parsed.unitMastery ?? {},
+    login: parsed.login ?? { lastDate: "", streak: 0 },
+  });
 }
 
 export function calcStars(accuracy: number, baseHpRatio: number): number {
