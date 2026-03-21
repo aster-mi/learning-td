@@ -3,7 +3,7 @@ import type { GameState } from "../domain/GameEngine";
 import type { Unit } from "../domain/Unit";
 import type { Enemy } from "../domain/Enemy";
 import type { StageThemeKey } from "../data/stages";
-import { UNIT_RENDERERS } from "./renderers";
+import { UNIT_RENDERERS, ensureRenderers } from "./renderers";
 
 interface Props {
   state: GameState;
@@ -1134,6 +1134,9 @@ export function BattleCanvas({ state, playerBaseX, enemyBaseX, canvasWidth, them
   const prevUnitPosRef  = useRef<Map<number,{x:number;y:number;color:string}>>(new Map());
   const comboFlashRef   = useRef<{ t: number; level: number }>({ t: 0, level: 0 });
   const prevComboFlashKey = useRef(0);
+
+  // Ensure renderers are loaded (usually already loaded by UnitIcon/PartySelect)
+  useEffect(() => { ensureRenderers(); }, []);
 
   // One-time star generation
   if (starsRef.current.length === 0) {

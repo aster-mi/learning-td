@@ -1,5 +1,5 @@
-import { useRef, useEffect } from "react";
-import { UNIT_RENDERERS } from "./renderers";
+import { useRef, useEffect, useState } from "react";
+import { UNIT_RENDERERS, ensureRenderers, renderersReady } from "./renderers";
 
 /** Cat types use a dedicated simple cat icon (BattleCanvas drawCat is too complex/unit-dependent) */
 const CAT_TYPES = new Set(["basic", "fast", "tank", "shooter", "bomber"]);
@@ -129,9 +129,18 @@ interface UnitIconProps {
 
 export function UnitIcon({ unitId, color, size, emoji, style }: UnitIconProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [ready, setReady] = useState(renderersReady());
 
   const isCat = CAT_TYPES.has(unitId);
-  const hasRenderer = isCat || !!UNIT_RENDERERS[unitId];
+
+  useEffect(() => {
+    if (isCat || ready) return;
+    let cancelled = false;
+    ensureRenderers().then(() => { if (!cancelled) setReady(true); });
+    return () => { cancelled = true; };
+  }, [isCat, ready]);
+
+  const hasRenderer = isCat || (ready && !!UNIT_RENDERERS[unitId]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
