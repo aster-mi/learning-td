@@ -4,6 +4,17 @@ export type Level = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
 
 export const LEVEL_ALL = 0;
 
+export const MAIN_CATEGORY_ORDER: MainCategory[] = [
+  "算数",
+  "国語",
+  "理科",
+  "社会",
+  "英語",
+  "雑学",
+  "プログラミング",
+  "なぞなぞ",
+];
+
 export const LEVEL_DEFS: { level: Level; label: string; emoji: string; color: string; desc: string }[] = [
   { level: 1, label: "小学1年生", emoji: "🌱", color: "#86efac", desc: "小学1年生レベル" },
   { level: 2, label: "小学2年生", emoji: "🌱", color: "#4ade80", desc: "小学2年生レベル" },
@@ -13,7 +24,7 @@ export const LEVEL_DEFS: { level: Level; label: string; emoji: string; color: st
   { level: 6, label: "小学6年生", emoji: "🍀", color: "#166534", desc: "小学6年生レベル" },
   { level: 7, label: "中学生", emoji: "📘", color: "#60a5fa", desc: "中学校レベル" },
   { level: 8, label: "高校生", emoji: "📗", color: "#f59e0b", desc: "高校レベル" },
-  { level: 9, label: "大学・一般", emoji: "🎓", color: "#f97316", desc: "大学・社会人" },
+  { level: 9, label: "大学・一般", emoji: "🎓", color: "#f97316", desc: "大学・一般レベル" },
   { level: 10, label: "専門知識", emoji: "🔬", color: "#ef4444", desc: "資格・専門分野" },
 ];
 

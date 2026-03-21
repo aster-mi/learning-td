@@ -28,7 +28,7 @@ flowchart TD
     E --> E4["progression.ts<br/>ログイン/ミッション/統計"]
     E --> E5["stages.ts / gacha.ts / dailyChallenge.ts"]
 
-    E2 --> F["questions.jsonl"]
+    E2 --> F["questionBanks/*.jsonl"]
     E3 --> G["localStorage"]
     E4 --> G
 

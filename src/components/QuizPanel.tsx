@@ -105,14 +105,14 @@ export function QuizPanel({
 
   useEffect(() => {
     let active = true;
-    void loadQuestions().then((loaded) => {
+    void loadQuestions({ subCategories }).then((loaded) => {
       if (!active) return;
       setQuestions(loaded);
     });
     return () => {
       active = false;
     };
-  }, []);
+  }, [subCategories]);
 
   useEffect(() => {
     if (!questions) return;

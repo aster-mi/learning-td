@@ -1,0 +1,200 @@
+{"id":"e001","main":"英語","sub":"英単語","level":3,"question":"\"apple\" のにほんごは？","choices":["みかん","りんご","ぶどう","もも"],"answer":"りんご"}
+{"id":"e002","main":"英語","sub":"英単語","level":4,"question":"\"beautiful\" の反意語は？","choices":["ugly","small","old","slow"],"answer":"ugly"}
+{"id":"e003","main":"英語","sub":"英単語","level":3,"question":"\"I am hungry\" の意味は？","choices":["眠い","楽しい","お腹が空いた","怒っている"],"answer":"お腹が空いた"}
+{"id":"e004","main":"英語","sub":"英単語","level":7,"question":"\"environment\" の意味は？","choices":["娯楽","環境","教育","感情"],"answer":"環境"}
+{"id":"e005","main":"英語","sub":"英単語","level":8,"question":"\"collaborate\" の意味は？","choices":["競争する","協力する","妨害する","分離する"],"answer":"協力する"}
+{"id":"e101","main":"英語","sub":"英文法","level":7,"question":"\"run\" の過去形は？","choices":["runned","ran","ranned","running"],"answer":"ran"}
+{"id":"e102","main":"英語","sub":"英文法","level":5,"question":"\"She ___ a doctor.\" に入る動詞は？","choices":["am","are","is","be"],"answer":"is"}
+{"id":"e103","main":"英語","sub":"英文法","level":7,"question":"\"big\" の比較級は？","choices":["biger","bigger","most big","more big"],"answer":"bigger"}
+{"id":"e104","main":"英語","sub":"英文法","level":5,"question":"\"Where are you from?\" の意味は？","choices":["どこへ行く？","出身はどこ？","何をしている？","元気？"],"answer":"出身はどこ？"}
+{"id":"e105","main":"英語","sub":"英文法","level":5,"question":"\"Thank you\" への返答は？","choices":["Yes, I do.","You're welcome.","Nice to meet you.","I'm fine."],"answer":"You're welcome."}
+{"id":"e006","main":"英語","sub":"英単語","level":4,"question":"\"difficult\" の意味は？","choices":["簡単な","楽しい","早い","難しい"],"answer":"難しい"}
+{"id":"e007","main":"英語","sub":"英単語","level":7,"question":"\"immediately\" の意味は？","choices":["ゆっくり","丁寧に","静かに","すぐに"],"answer":"すぐに"}
+{"id":"e008","main":"英語","sub":"英単語","level":7,"question":"\"purchase\" の意味は？","choices":["販売する","借りる","修理する","購入する"],"answer":"購入する"}
+{"id":"e009","main":"英語","sub":"英単語","level":8,"question":"\"sustainable\" の意味は？","choices":["速い","壊れやすい","厳しい","持続可能な"],"answer":"持続可能な"}
+{"id":"e010","main":"英語","sub":"英単語","level":8,"question":"\"enhance\" の意味は？","choices":["減らす","妨げる","変換する","向上させる"],"answer":"向上させる"}
+{"id":"e011","main":"英語","sub":"英単語","level":8,"question":"\"consequence\" の意味は？","choices":["原因","目的","方法","結果・影響"],"answer":"結果・影響"}
+{"id":"e012","main":"英語","sub":"英単語","level":8,"question":"\"ambiguous\" の意味は？","choices":["明確な","積極的な","意欲的な","曖昧な"],"answer":"曖昧な"}
+{"id":"e013","main":"英語","sub":"英単語","level":7,"question":"\"frequently\" の意味は？","choices":["めったに","一度だけ","たまに","頻繁に"],"answer":"頻繁に"}
+{"id":"e014","main":"英語","sub":"英単語","level":8,"question":"\"enormous\" の意味は？","choices":["小さな","普通の","軽い","巨大な"],"answer":"巨大な"}
+{"id":"e015","main":"英語","sub":"英単語","level":7,"question":"\"volunteer\" の意味は？","choices":["強制される","給料をもらう","参加を断る","自発的に参加する"],"answer":"自発的に参加する"}
+{"id":"e106","main":"英語","sub":"英文法","level":5,"question":"\"I ___ to school every day.\" の空欄は？","choices":["goes","going","gone","go"],"answer":"go"}
+{"id":"e107","main":"英語","sub":"英文法","level":5,"question":"\"good\" の最上級は？","choices":["gooder","better","goodest","best"],"answer":"best"}
+{"id":"e108","main":"英語","sub":"英文法","level":7,"question":"\"buy\" の過去形は？","choices":["buyed","buyd","boughted","bought"],"answer":"bought"}
+{"id":"e109","main":"英語","sub":"英文法","level":7,"question":"受動態の基本形は？","choices":["do + 動詞","have + 過去分詞","will + 動詞","be動詞 + 過去分詞"],"answer":"be動詞 + 過去分詞"}
+{"id":"e110","main":"英語","sub":"英文法","level":7,"question":"\"He is taller ___ me.\" の空欄は？","choices":["as","of","from","than"],"answer":"than"}
+{"id":"e111","main":"英語","sub":"英文法","level":7,"question":"\"speak\" の現在分詞は？","choices":["speaked","spoke","speaken","speaking"],"answer":"speaking"}
+{"id":"e112","main":"英語","sub":"英文法","level":8,"question":"\"I have lived here for 10 years.\" の時制は？","choices":["過去形","過去進行形","未来形","現在完了"],"answer":"現在完了"}
+{"id":"e113","main":"英語","sub":"英文法","level":8,"question":"\"either A or B\" の意味は？","choices":["AもBも","AでもなくBでもない","AとBの両方","AかBのどちらか"],"answer":"AかBのどちらか"}
+{"id":"e114","main":"英語","sub":"英文法","level":7,"question":"\"The book ___ read by her.\" の空欄は？","choices":["did","had","is going to","was"],"answer":"was"}
+{"id":"e115","main":"英語","sub":"英文法","level":6,"question":"\"go\" の過去形は？","choices":["goed","gone","goes","went"],"answer":"went"}
+{"id":"e016","main":"英語","sub":"英単語","level":3,"question":"\"water\" のにほんごは？","choices":["火","空気","土","水"],"answer":"水"}
+{"id":"e017","main":"英語","sub":"英単語","level":7,"question":"\"investigate\" の意味は？","choices":["発明する","調査する","拡張する","破壊する"],"answer":"調査する"}
+{"id":"e018","main":"英語","sub":"英単語","level":8,"question":"\"inevitable\" の意味は？","choices":["可能な","望ましい","避けられない","不思議な"],"answer":"避けられない"}
+{"id":"e019","main":"英語","sub":"英単語","level":7,"question":"\"communicate\" の意味は？","choices":["命令する","移動する","連絡する","変換する"],"answer":"連絡する"}
+{"id":"e020","main":"英語","sub":"英単語","level":9,"question":"\"discrepancy\" の意味は？","choices":["一致","一貫性","矛盾のなさ","食い違い・差異"],"answer":"食い違い・差異"}
+{"id":"e021","main":"英語","sub":"英単語","level":8,"question":"\"anonymous\" の意味は？","choices":["有名な","公式な","匿名の","正式な"],"answer":"匿名の"}
+{"id":"e022","main":"英語","sub":"英単語","level":7,"question":"\"priority\" の意味は？","choices":["可能性","頻度","優先事項","選択肢"],"answer":"優先事項"}
+{"id":"e023","main":"英語","sub":"英単語","level":8,"question":"\"eloquent\" の意味は？","choices":["静かな","無口な","乱暴な","雄弁な"],"answer":"雄弁な"}
+{"id":"e024","main":"英語","sub":"英単語","level":3,"question":"\"school\" のにほんごは？","choices":["病院","学校","銀行","図書館"],"answer":"学校"}
+{"id":"e025","main":"英語","sub":"英単語","level":9,"question":"\"ubiquitous\" の意味は？","choices":["珍しい","一時的な","局所的な","どこにでも存在する"],"answer":"どこにでも存在する"}
+{"id":"e116","main":"英語","sub":"英文法","level":5,"question":"\"cat\" の複数形は？","choices":["cats","cates","catis","catts"],"answer":"cats"}
+{"id":"e117","main":"英語","sub":"英文法","level":7,"question":"\"He ___ TV when I arrived.\" の空欄は？","choices":["watched","was watching","watches","is watching"],"answer":"was watching"}
+{"id":"e118","main":"英語","sub":"英文法","level":7,"question":"関係代名詞 who は何を修飾する？","choices":["場所","時間","物","人"],"answer":"人"}
+{"id":"e119","main":"英語","sub":"英文法","level":8,"question":"\"If I ___ you, I would apologize.\" の空欄は？","choices":["am","were","be","will be"],"answer":"were"}
+{"id":"e120","main":"英語","sub":"英文法","level":7,"question":"\"She has ___ to Paris before.\" の空欄は？","choices":["go","gone","going","goes"],"answer":"gone"}
+{"id":"e121","main":"英語","sub":"英文法","level":7,"question":"\"stop smoking\" の意味は？","choices":["喫煙を始める","喫煙を続ける","喫煙が好き","喫煙をやめる"],"answer":"喫煙をやめる"}
+{"id":"e122","main":"英語","sub":"英文法","level":8,"question":"分詞構文の主な働きは？","choices":["名詞を修飾する","代名詞を強調する","副詞節を短縮する","文を接続する"],"answer":"副詞節を短縮する"}
+{"id":"e123","main":"英語","sub":"英文法","level":5,"question":"\"Do you like coffee?\" の否定の答えは？","choices":["Yes, I do.","No, I don't.","Yes, I am.","No, I am not."],"answer":"No, I don't."}
+{"id":"e124","main":"英語","sub":"英文法","level":8,"question":"強調構文 \"It is ___ that...\" の空欄に入らないのは？","choices":["Tom","yesterday","in Tokyo","happily"],"answer":"happily"}
+{"id":"e125","main":"英語","sub":"英文法","level":7,"question":"\"the tallest mountain in the world\" の最上級を作る語は？","choices":["more","most","tall","tallest"],"answer":"tallest"}
+{"id":"e026","main":"英語","sub":"英単語","level":1,"question":"\"dog\" のにほんごは？","choices":["ねこ","とり","さかな","いぬ"],"answer":"いぬ"}
+{"id":"e027","main":"英語","sub":"英単語","level":1,"question":"\"cat\" のにほんごは？","choices":["いぬ","とり","うさぎ","ねこ"],"answer":"ねこ"}
+{"id":"e028","main":"英語","sub":"英単語","level":1,"question":"\"red\" のにほんごは？","choices":["あお","しろ","くろ","あか"],"answer":"あか"}
+{"id":"e029","main":"英語","sub":"英単語","level":1,"question":"\"blue\" のにほんごは？","choices":["あか","しろ","みどり","あお"],"answer":"あお"}
+{"id":"e030","main":"英語","sub":"英単語","level":1,"question":"\"one\" のにほんごは？","choices":["2","3","0","1"],"answer":"1"}
+{"id":"e031","main":"英語","sub":"英単語","level":1,"question":"\"two\" のにほんごは？","choices":["1","3","4","2"],"answer":"2"}
+{"id":"e032","main":"英語","sub":"英単語","level":1,"question":"\"yes\" のにほんごは？","choices":["いいえ","たぶん","もちろん","はい"],"answer":"はい"}
+{"id":"e033","main":"英語","sub":"英単語","level":1,"question":"\"no\" のにほんごは？","choices":["はい","わからない","そうです","いいえ"],"answer":"いいえ"}
+{"id":"e034","main":"英語","sub":"英単語","level":1,"question":"\"big\" のにほんごは？","choices":["ちいさい","おなじ","かるい","おおきい"],"answer":"おおきい"}
+{"id":"e035","main":"英語","sub":"英単語","level":1,"question":"\"small\" のにほんごは？","choices":["おおきい","おもい","はやい","ちいさい"],"answer":"ちいさい"}
+{"id":"e036","main":"英語","sub":"英単語","level":1,"question":"\"good\" のにほんごは？","choices":["わるい","ふつう","つまらない","よい"],"answer":"よい"}
+{"id":"e037","main":"英語","sub":"英単語","level":1,"question":"\"white\" のにほんごは？","choices":["くろ","あか","あお","しろ"],"answer":"しろ"}
+{"id":"e038","main":"英語","sub":"英単語","level":1,"question":"\"black\" のにほんごは？","choices":["しろ","はいいろ","あお","くろ"],"answer":"くろ"}
+{"id":"e039","main":"英語","sub":"英単語","level":1,"question":"\"sun\" のにほんごは？","choices":["つき","ほし","くも","たいよう"],"answer":"たいよう"}
+{"id":"e040","main":"英語","sub":"英単語","level":1,"question":"\"new\" のにほんごは？","choices":["ふるい","おおきい","はやい","あたらしい"],"answer":"あたらしい"}
+{"id":"e041","main":"英語","sub":"英単語","level":2,"question":"\"book\" のにほんごは？","choices":["ノート","えんぴつ","けしごむ","ほん"],"answer":"ほん"}
+{"id":"e042","main":"英語","sub":"英単語","level":2,"question":"\"friend\" のにほんごは？","choices":["かぞく","せんせい","となり","ともだち"],"answer":"ともだち"}
+{"id":"e043","main":"英語","sub":"英単語","level":2,"question":"\"happy\" のにほんごは？","choices":["かなしい","おこっている","ねむい","うれしい"],"answer":"うれしい"}
+{"id":"e044","main":"英語","sub":"英単語","level":2,"question":"\"run\" のにほんごは？","choices":["あるく","およぐ","とぶ","はしる"],"answer":"はしる"}
+{"id":"e045","main":"英語","sub":"英単語","level":2,"question":"\"eat\" のにほんごは？","choices":["のむ","あそぶ","かう","たべる"],"answer":"たべる"}
+{"id":"e046","main":"英語","sub":"英単語","level":2,"question":"\"play\" のにほんごは？","choices":["べんきょうする","はたらく","やすむ","あそぶ"],"answer":"あそぶ"}
+{"id":"e047","main":"英語","sub":"英単語","level":2,"question":"\"fast\" のにほんごは？","choices":["おそい","おもい","かるい","はやい"],"answer":"はやい"}
+{"id":"e048","main":"英語","sub":"英単語","level":2,"question":"\"long\" のにほんごは？","choices":["みじかい","かるい","うすい","ながい"],"answer":"ながい"}
+{"id":"e049","main":"英語","sub":"英単語","level":2,"question":"\"mother\" のにほんごは？","choices":["おとうさん","おじいさん","いもうと","おかあさん"],"answer":"おかあさん"}
+{"id":"e050","main":"英語","sub":"英単語","level":2,"question":"\"father\" のにほんごは？","choices":["おかあさん","おばあさん","おにいさん","おとうさん"],"answer":"おとうさん"}
+{"id":"e126","main":"英語","sub":"英単語","level":1,"question":"「dog」のにほんごはなんですか？","choices":["ねこ","いぬ","うさぎ","さる"],"answer":"いぬ"}
+{"id":"e127","main":"英語","sub":"英単語","level":1,"question":"「cat」のにほんごはなんですか？","choices":["いぬ","とり","ねこ","さかな"],"answer":"ねこ"}
+{"id":"e128","main":"英語","sub":"英単語","level":1,"question":"「red」のにほんごはなんですか？","choices":["あお","きいろ","みどり","あか"],"answer":"あか"}
+{"id":"e129","main":"英語","sub":"英単語","level":1,"question":"「one」はなんと読みますか？","choices":["ワン","ツー","スリー","フォー"],"answer":"ワン"}
+{"id":"e130","main":"英語","sub":"英単語","level":1,"question":"「apple」のにほんごはなんですか？","choices":["バナナ","みかん","りんご","ぶどう"],"answer":"りんご"}
+{"id":"e131","main":"英語","sub":"英単語","level":1,"question":"「sun」のにほんごはなんですか？","choices":["つき","ほし","たいよう","くも"],"answer":"たいよう"}
+{"id":"e132","main":"英語","sub":"英単語","level":1,"question":"「water」のにほんごはなんですか？","choices":["ジュース","みず","ぎゅうにゅう","おちゃ"],"answer":"みず"}
+{"id":"e133","main":"英語","sub":"英単語","level":1,"question":"「blue」のにほんごはなんですか？","choices":["あか","みどり","あお","きいろ"],"answer":"あお"}
+{"id":"e134","main":"英語","sub":"英単語","level":1,"question":"「three」はいくつですか？","choices":["1","2","3","4"],"answer":"3"}
+{"id":"e135","main":"英語","sub":"英単語","level":1,"question":"「book」のにほんごはなんですか？","choices":["つくえ","いす","えんぴつ","ほん"],"answer":"ほん"}
+{"id":"e136","main":"英語","sub":"英単語","level":1,"question":"「bird」のにほんごはなんですか？","choices":["さかな","とり","むし","けもの"],"answer":"とり"}
+{"id":"e137","main":"英語","sub":"英単語","level":4,"question":"「January」は何月ですか？","choices":["1月","2月","3月","4月"],"answer":"1月"}
+{"id":"e138","main":"英語","sub":"英単語","level":4,"question":"「Monday」は何曜日ですか？","choices":["日曜日","月曜日","火曜日","水曜日"],"answer":"月曜日"}
+{"id":"e139","main":"英語","sub":"英単語","level":4,"question":"「Spring」のにほんごはなんですか？","choices":["夏","秋","冬","春"],"answer":"春"}
+{"id":"e140","main":"英語","sub":"英単語","level":4,"question":"「December」は何月ですか？","choices":["9月","10月","11月","12月"],"answer":"12月"}
+{"id":"e141","main":"英語","sub":"英単語","level":4,"question":"「Saturday」は何曜日ですか？","choices":["金曜日","土曜日","日曜日","月曜日"],"answer":"土曜日"}
+{"id":"e142","main":"英語","sub":"英文法","level":5,"question":"「私はテニスをします」を英語にするとどれですか？","choices":["I plays tennis.","I play tennis.","I am tennis.","I playing tennis."],"answer":"I play tennis."}
+{"id":"e143","main":"英語","sub":"英文法","level":5,"question":"「She plays tennis.」の意味はどれですか？","choices":["彼女はテニスをする（三単現）","彼女はテニスが好き","彼女はテニスをしない","彼女はテニスを見る"],"answer":"彼女はテニスをする（三単現）"}
+{"id":"e144","main":"英語","sub":"英文法","level":5,"question":"「Is this a cat?」に対する肯定の答えはどれですか？","choices":["No, it is not.","Yes, it is.","Yes, this is.","No, it is."],"answer":"Yes, it is."}
+{"id":"e145","main":"英語","sub":"英文法","level":5,"question":"「I am not a student.」の「am not」は何ですか？","choices":["be動詞の否定形","一般動詞の否定形","助動詞","形容詞"],"answer":"be動詞の否定形"}
+{"id":"e146","main":"英語","sub":"英文法","level":5,"question":"「Do you like apples?」に対する否定の答えはどれですか？","choices":["Yes, I do.","No, I don't.","Yes, I like.","No, I am not."],"answer":"No, I don't."}
+{"id":"e147","main":"英語","sub":"英文法","level":5,"question":"「He doesn't play soccer.」の意味はどれですか？","choices":["彼はサッカーをする","彼はサッカーをしない","彼はサッカーが得意","彼はサッカーを見る"],"answer":"彼はサッカーをしない"}
+{"id":"e148","main":"英語","sub":"英文法","level":5,"question":"「What do you want?」の意味はどれですか？","choices":["あなたはどこへ行きますか？","あなたは何を欲しいですか？","あなたは何をしますか？","あなたは誰ですか？"],"answer":"あなたは何を欲しいですか？"}
+{"id":"e149","main":"英語","sub":"英文法","level":5,"question":"「I can swim.」の「can」は何ですか？","choices":["一般動詞","助動詞（〜できる）","be動詞","形容詞"],"answer":"助動詞（〜できる）"}
+{"id":"e150","main":"英語","sub":"英文法","level":5,"question":"「There is a book on the table.」の意味はどれですか？","choices":["テーブルの下に本がある","テーブルの上に本がある","テーブルに本を置く","本がテーブルを探す"],"answer":"テーブルの上に本がある"}
+{"id":"e151","main":"英語","sub":"英文法","level":5,"question":"「She was happy yesterday.」の「was」は何ですか？","choices":["be動詞の現在形","be動詞の過去形","一般動詞の過去形","助動詞"],"answer":"be動詞の過去形"}
+{"id":"e152","main":"英語","sub":"英文法","level":6,"question":"「I have been to Tokyo.」の意味はどれですか？","choices":["私は東京に行きます","私は東京に行ったことがある（現在完了・経験）","私は東京にいる","私は東京が好き"],"answer":"私は東京に行ったことがある（現在完了・経験）"}
+{"id":"e153","main":"英語","sub":"英文法","level":6,"question":"「She is taller than me.」の意味はどれですか？","choices":["彼女は私より背が低い","彼女は私と背が同じ","彼女は私より背が高い","彼女は最も背が高い"],"answer":"彼女は私より背が高い"}
+{"id":"e154","main":"英語","sub":"英文法","level":6,"question":"「He is the tallest in the class.」の「tallest」は何形ですか？","choices":["原級","比較級","最上級","動詞"],"answer":"最上級"}
+{"id":"e155","main":"英語","sub":"英文法","level":6,"question":"「I want to eat sushi.」の「to eat」は何ですか？","choices":["動名詞","不定詞（名詞的用法）","過去分詞","現在分詞"],"answer":"不定詞（名詞的用法）"}
+{"id":"e156","main":"英語","sub":"英文法","level":6,"question":"「I have lived here for 10 years.」で使われているのは何時制ですか？","choices":["現在形","過去形","未来形","現在完了形"],"answer":"現在完了形"}
+{"id":"e157","main":"英語","sub":"英文法","level":6,"question":"「The book was written by him.」は何の文ですか？","choices":["能動態","受動態（受け身）","疑問文","命令文"],"answer":"受動態（受け身）"}
+{"id":"e158","main":"英語","sub":"英文法","level":6,"question":"「If it rains, I will stay home.」の意味はどれですか？","choices":["雨が降っても外に出る","雨が降ったら家にいる","雨が降らなければ家にいる","雨が降っている"],"answer":"雨が降ったら家にいる"}
+{"id":"e159","main":"英語","sub":"英文法","level":6,"question":"「I don't know what he said.」の「what he said」は何ですか？","choices":["関係代名詞節","間接疑問文（疑問詞節）","条件節","接続詞節"],"answer":"間接疑問文（疑問詞節）"}
+{"id":"e160","main":"英語","sub":"英文法","level":6,"question":"「She has already finished her homework.」の「already」はどこに置きますか？","choices":["文頭","have と過去分詞の間","文末","動詞の前"],"answer":"have と過去分詞の間"}
+{"id":"e161","main":"英語","sub":"英文法","level":6,"question":"比較表現で「as 〜 as」はどんな意味ですか？","choices":["〜より大きい","〜より小さい","〜と同じくらい","〜より少ない"],"answer":"〜と同じくらい"}
+{"id":"e162","main":"英語","sub":"英単語","level":1,"question":"「fish」のにほんごは？","choices":["とり","さかな","むし","かえる"],"answer":"さかな"}
+{"id":"e163","main":"英語","sub":"英単語","level":1,"question":"「milk」のにほんごは？","choices":["みず","ジュース","ぎゅうにゅう","おちゃ"],"answer":"ぎゅうにゅう"}
+{"id":"e164","main":"英語","sub":"英単語","level":1,"question":"「green」のにほんごは？","choices":["あか","あお","きいろ","みどり"],"answer":"みどり"}
+{"id":"e165","main":"英語","sub":"英単語","level":1,"question":"「five」はいくつですか？","choices":["3","4","5","6"],"answer":"5"}
+{"id":"e166","main":"英語","sub":"英単語","level":1,"question":"「hand」のにほんごは？","choices":["あし","て","あたま","かお"],"answer":"て"}
+{"id":"e167","main":"英語","sub":"英単語","level":1,"question":"「eye」のにほんごは？","choices":["はな","くち","め","みみ"],"answer":"め"}
+{"id":"e168","main":"英語","sub":"英単語","level":1,"question":"「rabbit」のにほんごは？","choices":["ねこ","いぬ","うさぎ","さる"],"answer":"うさぎ"}
+{"id":"e169","main":"英語","sub":"英単語","level":1,"question":"「orange」のにほんごは？","choices":["りんご","ぶどう","みかん（オレンジ）","ばなな"],"answer":"みかん（オレンジ）"}
+{"id":"e170","main":"英語","sub":"英単語","level":1,"question":"「star」のにほんごは？","choices":["つき","たいよう","ほし","くも"],"answer":"ほし"}
+{"id":"e171","main":"英語","sub":"英単語","level":1,"question":"「hat」のにほんごは？","choices":["くつ","ぼうし","てぶくろ","かばん"],"answer":"ぼうし"}
+{"id":"e172","main":"英語","sub":"英単語","level":1,"question":"「egg」のにほんごは？","choices":["たまご","にく","パン","やさい"],"answer":"たまご"}
+{"id":"e173","main":"英語","sub":"英単語","level":1,"question":"「rain」のにほんごは？","choices":["ゆき","あめ","かぜ","くもり"],"answer":"あめ"}
+{"id":"e174","main":"英語","sub":"英単語","level":1,"question":"「pen」のにほんごは？","choices":["えんぴつ","けしごむ","ペン","ノート"],"answer":"ペン"}
+{"id":"e175","main":"英語","sub":"英単語","level":1,"question":"「nose」のにほんごは？","choices":["くち","め","はな","みみ"],"answer":"はな"}
+{"id":"e176","main":"英語","sub":"英単語","level":1,"question":"「house」のにほんごは？","choices":["がっこう","いえ","みせ","こうえん"],"answer":"いえ"}
+{"id":"e177","main":"英語","sub":"英単語","level":1,"question":"「ten」はいくつですか？","choices":["8","9","10","11"],"answer":"10"}
+{"id":"e178","main":"英語","sub":"英単語","level":1,"question":"「cake」のにほんごは？","choices":["パン","ケーキ","クッキー","おにぎり"],"answer":"ケーキ"}
+{"id":"e179","main":"英語","sub":"英単語","level":1,"question":"「pig」のにほんごは？","choices":["うし","うま","ぶた","ひつじ"],"answer":"ぶた"}
+{"id":"e180","main":"英語","sub":"英単語","level":1,"question":"「moon」のにほんごは？","choices":["たいよう","つき","ほし","くも"],"answer":"つき"}
+{"id":"e181","main":"英語","sub":"英単語","level":1,"question":"「flower」のにほんごは？","choices":["き","はな","くさ","は"],"answer":"はな"}
+{"id":"e182","main":"英語","sub":"英単語","level":2,"question":"「teacher」のにほんごは？","choices":["いしゃ","せんせい","おまわりさん","うんてんしゅ"],"answer":"せんせい"}
+{"id":"e183","main":"英語","sub":"英単語","level":2,"question":"「school」のにほんごは？","choices":["いえ","みせ","がっこう","びょういん"],"answer":"がっこう"}
+{"id":"e184","main":"英語","sub":"英単語","level":2,"question":"「mother」のにほんごは？","choices":["おとうさん","おかあさん","おにいさん","おねえさん"],"answer":"おかあさん"}
+{"id":"e185","main":"英語","sub":"英単語","level":2,"question":"「father」のにほんごは？","choices":["おとうさん","おかあさん","おにいさん","おねえさん"],"answer":"おとうさん"}
+{"id":"e186","main":"英語","sub":"英単語","level":2,"question":"「pencil」のにほんごは？","choices":["えんぴつ","ペン","けしゴム","ノート"],"answer":"えんぴつ"}
+{"id":"e187","main":"英語","sub":"英単語","level":2,"question":"「happy」のにほんごは？","choices":["かなしい","うれしい","おこっている","つかれた"],"answer":"うれしい"}
+{"id":"e188","main":"英語","sub":"英単語","level":2,"question":"「big」のにほんごは？","choices":["ちいさい","おおきい","ながい","みじかい"],"answer":"おおきい"}
+{"id":"e189","main":"英語","sub":"英単語","level":2,"question":"「small」のにほんごは？","choices":["おおきい","ちいさい","ながい","ひろい"],"answer":"ちいさい"}
+{"id":"e190","main":"英語","sub":"英単語","level":2,"question":"「car」のにほんごは？","choices":["でんしゃ","じてんしゃ","くるま","バス"],"answer":"くるま"}
+{"id":"e191","main":"英語","sub":"英単語","level":2,"question":"「sister」のにほんごは？","choices":["おとうと","きょうだい","しまい","おかあさん"],"answer":"しまい"}
+{"id":"e192","main":"英語","sub":"英単語","level":2,"question":"「brother」のにほんごは？","choices":["しまい","きょうだい","おとうさん","おじいさん"],"answer":"きょうだい"}
+{"id":"e193","main":"英語","sub":"英単語","level":2,"question":"「yellow」のにほんごは？","choices":["あか","あお","きいろ","みどり"],"answer":"きいろ"}
+{"id":"e194","main":"英語","sub":"英単語","level":2,"question":"「elephant」のにほんごは？","choices":["ライオン","ゾウ","キリン","サル"],"answer":"ゾウ"}
+{"id":"e195","main":"英語","sub":"英単語","level":2,"question":"「monkey」のにほんごは？","choices":["ウサギ","サル","クマ","ネズミ"],"answer":"サル"}
+{"id":"e196","main":"英語","sub":"英単語","level":2,"question":"「rice」のにほんごは？","choices":["パン","ごはん（おこめ）","めん","スープ"],"answer":"ごはん（おこめ）"}
+{"id":"e197","main":"英語","sub":"英単語","level":3,"question":"「morning」の意味は？","choices":["夜","昼","朝","夕方"],"answer":"朝"}
+{"id":"e198","main":"英語","sub":"英単語","level":3,"question":"「night」の意味は？","choices":["朝","昼","夕方","夜"],"answer":"夜"}
+{"id":"e199","main":"英語","sub":"英単語","level":3,"question":"「friend」の意味は？","choices":["先生","友達","家族","敵"],"answer":"友達"}
+{"id":"e200","main":"英語","sub":"英単語","level":3,"question":"「table」の意味は？","choices":["いす","テーブル（つくえ）","棚","本"],"answer":"テーブル（つくえ）"}
+{"id":"e201","main":"英語","sub":"英単語","level":3,"question":"「white」の意味は？","choices":["黒","白","灰色","茶色"],"answer":"白"}
+{"id":"e202","main":"英語","sub":"英単語","level":3,"question":"「black」の意味は？","choices":["白","黒","赤","青"],"answer":"黒"}
+{"id":"e203","main":"英語","sub":"英単語","level":3,"question":"「music」の意味は？","choices":["体育","音楽","算数","理科"],"answer":"音楽"}
+{"id":"e204","main":"英語","sub":"英単語","level":3,"question":"「swim」の意味は？","choices":["走る","泳ぐ","飛ぶ","歩く"],"answer":"泳ぐ"}
+{"id":"e205","main":"英語","sub":"英単語","level":3,"question":"「eat」の意味は？","choices":["飲む","食べる","寝る","起きる"],"answer":"食べる"}
+{"id":"e206","main":"英語","sub":"英単語","level":3,"question":"「run」の意味は？","choices":["歩く","走る","座る","立つ"],"answer":"走る"}
+{"id":"e207","main":"英語","sub":"英単語","level":4,"question":"「February」は何月ですか？","choices":["1月","2月","3月","4月"],"answer":"2月"}
+{"id":"e208","main":"英語","sub":"英単語","level":4,"question":"「Wednesday」は何曜日ですか？","choices":["月曜日","火曜日","水曜日","木曜日"],"answer":"水曜日"}
+{"id":"e209","main":"英語","sub":"英単語","level":4,"question":"「summer」の意味は？","choices":["春","夏","秋","冬"],"answer":"夏"}
+{"id":"e210","main":"英語","sub":"英単語","level":4,"question":"「autumn / fall」の意味は？","choices":["春","夏","秋","冬"],"answer":"秋"}
+{"id":"e211","main":"英語","sub":"英単語","level":4,"question":"「winter」の意味は？","choices":["春","夏","秋","冬"],"answer":"冬"}
+{"id":"e212","main":"英語","sub":"英単語","level":4,"question":"「hospital」の意味は？","choices":["学校","病院","駅","空港"],"answer":"病院"}
+{"id":"e213","main":"英語","sub":"英単語","level":4,"question":"「beautiful」の意味は？","choices":["大きい","小さい","美しい","速い"],"answer":"美しい"}
+{"id":"e214","main":"英語","sub":"英単語","level":4,"question":"「September」は何月ですか？","choices":["7月","8月","9月","10月"],"answer":"9月"}
+{"id":"e215","main":"英語","sub":"英単語","level":4,"question":"「Thursday」は何曜日ですか？","choices":["火曜日","水曜日","木曜日","金曜日"],"answer":"木曜日"}
+{"id":"e216","main":"英語","sub":"英単語","level":4,"question":"「March」は何月ですか？","choices":["2月","3月","4月","5月"],"answer":"3月"}
+{"id":"e217","main":"英語","sub":"英文法","level":5,"question":"「She likes music.」のlikesにsがつく理由は？","choices":["複数だから","三人称単数現在（三単現のs）","過去形だから","命令形だから"],"answer":"三人称単数現在（三単現のs）"}
+{"id":"e218","main":"英語","sub":"英文法","level":5,"question":"「They are playing soccer.」は何形ですか？","choices":["現在形","過去形","現在進行形","未来形"],"answer":"現在進行形"}
+{"id":"e219","main":"英語","sub":"英文法","level":5,"question":"「I went to school yesterday.」のwentは何の過去形？","choices":["come","go","get","give"],"answer":"go"}
+{"id":"e220","main":"英語","sub":"英文法","level":5,"question":"「How many books do you have?」の意味は？","choices":["何の本を持っていますか","本は好きですか","何冊の本を持っていますか","どこに本がありますか"],"answer":"何冊の本を持っていますか"}
+{"id":"e221","main":"英語","sub":"英文法","level":5,"question":"「I will go to the park tomorrow.」のwillは何を表す？","choices":["過去","現在","未来","命令"],"answer":"未来"}
+{"id":"e222","main":"英語","sub":"英文法","level":5,"question":"「Where is the station?」の意味は？","choices":["駅はいつですか","駅はどこですか","駅は何ですか","駅は誰ですか"],"answer":"駅はどこですか"}
+{"id":"e223","main":"英語","sub":"英文法","level":5,"question":"「I ate pizza for dinner.」のateは何の過去形？","choices":["eat","is","at","it"],"answer":"eat"}
+{"id":"e224","main":"英語","sub":"英文法","level":5,"question":"「He can speak English.」のcanの意味は？","choices":["〜しなければならない","〜できる","〜だろう","〜すべきだ"],"answer":"〜できる"}
+{"id":"e225","main":"英語","sub":"英文法","level":5,"question":"「This is my pen.」のmyは何ですか？","choices":["代名詞","動詞","所有格（〜の）","形容詞"],"answer":"所有格（〜の）"}
+{"id":"e226","main":"英語","sub":"英文法","level":5,"question":"「Don't run here.」は何文ですか？","choices":["疑問文","肯定文","否定の命令文（禁止文）","感嘆文"],"answer":"否定の命令文（禁止文）"}
+{"id":"e227","main":"英語","sub":"英文法","level":5,"question":"「She didn't come to school.」のdid notは何を表す？","choices":["過去の否定","現在の否定","未来の否定","進行形の否定"],"answer":"過去の否定"}
+{"id":"e228","main":"英語","sub":"英文法","level":5,"question":"「I have two cats.」のhaveの意味は？","choices":["食べる","持っている","好きだ","見る"],"answer":"持っている"}
+{"id":"e229","main":"英語","sub":"英文法","level":5,"question":"「When did you arrive?」のwhenの意味は？","choices":["どこ","いつ","なぜ","誰"],"answer":"いつ"}
+{"id":"e230","main":"英語","sub":"英文法","level":5,"question":"「It is sunny today.」のItは何を指す？","choices":["犬","猫","天気（形式主語）","本"],"answer":"天気（形式主語）"}
+{"id":"e231","main":"英語","sub":"英文法","level":5,"question":"「I like dogs better than cats.」の意味は？","choices":["犬より猫が好き","猫より犬が好き","犬と猫が好き","犬も猫も嫌い"],"answer":"猫より犬が好き"}
+{"id":"e232","main":"英語","sub":"英文法","level":6,"question":"「I have never been to France.」のneverの意味は？","choices":["いつも","時々","一度も〜ない","最近"],"answer":"一度も〜ない"}
+{"id":"e233","main":"英語","sub":"英文法","level":6,"question":"「This cake was made by my mother.」は何文ですか？","choices":["能動態","受動態（受け身）","疑問文","命令文"],"answer":"受動態（受け身）"}
+{"id":"e234","main":"英語","sub":"英文法","level":6,"question":"「I want to study abroad.」の「to study」は何ですか？","choices":["動名詞","不定詞","過去分詞","現在分詞"],"answer":"不定詞"}
+{"id":"e235","main":"英語","sub":"英文法","level":6,"question":"「Mt. Fuji is the highest mountain in Japan.」のhighestは何形？","choices":["原級","比較級","最上級","動詞"],"answer":"最上級"}
+{"id":"e236","main":"英語","sub":"英文法","level":6,"question":"「I enjoy playing tennis.」のplayingは何ですか？","choices":["現在形","不定詞","動名詞（〜すること）","過去形"],"answer":"動名詞（〜すること）"}
+{"id":"e237","main":"英語","sub":"英文法","level":6,"question":"「If I were you, I would study harder.」は何を表す？","choices":["事実","仮定法（もし〜なら）","命令","質問"],"answer":"仮定法（もし〜なら）"}
+{"id":"e238","main":"英語","sub":"英文法","level":6,"question":"「The boy who is standing there is Tom.」のwhoは何ですか？","choices":["疑問詞","関係代名詞","接続詞","前置詞"],"answer":"関係代名詞"}
+{"id":"e239","main":"英語","sub":"英文法","level":6,"question":"「He has been studying for three hours.」は何形ですか？","choices":["現在形","過去形","現在完了進行形","未来形"],"answer":"現在完了進行形"}
+{"id":"e240","main":"英語","sub":"英文法","level":6,"question":"「I must finish my homework.」のmustの意味は？","choices":["〜できる","〜しなければならない","〜だろう","〜したい"],"answer":"〜しなければならない"}
+{"id":"e241","main":"英語","sub":"英文法","level":6,"question":"「She is as tall as her mother.」の意味は？","choices":["母より背が高い","母より背が低い","母と同じ背の高さ","母とは違う"],"answer":"母と同じ背の高さ"}
+{"id":"e242","main":"英語","sub":"英文法","level":6,"question":"「I have just finished lunch.」のjustの意味は？","choices":["ちょうど（たった今）","まだ","もう","いつも"],"answer":"ちょうど（たった今）"}
+{"id":"e243","main":"英語","sub":"英文法","level":6,"question":"「How long have you lived here?」の意味は？","choices":["ここはどこですか","ここにどのくらい住んでいますか","ここは遠いですか","ここが好きですか"],"answer":"ここにどのくらい住んでいますか"}
+{"id":"e244","main":"英語","sub":"英文法","level":6,"question":"「I'm looking forward to seeing you.」のtoの後はなぜ動名詞？","choices":["不定詞だから","look forward to は前置詞+動名詞","過去形だから","未来形だから"],"answer":"look forward to は前置詞+動名詞"}
+{"id":"e245","main":"英語","sub":"英文法","level":6,"question":"「Neither A nor B」の意味は？","choices":["AもBも","AかBの一方","AでもBでもない","AまたはB"],"answer":"AでもBでもない"}
+{"id":"e246","main":"英語","sub":"英単語","level":2,"question":"「sun」は にほんごで なに？","choices":["つき","ほし","たいよう","くも"],"answer":"たいよう"}
+{"id":"e247","main":"英語","sub":"英単語","level":4,"question":"「library」の意味は？","choices":["病院","図書館","公園","駅"],"answer":"図書館"}
+{"id":"e248","main":"英語","sub":"英文法","level":4,"question":"「There are five books on the desk.」で本は何冊？","choices":["3冊","4冊","5冊","6冊"],"answer":"5冊"}
+{"id":"e249","main":"英語","sub":"英単語","level":4,"question":"「Wednesday」は何曜日？","choices":["月曜日","水曜日","金曜日","日曜日"],"answer":"水曜日"}
+{"id":"e250","main":"英語","sub":"英文法","level":6,"question":"「If I were you, I would study harder.」は何法？","choices":["命令法","仮定法","直接法","受動態"],"answer":"仮定法"}

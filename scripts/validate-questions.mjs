@@ -2,17 +2,27 @@ import fs from "node:fs";
 import path from "node:path";
 
 const root = process.cwd();
-const dataPath = path.join(root, "src", "data", "questions.jsonl");
+const questionDir = path.join(root, "src", "data", "questionBanks");
 const baselinePath = path.join(root, ".ai", "question_validation_baseline.json");
 
 const args = new Set(process.argv.slice(2));
 const writeBaseline = args.has("--write-baseline");
 const strictText = args.has("--strict-text");
 
-function loadLines(filePath) {
-  const raw = fs.readFileSync(filePath, "utf8").trim();
-  if (!raw) return [];
-  return raw.split(/\r?\n/);
+function loadLinesFromDirectory(dirPath) {
+  const files = fs
+    .readdirSync(dirPath)
+    .filter((name) => name.endsWith(".jsonl"))
+    .sort((a, b) => a.localeCompare(b, "en"));
+
+  const lines = [];
+  for (const name of files) {
+    const filePath = path.join(dirPath, name);
+    const raw = fs.readFileSync(filePath, "utf8").trim();
+    if (!raw) continue;
+    lines.push(...raw.split(/\r?\n/));
+  }
+  return lines;
 }
 
 function looksMojibake(text) {
@@ -166,7 +176,7 @@ function printList(title, arr) {
 }
 
 function main() {
-  const lines = loadLines(dataPath);
+  const lines = loadLinesFromDirectory(questionDir);
   const { rows, parseErrors } = parseRows(lines);
   const { structuralErrors, warnings, textIssues } = validateRows(rows);
 

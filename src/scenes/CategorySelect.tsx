@@ -1,9 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
-import { loadQuestions } from "../data/questions";
+import { useMemo, useState } from "react";
+import { QUESTION_STATS_BY_SUB } from "../data/questionStats";
 import {
   LEVEL_ALL,
   LEVEL_DEFS,
   MAIN_CATEGORY_META,
+  MAIN_CATEGORY_ORDER,
   SUB_CATEGORIES,
   type MainCategory,
 } from "../data/questionMeta";
@@ -17,70 +18,30 @@ interface Props {
   onReview: () => void;
 }
 
-const MAIN_ORDER: MainCategory[] = [
-  "算数",
-  "国語",
-  "理科",
-  "社会",
-  "英語",
-  "雑学",
-  "プログラミング",
-  "なぞなぞ",
-];
-
 export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrongCount, onReview }: Props) {
   const { isMobile } = useWindowSize();
-  const allSubs = SUB_CATEGORIES.map((s) => s.name);
+  const allSubs = SUB_CATEGORIES.map((subCategory) => subCategory.name);
 
   const [selected, setSelected] = useState<Set<string>>(
     () => new Set(initialSelected.length > 0 ? initialSelected : allSubs),
   );
   const [level, setLevel] = useState<number>(initialLevel > 0 ? initialLevel : LEVEL_ALL);
   const [openMain, setOpenMain] = useState<Set<MainCategory>>(() => new Set());
-  const [loadedQuestions, setLoadedQuestions] = useState<Array<{ sub: string; level: number }>>([]);
-  const [questionCounts, setQuestionCounts] = useState<Record<string, number>>({});
-  const [questionLevelRanges, setQuestionLevelRanges] = useState<Record<string, { min: number; max: number }>>({});
-
-  useEffect(() => {
-    let active = true;
-
-    void loadQuestions().then((loaded) => {
-      if (!active) return;
-
-      setLoadedQuestions(loaded.map((question) => ({ sub: question.sub, level: question.level })));
-
-      const counts: Record<string, number> = {};
-      const levelRanges: Record<string, { min: number; max: number }> = {};
-
-      for (const question of loaded) {
-        counts[question.sub] = (counts[question.sub] ?? 0) + 1;
-
-        const current = levelRanges[question.sub];
-        if (!current) {
-          levelRanges[question.sub] = { min: question.level, max: question.level };
-        } else {
-          levelRanges[question.sub] = {
-            min: Math.min(current.min, question.level),
-            max: Math.max(current.max, question.level),
-          };
-        }
-      }
-
-      setQuestionCounts(counts);
-      setQuestionLevelRanges(levelRanges);
-    });
-
-    return () => {
-      active = false;
-    };
-  }, []);
 
   const visibleQuestionCount = useMemo(() => {
-    return loadedQuestions.filter((question) => {
-      if (!selected.has(question.sub)) return false;
-      return level === LEVEL_ALL || question.level <= level;
-    }).length;
-  }, [level, loadedQuestions, selected]);
+    return [...selected].reduce((total, subName) => {
+      const stats = QUESTION_STATS_BY_SUB[subName];
+      if (!stats) return total;
+
+      if (level === LEVEL_ALL) return total + stats.total;
+
+      let count = 0;
+      for (const [levelKey, levelCount] of Object.entries(stats.byLevel)) {
+        if (Number(levelKey) <= level) count += levelCount ?? 0;
+      }
+      return total + count;
+    }, 0);
+  }, [level, selected]);
 
   const toggleSub = (subName: string) => {
     setSelected((prev) => {
@@ -92,7 +53,7 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
   };
 
   const toggleMain = (main: MainCategory) => {
-    const subs = SUB_CATEGORIES.filter((s) => s.main === main).map((s) => s.name);
+    const subs = SUB_CATEGORIES.filter((subCategory) => subCategory.main === main).map((subCategory) => subCategory.name);
     const allOn = subs.every((subName) => selected.has(subName));
     setSelected((prev) => {
       const next = new Set(prev);
@@ -139,9 +100,7 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
           LEARNING BATTLE CATS
         </div>
       )}
-      <h1 style={{ margin: "0 0 6px", fontSize: isMobile ? 20 : 24, fontWeight: "bold" }}>
-        問題選択
-      </h1>
+      <h1 style={{ margin: "0 0 6px", fontSize: isMobile ? 20 : 24, fontWeight: "bold" }}>問題選択</h1>
       <p
         style={{
           color: "#94a3b8",
@@ -170,14 +129,14 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
           </div>
           <select
             value={level}
-            onChange={(e) => setLevel(Number(e.target.value))}
+            onChange={(event) => setLevel(Number(event.target.value))}
             style={{
               width: "100%",
               padding: isMobile ? "10px 12px" : "11px 14px",
               background: "#1e293b",
               color: "#f1f5f9",
               border: `2px solid ${
-                level === LEVEL_ALL ? "#a78bfa" : LEVEL_DEFS.find((d) => d.level === level)?.color ?? "#334155"
+                level === LEVEL_ALL ? "#a78bfa" : LEVEL_DEFS.find((def) => def.level === level)?.color ?? "#334155"
               }`,
               borderRadius: 8,
               fontSize: 15,
@@ -189,16 +148,16 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
             <option value={LEVEL_ALL} style={{ background: "#1e293b" }}>
               すべて
             </option>
-            {LEVEL_DEFS.map((ld) => (
-              <option key={ld.level} value={ld.level} style={{ background: "#1e293b" }}>
-                {ld.emoji} {ld.label}まで
+            {LEVEL_DEFS.map((levelDef) => (
+              <option key={levelDef.level} value={levelDef.level} style={{ background: "#1e293b" }}>
+                {levelDef.emoji} {levelDef.label}まで
               </option>
             ))}
           </select>
           <div style={{ marginTop: 8, fontSize: 11, color: "#64748b" }}>
             {level === LEVEL_ALL
               ? `選択カテゴリの問題数: ${visibleQuestionCount}問`
-              : `${LEVEL_DEFS.find((d) => d.level === level)?.label ?? ""}以下の問題数: ${visibleQuestionCount}問`}
+              : `${LEVEL_DEFS.find((def) => def.level === level)?.label ?? ""}以下の問題数: ${visibleQuestionCount}問`}
           </div>
         </div>
 
@@ -223,11 +182,11 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
           {isAllSelected ? "すべて選択中" : "すべて選択する"}
         </button>
 
-        {MAIN_ORDER.map((main) => {
+        {MAIN_CATEGORY_ORDER.map((main) => {
           const meta = MAIN_CATEGORY_META[main];
-          const subs = SUB_CATEGORIES.filter((s) => s.main === main);
-          const allOn = subs.every((s) => selected.has(s.name));
-          const someOn = subs.some((s) => selected.has(s.name));
+          const subs = SUB_CATEGORIES.filter((subCategory) => subCategory.main === main);
+          const allOn = subs.every((subCategory) => selected.has(subCategory.name));
+          const someOn = subs.some((subCategory) => selected.has(subCategory.name));
           const isOpen = openMain.has(main);
 
           return (
@@ -271,11 +230,9 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
                   }}
                 >
                   <span style={{ fontSize: 18, marginRight: 8 }}>{meta.emoji}</span>
-                  <span style={{ fontWeight: "bold", fontSize: 15, color: someOn ? meta.color : "#94a3b8" }}>
-                    {main}
-                  </span>
+                  <span style={{ fontWeight: "bold", fontSize: 15, color: someOn ? meta.color : "#94a3b8" }}>{main}</span>
                   <span style={{ fontSize: 11, color: "#64748b", marginLeft: 8 }}>
-                    ({subs.filter((s) => selected.has(s.name)).length}/{subs.length})
+                    ({subs.filter((subCategory) => selected.has(subCategory.name)).length}/{subs.length})
                   </span>
                 </button>
 
@@ -308,39 +265,37 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
                     overflow: "hidden",
                   }}
                 >
-                  {subs.map((sub, idx) => {
-                    const isOn = selected.has(sub.name);
-                    const range = questionLevelRanges[sub.name];
-                    const minLevel = range?.min;
-                    const maxLevel = range?.max;
-                    const minDef = LEVEL_DEFS.find((d) => d.level === minLevel);
-                    const maxDef = LEVEL_DEFS.find((d) => d.level === maxLevel);
+                  {subs.map((subCategory, index) => {
+                    const isOn = selected.has(subCategory.name);
+                    const stats = QUESTION_STATS_BY_SUB[subCategory.name];
+                    const minDef = LEVEL_DEFS.find((def) => def.level === stats?.minLevel);
+                    const maxDef = LEVEL_DEFS.find((def) => def.level === stats?.maxLevel);
 
                     return (
                       <button
-                        key={sub.name}
-                        onClick={() => toggleSub(sub.name)}
+                        key={subCategory.name}
+                        onClick={() => toggleSub(subCategory.name)}
                         style={{
                           width: "100%",
                           display: "flex",
                           alignItems: "center",
                           gap: 10,
                           padding: "10px 16px",
-                          background: isOn ? `${sub.color}12` : "transparent",
+                          background: isOn ? `${subCategory.color}12` : "transparent",
                           border: "none",
-                          borderTop: idx > 0 ? "1px solid #1e293b" : "none",
+                          borderTop: index > 0 ? "1px solid #1e293b" : "none",
                           cursor: "pointer",
                           textAlign: "left",
                           transition: "background 0.15s",
                         }}
                       >
                         <span style={{ fontSize: 15, color: isOn ? "#22c55e" : "#475569" }}>{isOn ? "■" : "□"}</span>
-                        <span style={{ fontSize: 16 }}>{sub.emoji}</span>
+                        <span style={{ fontSize: 16 }}>{subCategory.emoji}</span>
                         <div>
-                          <div style={{ fontWeight: "bold", fontSize: 14, color: isOn ? sub.color : "#94a3b8" }}>
-                            {sub.name}
+                          <div style={{ fontWeight: "bold", fontSize: 14, color: isOn ? subCategory.color : "#94a3b8" }}>
+                            {subCategory.name}
                           </div>
-                          <div style={{ fontSize: 11, color: "#475569" }}>{sub.desc}</div>
+                          <div style={{ fontSize: 11, color: "#475569" }}>{subCategory.desc}</div>
                         </div>
                         <div
                           style={{
@@ -351,7 +306,7 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
                             gap: 3,
                           }}
                         >
-                          {minDef && maxDef && (
+                          {stats && minDef && maxDef && (
                             <span
                               style={{
                                 fontSize: 10,
@@ -363,10 +318,10 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
                                 whiteSpace: "nowrap",
                               }}
                             >
-                              {minLevel === maxLevel ? `${minDef.emoji} ${minDef.label}` : `${minDef.emoji} - ${maxDef.emoji}`}
+                              {stats.minLevel === stats.maxLevel ? `${minDef.emoji} ${minDef.label}` : `${minDef.emoji} - ${maxDef.emoji}`}
                             </span>
                           )}
-                          <span style={{ fontSize: 11, color: "#475569" }}>{questionCounts[sub.name] ?? 0}問</span>
+                          <span style={{ fontSize: 11, color: "#475569" }}>{stats?.total ?? 0}問</span>
                         </div>
                       </button>
                     );
@@ -383,7 +338,7 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
           ? "カテゴリを1つ以上選択してください"
           : `選択中: ${[...selected]
               .map((name) => {
-                const def = SUB_CATEGORIES.find((item) => item.name === name);
+                const def = SUB_CATEGORIES.find((subCategory) => subCategory.name === name);
                 return def ? `${def.emoji}${name}` : name;
               })
               .join("  ")}`}
@@ -408,11 +363,11 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
             alignItems: "center",
             gap: 8,
           }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = "scale(1.04)";
+          onMouseEnter={(event) => {
+            event.currentTarget.style.transform = "scale(1.04)";
           }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = "scale(1)";
+          onMouseLeave={(event) => {
+            event.currentTarget.style.transform = "scale(1)";
           }}
         >
           間違えた問題を復習
@@ -447,11 +402,11 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
           boxShadow: isEmpty ? "none" : "0 4px 16px #3b82f644",
           transition: "all 0.2s",
         }}
-        onMouseEnter={(e) => {
-          if (!isEmpty) e.currentTarget.style.transform = "scale(1.04)";
+        onMouseEnter={(event) => {
+          if (!isEmpty) event.currentTarget.style.transform = "scale(1.04)";
         }}
-        onMouseLeave={(e) => {
-          if (!isEmpty) e.currentTarget.style.transform = "scale(1)";
+        onMouseLeave={(event) => {
+          if (!isEmpty) event.currentTarget.style.transform = "scale(1)";
         }}
       >
         ステージ選択へ
