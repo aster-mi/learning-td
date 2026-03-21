@@ -15,6 +15,7 @@ import { AchievementToast } from "./components/AchievementToast";
 import { AchievementList } from "./components/AchievementList";
 import { GachaModal, type GachaReward } from "./components/GachaModal";
 import { useWindowSize } from "./hooks/useWindowSize";
+import { Tutorial } from "./components/Tutorial";
 import type { Achievement } from "./data/achievements";
 
 const STORAGE_KEY        = "learning_td_cleared";
@@ -185,8 +186,17 @@ export default function App() {
     ? subCategories
     : SUB_CATEGORIES.map(s => s.name);
 
+  const handleTutorialComplete = useCallback(() => {
+    const next = { ...saveData, tutorialSeen: true };
+    saveSave(next);
+    setSaveData(next);
+  }, [saveData]);
+
   return (
     <>
+      {!saveData.tutorialSeen && scene === "category" && (
+        <Tutorial onComplete={handleTutorialComplete} />
+      )}
       {scene === "category" && (
         <div key="category" className="scene-enter"><CategorySelect
           initialSelected={subCategories}

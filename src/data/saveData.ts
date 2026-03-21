@@ -46,6 +46,7 @@ export interface SaveData {
   missionClaims: string[];
   unitMastery: Record<string, number>;
   login: LoginState;
+  tutorialSeen?: boolean;
 }
 
 const STORAGE_KEY = "learning_td_save";
@@ -225,6 +226,7 @@ function loadSaveFrom(parsed: Partial<SaveData>): SaveData {
     missionClaims: parsed.missionClaims ?? [],
     unitMastery: parsed.unitMastery ?? {},
     login: parsed.login ?? { lastDate: "", streak: 0 },
+    tutorialSeen: parsed.tutorialSeen ?? false,
   });
 }
 
