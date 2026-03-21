@@ -164,9 +164,15 @@ function UnitCard({
         {entry.label}
       </span>
 
-      <div style={{ display: "flex", gap: 4, fontSize: 9, color: "#94a3b8" }}>
+      <div style={{ display: "flex", gap: 3, flexWrap: "wrap", justifyContent: "center", fontSize: 8, color: "#94a3b8" }}>
+        <span style={{ color: "#fbbf24" }}>{entry.cost}⚡</span>
         <span style={{ color: "#34d399" }}>HP{entry.hp}</span>
         <span style={{ color: "#f87171" }}>AT{entry.atk}</span>
+      </div>
+      <div style={{ display: "flex", gap: 3, justifyContent: "center", fontSize: 8, color: "#64748b" }}>
+        <span>{(entry.atkInterval / 1000).toFixed(1)}s</span>
+        <span>S{entry.speed}</span>
+        <span>R{entry.range}</span>
       </div>
     </button>
   );
@@ -262,9 +268,10 @@ function DetailPanel({
             </div>
 
             {/* secondary stats */}
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: 6 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 6 }}>
               {[
-                { label: "攻撃速度", value: `${(entry.atkInterval / 1000).toFixed(1)}s`, color: "#fbbf24" },
+                { label: "コスト", value: `${entry.cost}`, color: "#fbbf24" },
+                { label: "攻撃速度", value: `${(entry.atkInterval / 1000).toFixed(1)}s`, color: "#fb923c" },
                 { label: "移動速度", value: `${entry.speed}`, color: "#38bdf8" },
                 { label: "射程", value: `${entry.range}`, color: "#a78bfa" },
               ].map((s) => (
