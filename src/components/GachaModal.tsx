@@ -189,7 +189,7 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
     <div role="dialog" aria-label="ガチャ" style={{
       position: "fixed", inset: 0, background: "rgba(0,0,0,0.92)",
       display: "flex", flexDirection: "column", alignItems: "center",
-      zIndex: 200, overflow: "hidden",
+      zIndex: 200, overflowY: "auto",
     }}>
       <div style={{
         width: "100%", maxWidth: cardW + 64,

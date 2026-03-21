@@ -235,7 +235,7 @@ export default function App() {
         /></div>
       )}
       {scene === "gacha" && (
-        <div key="gacha" className="scene-enter"><GachaModal
+        <div key="gacha"><GachaModal
           coins={saveData.coins}
           ownedUnitIds={saveData.unlockedUnits}
           onPull={handleGachaPull}
@@ -244,13 +244,13 @@ export default function App() {
         /></div>
       )}
       {scene === "achievements" && (
-        <div key="achievements" className="scene-enter"><AchievementList
+        <div key="achievements"><AchievementList
           unlockedIds={saveData.achievements}
           onClose={() => setScene("select")}
         /></div>
       )}
       {scene === "game" && (
-        <div key="game" className="scene-enter"><GameScene
+        <div key="game"><GameScene
           key={gameKeyRef.current}
           stage={activeStage}
           subCategories={effectiveSubs}
