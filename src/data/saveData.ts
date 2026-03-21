@@ -1,4 +1,5 @@
-import { INITIAL_UNITS, DEFAULT_PARTY } from "../data/unitCatalog";
+import { DEFAULT_PARTY, INITIAL_UNITS, UNIT_CATALOG } from "../data/unitCatalog";
+import { SUB_CATEGORIES } from "./questions";
 
 export interface UnitUpgrade {
   hpLevel: number;
@@ -48,6 +49,11 @@ export interface SaveData {
 }
 
 const STORAGE_KEY = "learning_td_save";
+const MAX_DAILY_ACTIVITY_DAYS = 90;
+const MAX_MISSION_CLAIMS = 180;
+
+const VALID_SUB_CATEGORY_SET = new Set(SUB_CATEGORIES.map((entry) => entry.name));
+const VALID_UNIT_ID_SET = new Set(UNIT_CATALOG.map((unit) => unit.id));
 
 const DEFAULT_SAVE: SaveData = {
   coins: 0,
@@ -67,6 +73,74 @@ const DEFAULT_SAVE: SaveData = {
   login: { lastDate: "", streak: 0 },
 };
 
+function isValidDateKey(value: string): boolean {
+  return /^\d{4}-\d{2}-\d{2}$/.test(value);
+}
+
+function sortDateKeysDesc(a: string, b: string): number {
+  return b.localeCompare(a);
+}
+
+function pruneDailyActivity(activity: Record<string, DailyActivity>): Record<string, DailyActivity> {
+  return Object.fromEntries(
+    Object.entries(activity)
+      .filter(([key, value]) => isValidDateKey(key) && typeof value === "object" && value !== null)
+      .sort(([left], [right]) => sortDateKeysDesc(left, right))
+      .slice(0, MAX_DAILY_ACTIVITY_DAYS),
+  );
+}
+
+function extractClaimDate(claimId: string): string {
+  const match = claimId.match(/(\d{4}-\d{2}-\d{2})$/);
+  return match?.[1] ?? "";
+}
+
+function pruneMissionClaims(claims: string[]): string[] {
+  return [...new Set(claims)]
+    .filter((claim) => typeof claim === "string" && claim.length > 0)
+    .sort((left, right) => {
+      const leftDate = extractClaimDate(left);
+      const rightDate = extractClaimDate(right);
+      if (leftDate !== rightDate) {
+        return rightDate.localeCompare(leftDate);
+      }
+      return right.localeCompare(left);
+    })
+    .slice(0, MAX_MISSION_CLAIMS);
+}
+
+function sanitizeSaveData(data: SaveData): SaveData {
+  const unlockedUnits = [...new Set(data.unlockedUnits.filter((unitId) => VALID_UNIT_ID_SET.has(unitId)))];
+  for (const unitId of INITIAL_UNITS) {
+    if (!unlockedUnits.includes(unitId)) {
+      unlockedUnits.push(unitId);
+    }
+  }
+
+  let party = data.party.filter((unitId) => unlockedUnits.includes(unitId));
+  if (party.length === 0) {
+    party = unlockedUnits.slice(0, 5);
+  }
+
+  return {
+    ...data,
+    unlockedUnits,
+    party,
+    achievements: [...new Set(data.achievements)],
+    categoryStats: Object.fromEntries(
+      Object.entries(data.categoryStats).filter(([key]) => VALID_SUB_CATEGORY_SET.has(key)),
+    ),
+    dailyActivity: pruneDailyActivity(data.dailyActivity),
+    missionClaims: pruneMissionClaims(data.missionClaims),
+    unitMastery: Object.fromEntries(
+      Object.entries(data.unitMastery).filter(([key, value]) => VALID_UNIT_ID_SET.has(key) && Number.isFinite(value)),
+    ),
+    gachaItems: data.gachaItems.filter(
+      (item) => typeof item?.type === "string" && item.type.length > 0 && Number.isFinite(item.value),
+    ),
+  };
+}
+
 export function loadSave(): SaveData {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -82,7 +156,7 @@ export function loadSave(): SaveData {
     party = party.filter((id: string) => units.includes(id));
     if (party.length === 0) party = units.slice(0, 5);
 
-    return {
+    return sanitizeSaveData({
       coins: parsed.coins ?? DEFAULT_SAVE.coins,
       stageStars: parsed.stageStars ?? {},
       unitUpgrades: parsed.unitUpgrades ?? {},
@@ -98,14 +172,14 @@ export function loadSave(): SaveData {
       missionClaims: parsed.missionClaims ?? [],
       unitMastery: parsed.unitMastery ?? {},
       login: parsed.login ?? { lastDate: "", streak: 0 },
-    };
+    });
   } catch {
     return { ...DEFAULT_SAVE, unlockedUnits: [...DEFAULT_SAVE.unlockedUnits] };
   }
 }
 
 export function saveSave(data: SaveData): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(sanitizeSaveData(data)));
 }
 
 export function calcStars(accuracy: number, baseHpRatio: number): number {

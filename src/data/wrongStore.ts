@@ -7,6 +7,8 @@
  */
 
 const STORAGE_KEY = "learning_td_wrong_answers";
+const MAX_ENTRY_AGE_DAYS = 90;
+const MAX_ENTRIES = 500;
 
 export interface WrongEntry {
   /** 間違えた回数 */
@@ -20,14 +22,27 @@ type WrongMap = Record<string, WrongEntry>;
 function load(): WrongMap {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as WrongMap) : {};
+    return raw ? pruneMap(JSON.parse(raw) as WrongMap) : {};
   } catch {
     return {};
   }
 }
 
 function save(map: WrongMap) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(map));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(pruneMap(map)));
+}
+
+function pruneMap(map: WrongMap): WrongMap {
+  const cutoff = Date.now() - MAX_ENTRY_AGE_DAYS * 24 * 60 * 60 * 1000;
+  return Object.fromEntries(
+    Object.entries(map)
+      .filter(([, entry]) => {
+        const timestamp = Date.parse(entry.lastWrong);
+        return Number.isFinite(entry.count) && Number.isFinite(timestamp) && timestamp >= cutoff;
+      })
+      .sort(([, left], [, right]) => right.lastWrong.localeCompare(left.lastWrong))
+      .slice(0, MAX_ENTRIES),
+  );
 }
 
 /** 間違えた問題を記録 */

@@ -7,6 +7,8 @@
  */
 
 const STORAGE_KEY = "learning_td_correct_history";
+const MAX_ENTRY_AGE_DAYS = 120;
+const MAX_ENTRIES = 500;
 
 export interface CorrectEntry {
   /** 正解した回数 */
@@ -20,14 +22,27 @@ type CorrectMap = Record<string, CorrectEntry>;
 function load(): CorrectMap {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? (JSON.parse(raw) as CorrectMap) : {};
+    return raw ? pruneMap(JSON.parse(raw) as CorrectMap) : {};
   } catch {
     return {};
   }
 }
 
 function save(map: CorrectMap) {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(map));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(pruneMap(map)));
+}
+
+function pruneMap(map: CorrectMap): CorrectMap {
+  const cutoff = Date.now() - MAX_ENTRY_AGE_DAYS * 24 * 60 * 60 * 1000;
+  return Object.fromEntries(
+    Object.entries(map)
+      .filter(([, entry]) => {
+        const timestamp = Date.parse(entry.lastCorrect);
+        return Number.isFinite(entry.count) && Number.isFinite(timestamp) && timestamp >= cutoff;
+      })
+      .sort(([, left], [, right]) => right.lastCorrect.localeCompare(left.lastCorrect))
+      .slice(0, MAX_ENTRIES),
+  );
 }
 
 /** 正解した問題を記録 */
