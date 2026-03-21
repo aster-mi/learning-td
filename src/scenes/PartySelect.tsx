@@ -484,9 +484,9 @@ export function PartySelect({ ownedUnitIds, currentParty, saveData, onConfirm, o
               { label: "編成数", value: `${party.length}/${MAX_PARTY}`, color: "#22d3ee" },
               { label: "所持コイン", value: `${saveData.coins}`, color: "#fbbf24" },
             ].map((item) => (
-              <div key={item.label} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "14px 16px" }}>
-                <div style={{ fontSize: 12, color: "#94a3b8", marginBottom: 8 }}>{item.label}</div>
-                <div style={{ fontSize: 24, fontWeight: 800, color: item.color }}>{item.value}</div>
+              <div key={item.label} style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 14, padding: "10px 12px" }}>
+                <div style={{ fontSize: 10, color: "#94a3b8", marginBottom: 4 }}>{item.label}</div>
+                <div style={{ fontSize: 18, fontWeight: 800, color: item.color }}>{item.value}</div>
               </div>
             ))}
           </div>
