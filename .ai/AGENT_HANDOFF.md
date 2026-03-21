@@ -25,6 +25,38 @@ Next Step:
 
 ---
 
+## [2026-03-21 JST] Agent: Claude
+Summary:
+- Replaced all 50 expansion unit renderers (eng/nat/his/mus/spo × 10) with hand-drawn Canvas2D designs
+- Each unit now has a unique draw function with distinctive silhouette matching its name/theme
+- Removed dependency on generic expansion.ts template system (model/gear/aura combos)
+- Overhauled all 8 `.ai/skills/` files with concrete commands, parameter tables, and copy-paste procedures
+
+Changed Files:
+- `src/components/renderers/engineering.ts` (new, 10 renderers)
+- `src/components/renderers/nature.ts` (new, 10 renderers)
+- `src/components/renderers/history.ts` (new, 10 renderers)
+- `src/components/renderers/music.ts` (new, 10 renderers)
+- `src/components/renderers/sports.ts` (new, 10 renderers)
+- `src/components/renderers/index.ts` (rewired imports from 5 new files, removed expansion.ts import)
+- `.ai/skills/*` (all 8 skills + README rewritten)
+- `.ai/UNIT_POLICY.md` (added generic template prohibition)
+
+Validation:
+- `npm run build` → success (0 type errors)
+- Bundle size: 1284 KB (up from ~800 KB due to 50 new render functions — expected)
+- `expansion.ts` is now unused/dead code (not deleted yet)
+
+Open Questions:
+- Delete `expansion.ts`? It's no longer imported but still exists on disk
+- Bundle size is large (1284 KB). Consider code-splitting renderers if it becomes a problem
+- なぞなぞ品質レビューは前セッションで5エージェント走らせたが、4/5がrate limitで失敗。再実行が必要
+
+Next Step:
+- なぞなぞ問題の品質レビュー再実行（前回失敗分）
+- expansion.ts の削除判断
+- 雑学問題の品質レビュー（ユーザーが希望すれば）
+
 ## [2026-03-21 02:08 JST] Agent: Codex
 Summary:
 - Expanded riddle dataset to target scale (200 total `nz` questions).

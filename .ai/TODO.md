@@ -10,6 +10,8 @@ Update status inline and keep newest/highest-priority tasks near the top.
 - `done`
 
 ## Tasks
-- [todo] Add temporary generation files to `.gitignore` and keep review artifacts untracked.
-- [todo] Add a lightweight quality checklist for question data edits (question clarity, option quality, ambiguity check).
+- [todo] なぞなぞ問題の品質レビュー再実行（前回5エージェント中4つがrate limitで失敗）
+- [todo] expansion.ts の削除（index.tsから参照されなくなった）
 - [todo] Decide whether to keep generated helper scripts in root or move them to `tools/`.
+- [done] 50ユニットの手描きレンダラー作成（engineering/nature/history/music/sports）
+- [done] .ai/skills 全体の整備（コマンド・テーブル・手順を明記）
