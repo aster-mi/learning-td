@@ -67,8 +67,8 @@ const CHALLENGE_TEMPLATES: Array<{
     bonusCoins: 150,
   },
   {
-    title: "省エネモード",
-    desc: "初期エネルギー10でスタート！",
+    title: "省エネサバイバル",
+    desc: "初期エネルギーたった10で生き残れ！",
     emoji: "🔋",
     modifier: { energyStart: 10 },
     bonusCoins: 100,
