@@ -52,7 +52,8 @@ function saveLevel(level: number) {
 
 export default function App() {
   const { isMobile } = useWindowSize();
-  const [scene, setScene]                 = useState<"category" | "select" | "party" | "gacha" | "game" | "achievements">("category");
+  const [scene, setSceneRaw]              = useState<"category" | "select" | "party" | "gacha" | "game" | "achievements">("category");
+  const setScene = useCallback((s: typeof scene) => { window.scrollTo(0, 0); setSceneRaw(s); }, []);
   const [activeStageId, setActiveStageId] = useState<number>(1);
   const [clearedStages, setClearedStages] = useState<Set<number>>(loadCleared);
   const [subCategories, setSubCategories] = useState<string[]>(loadSubCategories);
