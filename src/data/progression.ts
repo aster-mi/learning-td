@@ -21,6 +21,19 @@ export interface CategoryInsight {
   wrong: number;
 }
 
+const MISSION_BALANCE = {
+  daily: {
+    login: { rewardCoins: 20, target: 1 },
+    correct: { rewardCoins: 40, target: 8 },
+    clear: { rewardCoins: 50, target: 1 },
+  },
+  weekly: {
+    correct: { rewardCoins: 100, target: 35 },
+    clear: { rewardCoins: 120, target: 4 },
+    combo: { rewardCoins: 80, target: 12 },
+  },
+} as const;
+
 export function getDateKey(date = new Date()): string {
   const y = date.getFullYear();
   const m = String(date.getMonth() + 1).padStart(2, "0");
@@ -92,55 +105,55 @@ export function getDailyWeeklyMissions(save: SaveData, date = new Date()): Missi
     {
       id: `daily-login-${todayKey}`,
       title: "今日のログイン",
-      desc: "1回起動して継続ボーナスを受け取る",
-      rewardCoins: 40,
+      desc: "1回ログインしてコインを受け取る",
+      rewardCoins: MISSION_BALANCE.daily.login.rewardCoins,
       progress: 1,
-      target: 1,
+      target: MISSION_BALANCE.daily.login.target,
       scope: "daily",
     },
     {
       id: `daily-correct-${todayKey}`,
-      title: "今日の10問正解",
-      desc: "本日の正解数を10問まで伸ばす",
-      rewardCoins: 80,
+      title: "今日の8問正解",
+      desc: "今日は8問正解して学習ペースを作る",
+      rewardCoins: MISSION_BALANCE.daily.correct.rewardCoins,
       progress: today.correct,
-      target: 10,
+      target: MISSION_BALANCE.daily.correct.target,
       scope: "daily",
     },
     {
       id: `daily-clear-${todayKey}`,
-      title: "今日の1ステージ突破",
-      desc: "どこかのステージを1回クリアする",
-      rewardCoins: 100,
+      title: "今日の1ステージクリア",
+      desc: "どれか1つのステージをクリアする",
+      rewardCoins: MISSION_BALANCE.daily.clear.rewardCoins,
       progress: today.clears,
-      target: 1,
+      target: MISSION_BALANCE.daily.clear.target,
       scope: "daily",
     },
     {
       id: `weekly-correct-${weekKey}`,
-      title: "今週の50問正解",
-      desc: "1週間で50問正解する",
-      rewardCoins: 180,
+      title: "今週の35問正解",
+      desc: "1週間で35問正解して安定して積み上げる",
+      rewardCoins: MISSION_BALANCE.weekly.correct.rewardCoins,
       progress: weekTotal.correct,
-      target: 50,
+      target: MISSION_BALANCE.weekly.correct.target,
       scope: "weekly",
     },
     {
       id: `weekly-clear-${weekKey}`,
-      title: "今週の5回クリア",
-      desc: "1週間でステージを5回クリアする",
-      rewardCoins: 220,
+      title: "今週の4ステージクリア",
+      desc: "1週間で4ステージクリアして攻略を進める",
+      rewardCoins: MISSION_BALANCE.weekly.clear.rewardCoins,
       progress: weekTotal.clears,
-      target: 5,
+      target: MISSION_BALANCE.weekly.clear.target,
       scope: "weekly",
     },
     {
       id: `weekly-combo-${weekKey}`,
-      title: "今週の10コンボ",
-      desc: "1週間のどこかで10コンボに到達する",
-      rewardCoins: 160,
+      title: "今週の12コンボ",
+      desc: "1週間のどこかで12コンボに到達する",
+      rewardCoins: MISSION_BALANCE.weekly.combo.rewardCoins,
       progress: weekTotal.bestCombo,
-      target: 10,
+      target: MISSION_BALANCE.weekly.combo.target,
       scope: "weekly",
     },
   ];
@@ -168,32 +181,34 @@ export function getCategoryInsights(save: SaveData): CategoryInsight[] {
     mainToSubs.set(sub.main, current);
   }
 
-  return Array.from(mainToSubs.entries()).map(([main, subs]) => {
-    const totals = subs.reduce(
-      (acc, sub) => {
-        const current = save.categoryStats[sub] ?? { correct: 0, wrong: 0 };
-        acc.correct += current.correct;
-        acc.wrong += current.wrong;
-        return acc;
-      },
-      { correct: 0, wrong: 0 },
-    );
-    const total = totals.correct + totals.wrong;
-    const meta = MAIN_CATEGORY_META[main];
-    return {
-      name: main,
-      emoji: meta.emoji,
-      color: meta.color,
-      correct: totals.correct,
-      wrong: totals.wrong,
-      accuracy: total > 0 ? totals.correct / total : 0,
-    };
-  }).sort((a, b) => {
-    const totalA = a.correct + a.wrong;
-    const totalB = b.correct + b.wrong;
-    if (totalB !== totalA) return totalB - totalA;
-    return b.accuracy - a.accuracy;
-  });
+  return Array.from(mainToSubs.entries())
+    .map(([main, subs]) => {
+      const totals = subs.reduce(
+        (acc, sub) => {
+          const current = save.categoryStats[sub] ?? { correct: 0, wrong: 0 };
+          acc.correct += current.correct;
+          acc.wrong += current.wrong;
+          return acc;
+        },
+        { correct: 0, wrong: 0 },
+      );
+      const total = totals.correct + totals.wrong;
+      const meta = MAIN_CATEGORY_META[main];
+      return {
+        name: main,
+        emoji: meta.emoji,
+        color: meta.color,
+        correct: totals.correct,
+        wrong: totals.wrong,
+        accuracy: total > 0 ? totals.correct / total : 0,
+      };
+    })
+    .sort((a, b) => {
+      const totalA = a.correct + a.wrong;
+      const totalB = b.correct + b.wrong;
+      if (totalB !== totalA) return totalB - totalA;
+      return b.accuracy - a.accuracy;
+    });
 }
 
 export function getRecentActivity(save: SaveData, days = 7, date = new Date()) {
