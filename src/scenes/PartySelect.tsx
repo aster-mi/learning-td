@@ -226,6 +226,105 @@ function UnitCard({
   );
 }
 
+function FocusedUnitPanel({
+  entry,
+  rarityLabel,
+  rarityColor,
+  saveData,
+  selectedUpgrade,
+  applyUpgrade,
+  rarityCounts,
+  sticky,
+}: {
+  entry: UnitCatalogEntry;
+  rarityLabel: string;
+  rarityColor: string;
+  saveData: SaveData;
+  selectedUpgrade: { hpLevel: number; atkLevel: number };
+  applyUpgrade: (type: "hpLevel" | "atkLevel") => void;
+  rarityCounts: Record<string, number>;
+  sticky: boolean;
+}) {
+  return (
+    <div
+      style={{
+        background: "rgba(255,255,255,0.03)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        borderRadius: 16,
+        padding: "18px",
+        ...(sticky ? { position: "sticky" as const, top: 16 } : {}),
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 14, marginBottom: 14 }}>
+        <UnitIcon unitId={entry.id} color={entry.color} size={64} emoji={entry.emoji} />
+        <div>
+          <div style={{ fontSize: 12, color: rarityColor, marginBottom: 4 }}>{rarityLabel}</div>
+          <div style={{ fontSize: 22, fontWeight: 800 }}>{entry.label}</div>
+          <div style={{ fontSize: 12, color: "#94a3b8", marginTop: 4 }}>{entry.series}</div>
+        </div>
+      </div>
+
+      <div style={{ fontSize: 13, color: "#cbd5e1", lineHeight: 1.7, marginBottom: 16 }}>{entry.desc}</div>
+
+      <div style={{ display: "grid", gap: 8, marginBottom: 16 }}>
+        <StatPill label="基礎HP" value={entry.hp} color="#34d399" />
+        <StatPill label="強化後HP" value={Math.round(entry.hp * getHpMultiplier(selectedUpgrade.hpLevel))} color="#22c55e" />
+        <StatPill label="基礎ATK" value={entry.atk} color="#f87171" />
+        <StatPill label="強化後ATK" value={Math.round(entry.atk * getAtkMultiplier(selectedUpgrade.atkLevel))} color="#fb7185" />
+        <StatPill label="熟練度" value={saveData.unitMastery[entry.id] ?? 0} color="#22d3ee" />
+      </div>
+
+      <div style={{ display: "grid", gap: 10 }}>
+        {[
+          { key: "hpLevel" as const, label: "HP強化", level: selectedUpgrade.hpLevel, color: "#22c55e" },
+          { key: "atkLevel" as const, label: "ATK強化", level: selectedUpgrade.atkLevel, color: "#f97316" },
+        ].map((item) => {
+          const cost = getUpgradeCost(item.level);
+          const disabled = cost == null || saveData.coins < cost;
+          return (
+            <div key={item.key} style={{ border: "1px solid #334155", borderRadius: 12, padding: "12px 14px" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                <div style={{ color: item.color, fontWeight: 700 }}>{item.label}</div>
+                <div style={{ fontSize: 12, color: "#cbd5e1" }}>Lv.{item.level}/{MAX_UPGRADE_LEVEL}</div>
+              </div>
+              <div style={{ height: 8, background: "#0f172a", borderRadius: 999, marginBottom: 10 }}>
+                <div
+                  style={{
+                    width: `${(item.level / MAX_UPGRADE_LEVEL) * 100}%`,
+                    height: "100%",
+                    borderRadius: 999,
+                    background: item.color,
+                  }}
+                />
+              </div>
+              <button
+                disabled={disabled}
+                onClick={() => applyUpgrade(item.key)}
+                style={{
+                  width: "100%",
+                  background: disabled ? "#1e293b" : item.color,
+                  color: disabled ? "#64748b" : "#fff",
+                  border: "none",
+                  borderRadius: 8,
+                  padding: "9px 12px",
+                  cursor: disabled ? "not-allowed" : "pointer",
+                  fontWeight: 700,
+                }}
+              >
+                {cost == null ? "最大まで強化済み" : `強化する - ${cost}コイン`}
+              </button>
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{ marginTop: 16, fontSize: 12, color: "#94a3b8" }}>
+        レア数: C {rarityCounts.common ?? 0} / R {rarityCounts.rare ?? 0} / E {rarityCounts.epic ?? 0} / L {rarityCounts.legendary ?? 0}
+      </div>
+    </div>
+  );
+}
+
 export function PartySelect({ ownedUnitIds, currentParty, saveData, onConfirm, onSaveData, onBack }: Props) {
   const { isMobile } = useWindowSize();
   const [party, setParty] = useState<string[]>(() => [...currentParty]);
@@ -391,6 +490,19 @@ export function PartySelect({ ownedUnitIds, currentParty, saveData, onConfirm, o
               </div>
             ))}
           </div>
+
+          {isMobile && selectedEntry && (
+            <FocusedUnitPanel
+              entry={selectedEntry}
+              rarityLabel={RARITY_INFO[selectedEntry.rarity].label}
+              rarityColor={RARITY_INFO[selectedEntry.rarity].color}
+              saveData={saveData}
+              selectedUpgrade={selectedUpgrade}
+              applyUpgrade={applyUpgrade}
+              rarityCounts={rarityCounts}
+              sticky={false}
+            />
+          )}
 
           <div
             style={{
