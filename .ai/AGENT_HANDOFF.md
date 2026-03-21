@@ -25,6 +25,39 @@ Next Step:
 
 ---
 
+## [2026-03-21 16:02 JST] Agent: Codex
+Summary:
+- ルート配下を棚卸しし、現在の実行フローから参照されていない旧データ投入スクリプトと入力JSONを削除した。
+- `add_elem_*`, `add_more_*`, `add_questions.py`, `import/export_jsonl*`, `java_*_extra*.json`, `java_exam_questions2.json` を除却した。
+- 生成残骸だった `tmp_riddle_*` / `tmp_riddles_review.jsonl` もローカルから削除し、ルート直下を整理した。
+
+Changed Files:
+- `add_elem_lv12.py`
+- `add_elem_lv34.py`
+- `add_elem_lv56.py`
+- `add_more_fill.py`
+- `add_more_lv12.py`
+- `add_more_lv34.py`
+- `add_more_lv56.py`
+- `add_questions.py`
+- `import_questions.py`
+- `export_jsonl.py`
+- `export_jsonl.cjs`
+- `java_b_extra.json`
+- `java_s_extra1.json`
+- `java_s_extra2.json`
+- `java_exam_questions2.json`
+- `.ai/AGENT_HANDOFF.md`
+
+Validation:
+- `npm run build` success
+
+Open Questions:
+- なし
+
+Next Step:
+- 必要なら次は `scripts/` や `.ai/` 配下の運用ファイルも「現役/アーカイブ」で整理する。
+
 ## [2026-03-21 15:40 JST] Agent: Codex
 Summary:
 - リポジトリ全体を見直し、Issue 化価値の高い課題を監査した。
