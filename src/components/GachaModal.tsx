@@ -571,7 +571,7 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
                     もう一度回す
                   </button>
                 )}
-                <button onClick={onClose} style={{
+                <button onClick={closePullModal} style={{
                   padding: "12px 24px", borderRadius: 10,
                   background: "linear-gradient(135deg, #3b82f6, #2563eb)",
                   border: "none", color: "#fff",

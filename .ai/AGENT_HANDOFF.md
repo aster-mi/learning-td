@@ -25,6 +25,23 @@ Next Step:
 
 ---
 
+## [2026-03-21 14:01 JST] Agent: Codex
+Summary:
+- ガチャ結果モーダルの `閉じる` を、親ガチャ画面ごと閉じるのではなく結果モーダルだけ閉じる動作に変更した。
+
+Changed Files:
+- `src/components/GachaModal.tsx`
+- `.ai/AGENT_HANDOFF.md`
+
+Validation:
+- `npm run build` → success
+
+Open Questions:
+- なし
+
+Next Step:
+- ガチャ体験の導線を引き続きモーダル単位で統一する。
+
 ## [2026-03-21 13:56 JST] Agent: Codex
 Summary:
 - ガチャ結果画面の `もう一度回す` を即ロール開始に変更した。
