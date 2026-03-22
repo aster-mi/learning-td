@@ -46,12 +46,17 @@
     display: flex;
     padding: 0 24px;
     gap: 4px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
   }
   nav button {
     background: none; border: none; cursor: pointer;
     color: var(--muted); padding: 10px 16px; font-size: 13px;
     border-bottom: 2px solid transparent; transition: all .15s;
     position: relative;
+    min-height: 44px;
+    flex: 0 0 auto;
+    white-space: nowrap;
   }
   nav button:hover { color: var(--text); }
   nav button.active { color: var(--accent); border-bottom-color: var(--accent); }
@@ -108,6 +113,7 @@
   .msg-header {
     padding: 10px 14px; background: var(--surface2);
     display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    min-height: 44px;
   }
   .msg-from { font-size: 12px; font-weight: 600; color: var(--accent); }
   .msg-subj { font-size: 13px; color: var(--text); flex: 1; }
@@ -128,6 +134,7 @@
     margin-top: 8px; background: var(--accent); color: #fff;
     border: none; border-radius: 6px; padding: 6px 16px;
     font-size: 13px; cursor: pointer; font-weight: 600;
+    min-height: 44px;
   }
   .msg-reply-form button:hover { opacity: .85; }
 
@@ -147,6 +154,7 @@
     background: var(--accent); color: #fff; border: none;
     border-radius: 6px; padding: 7px 18px; font-size: 13px;
     cursor: pointer; font-weight: 600;
+    min-height: 44px;
   }
   .instruct-form button:hover { opacity: .85; }
 
@@ -193,6 +201,7 @@
     color: var(--muted); padding: 7px 10px; border-radius: 6px;
     font-size: 13px; margin-bottom: 2px; transition: all .15s;
     position: relative;
+    min-height: 44px;
   }
   .ch-tab:hover { background: var(--surface2); color: var(--text); }
   .ch-tab.active { background: var(--surface2); color: var(--text); }
@@ -221,6 +230,7 @@
     background: var(--accent); color: #fff; border: none;
     border-radius: 6px; padding: 6px 16px; font-size: 13px;
     cursor: pointer; font-weight: 600;
+    min-height: 44px;
   }
   .ch-post-form button:hover { opacity: .85; }
 
@@ -233,6 +243,7 @@
     padding: 9px 14px; background: var(--surface2);
     display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
     cursor: pointer;
+    min-height: 44px;
   }
   .thread-header:hover { background: #282d43; }
   .thread-toggle {
@@ -240,7 +251,10 @@
     transition: transform .15s ease;
   }
   .thread-from { font-size: 12px; font-weight: 700; color: var(--accent); }
-  .thread-subject { font-size: 13px; flex: 1; color: var(--text); }
+  .thread-subject {
+    font-size: 13px; flex: 1; color: var(--text);
+    min-width: 0; overflow-wrap: anywhere; word-break: break-word;
+  }
   .thread-time { font-size: 11px; color: var(--muted); }
   .thread-content { display: none; }
   .thread.open .thread-content { display: block; }
@@ -272,6 +286,7 @@
   .thread-reply-form button {
     background: var(--surface2); color: var(--accent); border: 1px solid var(--border);
     border-radius: 6px; padding: 6px 12px; font-size: 12px; cursor: pointer; font-weight: 600;
+    min-height: 44px;
   }
   .thread-reply-form button:hover { background: var(--accent); color: #fff; }
   @media (max-width: 800px) {
@@ -279,6 +294,114 @@
     .thread-body { padding: 12px; }
     .thread-reply { padding: 8px 12px 8px 20px; }
     .thread-reply-form { padding: 10px 12px; }
+  }
+
+  @media (max-width: 600px) {
+    nav { padding: 0 12px; gap: 2px; }
+    nav button { padding: 8px 12px; font-size: 12px; }
+
+    main { padding: 12px; }
+
+    .card-body { max-height: 65vh; }
+    .card-body.tall { max-height: 75vh; }
+    .card-body.short { max-height: 32vh; }
+
+    .ch-layout {
+      flex-direction: column;
+      height: auto;
+      min-height: 0;
+      gap: 12px;
+    }
+    .ch-sidebar {
+      width: auto;
+      border-radius: 10px;
+      padding: 8px;
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      overflow-y: hidden;
+      -webkit-overflow-scrolling: touch;
+      white-space: nowrap;
+    }
+    .ch-sidebar-title {
+      display: none;
+    }
+    .ch-tab {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: auto;
+      min-width: max-content;
+      margin-bottom: 0;
+      padding: 8px 12px;
+      font-size: 12px;
+    }
+    .ch-tab .ch-badge {
+      position: static;
+      transform: none;
+      margin-left: 8px;
+    }
+    .ch-main {
+      border-left: 1px solid var(--border);
+      border-radius: 10px;
+      min-height: 0;
+    }
+    #ch-threads { padding: 12px; }
+    .ch-post-form { padding: 12px; }
+
+    .thread-header {
+      align-items: flex-start;
+      padding: 10px 12px;
+      gap: 8px;
+    }
+    .thread-from,
+    .thread-time,
+    .thread-subject,
+    .msg-from,
+    .msg-subj,
+    .msg-body,
+    .thread-body,
+    .thread-reply,
+    .thread-reply-body {
+      font-size: 12px;
+    }
+    .thread-time {
+      width: 100%;
+    }
+    .thread-reply {
+      padding: 10px 12px;
+    }
+    .thread-reply-form {
+      padding: 12px;
+      flex-wrap: wrap;
+    }
+    .thread-reply-form input {
+      width: 100%;
+    }
+    .thread-reply-form button {
+      width: 100%;
+    }
+
+    .msg-header,
+    .msg-body,
+    .msg-reply-form {
+      padding-left: 12px;
+      padding-right: 12px;
+    }
+    .msg-subj {
+      flex-basis: 100%;
+      overflow-wrap: anywhere;
+      word-break: break-word;
+    }
+
+    .instruct-form input,
+    .instruct-form textarea,
+    .ch-post-form input,
+    .ch-post-form textarea,
+    .msg-reply-form textarea,
+    .thread-reply-form input {
+      font-size: 16px;
+    }
   }
 
   .toast {

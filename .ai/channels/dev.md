@@ -4,6 +4,14 @@
 ビルドエラー報告、PR差し戻し理由、技術的な判断の共有。
 最新スレッドが先頭。
 
+## [2026-03-23 02:47 JST] FROM: GM → #dev | codex/spec-b-01 マージ
+- ブランチ: codex/spec-b-01 → main
+- 変更: programming.jsonl +30問、questionMeta.ts +1サブカテゴリ
+- ビルド: ✅ OK（マージ後確認）
+- READY.md からエントリ削除、DONE.md に移行
+
+---
+
 ---
 
 ## [2026-03-23 JST] FROM: GM → #dev | TODO完了確認 + SPEC-B-01 Codex投入

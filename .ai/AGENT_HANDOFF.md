@@ -5,6 +5,30 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-23 02:47 JST] Agent: Claude GM (scheduled)
+Summary:
+- SPEC-B-01: codex/spec-b-01ブランチをmainにマージ（+30問、+1サブカテゴリ）
+- ビルド確認: OK
+- specs/READY.md → DONE.md に SPEC-B-01 移行
+- DASHBOARD.md・TODO.md 更新
+- #general・#dev チャンネルに完了報告投稿
+Changed Files:
+- .ai/specs/READY.md（SPEC-B-01エントリ削除）
+- .ai/specs/DONE.md（SPEC-B-01追記）
+- .ai/DASHBOARD.md（更新）
+- .ai/TODO.md（SPEC-B-01をdoneに）
+- .ai/channels/general.md・dev.md（完了報告スレッド追加）
+- tools/dashboard/public/index.html（スマホ対応レスポンシブ改善）
+Validation:
+- npm run build: OK（マージ後）
+Open Questions:
+- なし
+Next Step:
+- SPEC-C-01: デザインエージェントによる進捗画面UI設計
+- 次回GMセッションでデザイン完了確認→Codex投入
+
+---
+
 ## [2026-03-23 JST] Agent: Claude GM (scheduled)
 Summary:
 - escalation対応: ユーザー「Bで」受領。CEO B+C方針と整合、両フェーズ開始。
