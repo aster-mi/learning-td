@@ -22,7 +22,13 @@ type WrongMap = Record<string, WrongEntry>;
 function load(): WrongMap {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
-    return raw ? pruneMap(JSON.parse(raw) as WrongMap) : {};
+    if (!raw) return {};
+    const parsed = JSON.parse(raw) as WrongMap;
+    const pruned = pruneMap(parsed);
+    if (JSON.stringify(parsed) !== JSON.stringify(pruned)) {
+      save(pruned);
+    }
+    return pruned;
   } catch (e) {
     console.warn("[WrongStore] Failed to load:", e);
     return {};

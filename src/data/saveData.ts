@@ -51,7 +51,9 @@ export interface SaveData {
 
 const STORAGE_KEY = "learning_td_save";
 const MAX_DAILY_ACTIVITY_DAYS = 90;
-const MAX_MISSION_CLAIMS = 180;
+const MAX_MISSION_CLAIMS = 100;
+const QUOTA_RETRY_DAILY_ACTIVITY_DAYS = [30, 14, 7];
+const QUOTA_RETRY_MISSION_CLAIMS = [50, 20, 10];
 
 const VALID_SUB_CATEGORY_SET = new Set(SUB_CATEGORIES.map((entry) => entry.name));
 const VALID_UNIT_ID_SET = new Set(UNIT_CATALOG.map((unit) => unit.id));
@@ -85,7 +87,18 @@ function sortDateKeysDesc(a: string, b: string): number {
 function pruneDailyActivity(activity: Record<string, DailyActivity>): Record<string, DailyActivity> {
   return Object.fromEntries(
     Object.entries(activity)
-      .filter(([key, value]) => isValidDateKey(key) && typeof value === "object" && value !== null)
+      .filter(
+        ([key, value]) =>
+          isValidDateKey(key) &&
+          typeof value === "object" &&
+          value !== null &&
+          Number.isFinite(value.plays) &&
+          Number.isFinite(value.clears) &&
+          Number.isFinite(value.correct) &&
+          Number.isFinite(value.wrong) &&
+          Number.isFinite(value.bestCombo) &&
+          Number.isFinite(value.coinsEarned),
+      )
       .sort(([left], [right]) => sortDateKeysDesc(left, right))
       .slice(0, MAX_DAILY_ACTIVITY_DAYS),
   );
@@ -110,6 +123,30 @@ function pruneMissionClaims(claims: string[]): string[] {
     .slice(0, MAX_MISSION_CLAIMS);
 }
 
+function pruneMissionClaimsToLimit(claims: string[], limit: number): string[] {
+  return pruneMissionClaims(claims).slice(0, limit);
+}
+
+function pruneDailyActivityToLimit(
+  activity: Record<string, DailyActivity>,
+  limit: number,
+): Record<string, DailyActivity> {
+  return Object.fromEntries(Object.entries(pruneDailyActivity(activity)).slice(0, limit));
+}
+
+function pruneCategoryStats(stats: Record<string, CategoryRecord>): Record<string, CategoryRecord> {
+  return Object.fromEntries(
+    Object.entries(stats).filter(
+      ([key, value]) =>
+        VALID_SUB_CATEGORY_SET.has(key) &&
+        typeof value === "object" &&
+        value !== null &&
+        Number.isFinite(value.correct) &&
+        Number.isFinite(value.wrong),
+    ),
+  );
+}
+
 function sanitizeSaveData(data: SaveData): SaveData {
   const unlockedUnits = [...new Set(data.unlockedUnits.filter((unitId) => VALID_UNIT_ID_SET.has(unitId)))];
   for (const unitId of INITIAL_UNITS) {
@@ -128,9 +165,7 @@ function sanitizeSaveData(data: SaveData): SaveData {
     unlockedUnits,
     party,
     achievements: [...new Set(data.achievements)],
-    categoryStats: Object.fromEntries(
-      Object.entries(data.categoryStats).filter(([key]) => VALID_SUB_CATEGORY_SET.has(key)),
-    ),
+    categoryStats: pruneCategoryStats(data.categoryStats),
     dailyActivity: pruneDailyActivity(data.dailyActivity),
     missionClaims: pruneMissionClaims(data.missionClaims),
     unitMastery: Object.fromEntries(
@@ -155,10 +190,30 @@ export function loadSave(): SaveData {
 }
 
 export function saveSave(data: SaveData): void {
+  const sanitized = sanitizeSaveData(data);
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(sanitizeSaveData(data)));
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(sanitized));
   } catch (e) {
     if (e instanceof DOMException && e.name === "QuotaExceededError") {
+      console.warn("[SaveData] localStorage quota exceeded; pruning stored history more aggressively");
+      for (let index = 0; index < QUOTA_RETRY_DAILY_ACTIVITY_DAYS.length; index += 1) {
+        const pruned = {
+          ...sanitized,
+          dailyActivity: pruneDailyActivityToLimit(sanitized.dailyActivity, QUOTA_RETRY_DAILY_ACTIVITY_DAYS[index]),
+          missionClaims: pruneMissionClaimsToLimit(sanitized.missionClaims, QUOTA_RETRY_MISSION_CLAIMS[index]),
+        };
+        try {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(pruned));
+          return;
+        } catch (retryError) {
+          if (!(retryError instanceof DOMException) || retryError.name !== "QuotaExceededError") {
+            console.error("[SaveData] Failed to save after quota fallback:", retryError);
+            return;
+          }
+        }
+      }
+      console.error("[SaveData] Still over quota after aggressive pruning");
+      return;
       console.warn("[SaveData] localStorage quota exceeded – pruning old data");
       // Aggressive prune: keep only 30 days of activity
       const pruned = {
