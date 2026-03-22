@@ -1,7 +1,7 @@
 /**
- * Unit renderer registry (lazy-loaded)
- * Maps unit ID → custom draw function
- * Renderers are loaded asynchronously to reduce initial bundle size.
+ * ユニット描画関数のレジストリ（遅延読み込み）
+ * ユニットIDと専用の描画関数を対応付ける。
+ * 初期バンドルを抑えるため、描画モジュールは非同期で読み込む。
  */
 
 export type UnitDrawFn = (
@@ -11,13 +11,13 @@ export type UnitDrawFn = (
   t: number, ph: number,
 ) => void;
 
-/** Registry populated by ensureRenderers() */
+/** `ensureRenderers()` 実行後に埋まるレジストリ */
 export const UNIT_RENDERERS: Record<string, UnitDrawFn> = {};
 
 let _loaded = false;
 let _loadPromise: Promise<void> | null = null;
 
-/** Load all renderer modules. Safe to call multiple times. */
+/** すべての描画モジュールを読み込む。複数回呼んでも安全。 */
 export function ensureRenderers(): Promise<void> {
   if (_loaded) return Promise.resolve();
   if (_loadPromise) return _loadPromise;
@@ -134,7 +134,7 @@ export function ensureRenderers(): Promise<void> {
   return _loadPromise;
 }
 
-/** Check if renderers are already loaded */
+/** 描画モジュールの読み込み完了を返す */
 export function renderersReady(): boolean {
   return _loaded;
 }

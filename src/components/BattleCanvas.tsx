@@ -13,13 +13,13 @@ interface Props {
   themeKey: StageThemeKey;
   isPaused?: boolean;
   combo?: number;
-  comboFlashKey?: number;  // changes when combo milestone hit
+  comboFlashKey?: number;  // コンボの節目に到達したときに変化する
 }
 
 const CANVAS_HEIGHT = 300;
 const GROUND_Y = 218;
 
-// ── colour helpers ─────────────────────────────────────────────────────────
+// ── 色計算ヘルパー ─────────────────────────────────────────────────────────
 function hexToRgb(hex: string) {
   return {
     r: parseInt(hex.slice(1, 3), 16),
@@ -36,7 +36,7 @@ function lighter(hex: string, n: number) {
   return `rgb(${Math.min(255,r+n)},${Math.min(255,g+n)},${Math.min(255,b+n)})`;
 }
 
-// ── effect structs ─────────────────────────────────────────────────────────
+// ── エフェクト用の型 ───────────────────────────────────────────────────────
 interface HitEffect { x:number; y:number; t:number; dur:number; color:string; }
 interface Particle  { x:number; y:number; vx:number; vy:number; t:number; dur:number; color:string; r:number; }
 interface Angel     { x:number; y:number; t:number; dur:number; color:string; facingLeft:boolean; }
@@ -164,7 +164,7 @@ const STAGE_THEMES: Record<StageThemeKey, StageTheme> = {
   },
 };
 
-// ── HP bar ─────────────────────────────────────────────────────────────────
+// ── HPバー ─────────────────────────────────────────────────────────────────
 function drawHpBar(ctx: CanvasRenderingContext2D, cx:number, y:number, w:number, hp:number, maxHp:number) {
   const ratio = Math.max(0, hp / maxHp);
   ctx.fillStyle = "rgba(0,0,0,0.65)";
@@ -177,7 +177,7 @@ function drawHpBar(ctx: CanvasRenderingContext2D, cx:number, y:number, w:number,
   ctx.fillRect(cx - w/2, y, w * ratio, 2);
 }
 
-// ── background ─────────────────────────────────────────────────────────────
+// ── 背景描画 ───────────────────────────────────────────────────────────────
 function drawBackground(
   ctx: CanvasRenderingContext2D,
   W: number,
@@ -466,11 +466,11 @@ function drawCat(ctx: CanvasRenderingContext2D, u: Unit, t: number) {
   const cx = u.x + lungeX;
   const cy  = GROUND_Y - r * 0.92 - bob + lungeY;
 
-  // Shadow
+  // 影
   ctx.fillStyle = "rgba(0,0,0,0.32)";
   ctx.beginPath(); ctx.ellipse(cx, GROUND_Y + 2, r * 1.05, 4, 0, 0, Math.PI * 2); ctx.fill();
 
-  // Tail (swaying bezier behind body)
+  // しっぽ（体の後ろで揺らすベジェ曲線）
   const tailSway = Math.sin(ph * 0.65) * 0.5;
   ctx.save();
   ctx.strokeStyle = col; ctx.lineWidth = r * 0.33; ctx.lineCap = "round";
@@ -598,7 +598,7 @@ function drawGenericUnit(ctx: CanvasRenderingContext2D, u: Unit, t: number) {
   const cx = u.x + lungeX;
   const cy = GROUND_Y - r * 0.92 - bob + lungeY;
 
-  // Shadow
+  // 影
   ctx.fillStyle = "rgba(0,0,0,0.32)";
   ctx.beginPath();
   ctx.ellipse(cx, GROUND_Y + 2, r * 1.05, 4, 0, 0, Math.PI * 2);
@@ -624,7 +624,7 @@ function drawGenericUnit(ctx: CanvasRenderingContext2D, u: Unit, t: number) {
     ctx.restore();
   }
 
-  // HP bar
+  // HPバー
   drawHpBar(ctx, cx, cy - r - bob - 14, r * 2.4, u.hp, u.maxHp);
 }
 

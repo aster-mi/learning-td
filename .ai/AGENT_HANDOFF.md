@@ -25,6 +25,26 @@ Next Step:
 
 ---
 
+## [2026-03-23 22:00 JST] Agent: Codex
+Summary:
+- `src/` 配下の `.ts` / `.tsx` を走査し、文字化けパターンを確認したが、実コード中には明確な mojibake は見つからなかった。
+- そのため、読みづらい英日混在コメントを日本語へそろえ、`.ai/` と `.codex/` の運用文書も日本語表現に統一した。
+
+Changed Files:
+- `src/components/BattleCanvas.tsx`
+- `src/components/renderers/index.ts`
+- `.codex/CODEX.md`
+- `.ai/TODO.md`
+- `.ai/AGENT_HANDOFF.md`
+
+Validation:
+- `npm run build`: OK
+
+Open Questions:
+- なし
+
+Next Step:
+- 必要なら次は他の運用ドキュメントも同じ基準で表現をそろえる。
 ## [2026-03-21 16:02 JST] Agent: Codex
 Summary:
 - ルート配下を棚卸しし、現在の実行フローから参照されていない旧データ投入スクリプトと入力JSONを削除した。

@@ -46,7 +46,7 @@ Next Step:
 - 追加運用ルールが必要になった
 - 同じ失敗を繰り返しそうな兆候がある
 
-## Shared Files
+## 共有ファイル
 | ファイル | 用途 |
 |---------|------|
 | `.claude/CLAUDE.md` | Claude 用の運用ルール |
@@ -57,25 +57,25 @@ Next Step:
 | `.ai/skills/` | プロジェクト専用 Skills |
 | `.ai/UNIT_POLICY.md` | ユニット追加ポリシー |
 
-## Commit Convention
-- Format: `<scope>: <short summary>`
-- Keep one intent per commit.
-- Scopes: `quiz`, `render`, `unit`, `feat`, `fix`, `refactor`, `docs`, `ci`, `chore`, `balance`
+## コミット規約
+- 形式: `<scope>: <short summary>`
+- 1コミットにつき1つの意図に絞る。
+- scope: `quiz`, `render`, `unit`, `feat`, `fix`, `refactor`, `docs`, `ci`, `chore`, `balance`
 
-## Issue Workflow
+## Issue運用
 - 問題や改善案を見つけたら GitHub Issue に起票して追う。
 - ラベルは `bug`, `question-quality`, `feature`, `ux`, `balance`, `content`, `docs`, `data`, `performance`, `retention` を使い分ける。
 - 優先度は `P1`, `P2`, `P3` を付ける。
 - 引き継ぎや作業報告では Issue 番号を明記する。
 - 関連 Skill: `.ai/skills/SKILL_ISSUE_WORKFLOW.md`
 
-## Operating Principles
-- Keep updates short and factual.
-- If unexpected local changes are detected, pause and ask the human.
-- Do not delete or overwrite another agent's notes without reason.
+## 運用原則
+- 進捗共有は短く、事実ベースで書く。
+- 想定外のローカル変更を見つけたら、いったん止めて人間に確認する。
+- 他エージェントのメモは、理由なく削除・上書きしない。
 - `tmp_*` の一時ファイルはコミットしない。
 
-## Key Commands
+## 主要コマンド
 ```bash
 npm run build
 npm run quiz:validate
