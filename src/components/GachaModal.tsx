@@ -88,6 +88,26 @@ type SelectorOption = {
   cost: number;
 };
 
+/** シリーズごとのビジュアルテーマ */
+const SERIES_THEME: Record<string, {
+  emoji: string; gradient: string; border: string;
+  glow: string; accent: string; catchphrase: string;
+}> = {
+  "猫": { emoji: "🐱", gradient: "linear-gradient(135deg, #451a03 0%, #78350f 40%, #b45309 100%)", border: "#f59e0b", glow: "#f59e0b44", accent: "#fbbf24", catchphrase: "にゃんこ軍団、出撃！" },
+  "文房具": { emoji: "✏️", gradient: "linear-gradient(135deg, #1e1b4b 0%, #312e81 40%, #4338ca 100%)", border: "#818cf8", glow: "#818cf844", accent: "#a5b4fc", catchphrase: "筆箱から飛び出す戦士たち" },
+  "学校": { emoji: "🏫", gradient: "linear-gradient(135deg, #042f2e 0%, #134e4a 40%, #0d9488 100%)", border: "#2dd4bf", glow: "#2dd4bf44", accent: "#5eead4", catchphrase: "授業開始のチャイムが鳴る！" },
+  "科学": { emoji: "🔬", gradient: "linear-gradient(135deg, #022c22 0%, #064e3b 40%, #059669 100%)", border: "#34d399", glow: "#34d39944", accent: "#6ee7b7", catchphrase: "実験の成果を見せてやれ！" },
+  "数学": { emoji: "🧮", gradient: "linear-gradient(135deg, #1a1a2e 0%, #16213e 40%, #0f3460 100%)", border: "#60a5fa", glow: "#60a5fa44", accent: "#93c5fd", catchphrase: "数式が武器になる世界" },
+  "芸術": { emoji: "🎨", gradient: "linear-gradient(135deg, #3b0764 0%, #6b21a8 40%, #9333ea 100%)", border: "#c084fc", glow: "#c084fc44", accent: "#d8b4fe", catchphrase: "色彩が戦場を染める！" },
+  "工学": { emoji: "⚙️", gradient: "linear-gradient(135deg, #0c1222 0%, #1e293b 40%, #334155 100%)", border: "#22d3ee", glow: "#22d3ee44", accent: "#67e8f9", catchphrase: "機械仕掛けの精鋭部隊" },
+  "自然": { emoji: "🌿", gradient: "linear-gradient(135deg, #052e16 0%, #14532d 40%, #15803d 100%)", border: "#4ade80", glow: "#4ade8044", accent: "#86efac", catchphrase: "大地の力が目覚める！" },
+  "歴史": { emoji: "🏛️", gradient: "linear-gradient(135deg, #1c1917 0%, #44403c 40%, #78716c 100%)", border: "#f59e0b", glow: "#f59e0b44", accent: "#fcd34d", catchphrase: "歴戦の英雄たちが蘇る" },
+  "音楽": { emoji: "🎵", gradient: "linear-gradient(135deg, #2e1065 0%, #4c1d95 40%, #7c3aed 100%)", border: "#a78bfa", glow: "#a78bfa44", accent: "#c4b5fd", catchphrase: "旋律が戦場に響き渡る！" },
+  "スポーツ": { emoji: "🏆", gradient: "linear-gradient(135deg, #0c2461 0%, #1e3a8a 40%, #1d4ed8 100%)", border: "#3b82f6", glow: "#3b82f644", accent: "#93c5fd", catchphrase: "アスリートたちの頂上決戦" },
+  "図工": { emoji: "🖌️", gradient: "linear-gradient(135deg, #4a1942 0%, #831843 40%, #be185d 100%)", border: "#f472b6", glow: "#f472b644", accent: "#fbcfe8", catchphrase: "創造力で敵を圧倒せよ！" },
+};
+const DEFAULT_THEME = { emoji: "🎁", gradient: "linear-gradient(135deg, #1e293b, #334155)", border: "#64748b", glow: "#64748b44", accent: "#94a3b8", catchphrase: "" };
+
 export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: Props) {
   const seriesOptions: SelectorOption[] = SERIES_LIST.map((series) => ({
     key: series,
@@ -218,62 +238,144 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
       <div style={{
         width: "100%", maxWidth: cardW + 64,
         padding: "6px 20px 10px",
+        overflowY: "auto",
+        flex: 1,
       }}>
         <div style={{
           display: "grid",
           gridTemplateColumns: `repeat(${selectorCols}, minmax(0, 1fr))`,
-          gap: 8,
+          gap: 10,
         }}>
           {allOptions.map((opt) => {
             const active = activeTab === opt.key;
             const isOptBuff = opt.key === BUFF_TAB_KEY;
             const optPool = isOptBuff ? [] : GACHA_POOL_UNITS.filter((u) => u.series === opt.key);
             const optOwned = isOptBuff ? 0 : optPool.filter((u) => ownedUnitIds.includes(u.id)).length;
-            const subtitle = isOptBuff
-              ? `1回 ${opt.cost}コイン`
-              : `${optOwned}/${optPool.length} 所持`;
+            const allCollected = !isOptBuff && optPool.length > 0 && optOwned === optPool.length;
+            const theme = isOptBuff ? null : (SERIES_THEME[opt.key] ?? DEFAULT_THEME);
+            const completePct = isOptBuff ? 0 : optPool.length > 0 ? Math.round((optOwned / optPool.length) * 100) : 0;
+
+            // バフガチャ用の特別デザイン
+            if (isOptBuff) {
+              return (
+                <button
+                  key={opt.key}
+                  onClick={() => handleTabChange(opt.key)}
+                  style={{
+                    position: "relative",
+                    borderRadius: 14,
+                    padding: "14px 12px",
+                    background: active
+                      ? "linear-gradient(135deg, #422006 0%, #713f12 40%, #a16207 100%)"
+                      : "linear-gradient(135deg, #1a1500 0%, #2a2000 50%, #332800 100%)",
+                    border: `2px solid ${active ? "#fbbf24" : "#713f12"}`,
+                    color: "#fff",
+                    textAlign: "center",
+                    cursor: phase === "rolling" ? "default" : "pointer",
+                    transition: "all 0.25s ease",
+                    overflow: "hidden",
+                    boxShadow: active ? "0 0 20px #fbbf2444, inset 0 1px 0 #fbbf2433" : "0 2px 8px rgba(0,0,0,0.3)",
+                  }}
+                >
+                  <div style={{ fontSize: isMobile ? 28 : 34, marginBottom: 4, filter: "drop-shadow(0 0 6px #fbbf24)" }}>⚡</div>
+                  <div style={{ fontSize: isMobile ? 13 : 14, fontWeight: 800, color: "#fde68a", marginBottom: 2 }}>バフガチャ</div>
+                  <div style={{ fontSize: 10, color: "#fbbf24", opacity: 0.8 }}>💰 {opt.cost} コイン</div>
+                  <div style={{ fontSize: 9, color: "#d97706", marginTop: 4, fontStyle: "italic" }}>ステージ有利に！</div>
+                </button>
+              );
+            }
+
             return (
               <button
                 key={opt.key}
                 onClick={() => handleTabChange(opt.key)}
                 style={{
-                  borderRadius: 12,
-                  padding: "10px 10px",
-                  background: active
-                    ? (isOptBuff ? "rgba(234,179,8,0.25)" : "rgba(99,102,241,0.25)")
-                    : "rgba(255,255,255,0.05)",
-                  border: active
-                    ? (isOptBuff ? "1px solid #eab308" : "1px solid #818cf8")
-                    : "1px solid #334155",
-                  color: active ? "#e2e8f0" : "#94a3b8",
-                  textAlign: "left",
+                  position: "relative",
+                  borderRadius: 14,
+                  padding: "14px 12px 10px",
+                  background: theme!.gradient,
+                  border: `2px solid ${active ? theme!.border : `${theme!.border}55`}`,
+                  color: "#fff",
+                  textAlign: "center",
                   cursor: phase === "rolling" ? "default" : "pointer",
-                  transition: "all 0.2s",
-                  minHeight: 72,
+                  transition: "all 0.25s ease",
+                  overflow: "hidden",
+                  boxShadow: active
+                    ? `0 0 24px ${theme!.glow}, inset 0 1px 0 ${theme!.accent}33`
+                    : "0 2px 8px rgba(0,0,0,0.3)",
+                  transform: active ? "scale(1.03)" : "scale(1)",
                 }}
               >
-                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                  {isOptBuff ? (
-                    <span style={{ fontSize: 22, lineHeight: 1 }}>⚡</span>
-                  ) : optPool[0] ? (
-                    <UnitIcon
-                      unitId={optPool[0].id}
-                      color={optPool[0].color}
-                      size={24}
-                      emoji={optPool[0].emoji}
-                    />
-                  ) : (
-                    <span style={{ fontSize: 22, lineHeight: 1 }}>?</span>
-                  )}
-                  <div style={{ minWidth: 0 }}>
-                    <div style={{
-                      fontSize: 13, fontWeight: 700, overflow: "hidden",
-                      textOverflow: "ellipsis", whiteSpace: "nowrap",
-                    }}>
-                      {opt.label}
-                    </div>
-                    <div style={{ fontSize: 11, opacity: 0.85 }}>{subtitle}</div>
-                  </div>
+                {/* 背景のキラキラエフェクト */}
+                <div style={{
+                  position: "absolute", inset: 0, opacity: active ? 0.15 : 0.06,
+                  background: `radial-gradient(circle at 20% 20%, ${theme!.accent} 0%, transparent 50%), radial-gradient(circle at 80% 80%, ${theme!.accent} 0%, transparent 50%)`,
+                  pointerEvents: "none",
+                }} />
+
+                {/* コンプリートバッジ */}
+                {allCollected && (
+                  <div style={{
+                    position: "absolute", top: 4, right: 4,
+                    fontSize: 8, fontWeight: 800, color: "#fbbf24",
+                    background: "rgba(0,0,0,0.6)", borderRadius: 6,
+                    padding: "2px 5px", border: "1px solid #fbbf2466",
+                  }}>COMPLETE</div>
+                )}
+
+                {/* シリーズ絵文字 */}
+                <div style={{
+                  fontSize: isMobile ? 30 : 38, lineHeight: 1, marginBottom: 6,
+                  filter: `drop-shadow(0 0 8px ${theme!.glow})`,
+                }}>
+                  {theme!.emoji}
+                </div>
+
+                {/* シリーズ名 */}
+                <div style={{
+                  fontSize: isMobile ? 14 : 15, fontWeight: 800,
+                  color: theme!.accent, letterSpacing: 0.5,
+                  textShadow: `0 0 10px ${theme!.glow}`,
+                  marginBottom: 3,
+                }}>
+                  {opt.label}
+                </div>
+
+                {/* キャッチコピー */}
+                <div style={{
+                  fontSize: 9, color: `${theme!.accent}aa`, fontStyle: "italic",
+                  marginBottom: 6, minHeight: 12,
+                  overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap",
+                }}>
+                  {theme!.catchphrase}
+                </div>
+
+                {/* 所持プログレスバー */}
+                <div style={{
+                  height: 4, borderRadius: 2,
+                  background: "rgba(0,0,0,0.4)",
+                  overflow: "hidden", marginBottom: 4,
+                }}>
+                  <div style={{
+                    width: `${completePct}%`, height: "100%",
+                    background: allCollected
+                      ? "linear-gradient(90deg, #fbbf24, #f59e0b)"
+                      : `linear-gradient(90deg, ${theme!.accent}, ${theme!.border})`,
+                    borderRadius: 2,
+                    transition: "width 0.3s",
+                  }} />
+                </div>
+
+                <div style={{
+                  display: "flex", justifyContent: "space-between", alignItems: "center",
+                  fontSize: 10,
+                }}>
+                  <span style={{ color: allCollected ? "#fbbf24" : theme!.accent, fontWeight: 700 }}>
+                    {optOwned}/{optPool.length}
+                  </span>
+                  <span style={{ color: "#fbbf24", fontWeight: 700 }}>
+                    💰 {opt.cost}
+                  </span>
                 </div>
               </button>
             );
@@ -281,23 +383,13 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
         </div>
       </div>
 
+      {/* 下部のヒントテキスト */}
       <div style={{
-        flex: 1,
-        width: "100%",
-        maxWidth: cardW + 64,
-        padding: "0 20px 20px",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
+        padding: "8px 20px 16px",
+        textAlign: "center",
+        fontSize: 11, color: "#475569",
       }}>
-        <div style={{
-          color: "#64748b",
-          fontSize: 14,
-          textAlign: "center",
-          padding: "24px 20px",
-        }}>
-          上のガチャ種類を選ぶと、回すためのモーダルが開きます
-        </div>
+        気になるシリーズをタップしてガチャを回そう！
       </div>
 
       {hasSelection && (
@@ -603,6 +695,10 @@ export function GachaModal({ coins, ownedUnitIds, onPull, onClose, isMobile }: P
         @keyframes pulse {
           0%, 100% { opacity: 1; }
           50% { opacity: 0.5; }
+        }
+        @keyframes shimmer {
+          0% { background-position: -200% 0; }
+          100% { background-position: 200% 0; }
         }
       `}</style>
     </div>
