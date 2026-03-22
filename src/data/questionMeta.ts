@@ -62,6 +62,7 @@ export const SUB_CATEGORIES: SubCategoryDef[] = [
   { main: "プログラミング", name: "Java Bronze", emoji: "☕", color: "#f97316", desc: "Javaの基礎文法・オブジェクト指向入門" },
   { main: "プログラミング", name: "Java Silver", emoji: "🥈", color: "#94a3b8", desc: "Java SE開発者向け中級" },
   { main: "プログラミング", name: "Java Gold", emoji: "🥇", color: "#fbbf24", desc: "Java SE開発者向け上級" },
+  { main: "プログラミング", name: "情報・ITリテラシー", emoji: "🖥️", color: "#7c3aed", desc: "PC基礎・インターネット・情報セキュリティ" },
   { main: "雑学", name: "生活・常識", emoji: "🏠", color: "#f472b6", desc: "日常の豆知識・一般常識" },
   { main: "雑学", name: "スポーツ・芸能", emoji: "⚽", color: "#fb7185", desc: "スポーツ・芸能・エンタメ" },
   { main: "雑学", name: "自然・科学トリビア", emoji: "🌏", color: "#e879f9", desc: "自然や科学の意外な事実" },
