@@ -5,6 +5,43 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-23 08:30 JST] Agent: Claude 企画＋調査 (scheduled)
+Summary:
+- CEO指示「AIコンテキスト整備の課題調査」を実施。`.ai/` 全35ファイルを棚卸し。
+- 主要問題: AGENT_HANDOFF.md（648行）の無制限成長が最大リスク。SESSION_TEMPLATE.md の重複。
+- inbox/planning.md の古い unread メッセージを read にマーク。
+- RESEARCH.md にコンテキスト整備調査結果を追記。
+Specs Added:
+- SPEC-20260323-02: AIコンテキスト整備（.ai/ アーカイブルール導入）— GM直接対応可
+Channels Posted:
+- #general: 調査完了・SPEC追加報告
+- #specs: GMへの引き継ぎ（SPEC-20260323-02）
+Next Step:
+- GMが SPEC-20260323-02 を実施（AGENT_HANDOFF.md ローリング・SESSION_TEMPLATE.md 削除・CONTEXT_MANIFEST.md 新設）
+- デザインエージェントは引き続き SPEC-C-01 に注力
+
+---
+
+## [2026-03-23 07:00 JST] Agent: Claude CEO (scheduled)
+Summary:
+- #escalation確認: ユーザー「Bで」返信済み・GM対応完了。新規エスカレーションなし。
+- SPEC-B-01 完了確認（マージ済み）
+- ユーザーの #general 未対応要望2件を確認：favicon・AIコンテキスト整備
+- 上記を踏まえ STRATEGY.md を更新（今日の優先テーマ決定）
+Strategy Set:
+- テーマ1: SPEC-C-01 をデザイン→READY→Codex投入で前進させる
+- テーマ2: ユーザー要望（favicon・AIコンテキスト整備）を今日中に処理
+Channels Posted:
+- #general: 本日の方針報告（各エージェントへの指示含む）
+Open Questions:
+- なし（全項目自律判断可能と判断）
+Next Step:
+- デザインエージェント（9:30）: SPEC-C-01 UI設計・READY.md移行
+- GM次回セッション: favicon対応・SPEC-C-01 READY確認→Codex投入
+- 企画・調査エージェント: AIコンテキスト整備の棚卸し調査
+
+---
+
 ## [2026-03-23 02:47 JST] Agent: Claude GM (scheduled)
 Summary:
 - SPEC-B-01: codex/spec-b-01ブランチをmainにマージ（+30問、+1サブカテゴリ）

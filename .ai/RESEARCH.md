@@ -4,6 +4,92 @@
 
 ---
 
+## [2026-03-23 08:30 JST] AIコンテキスト整備: `.ai/` 配下ファイル棚卸し調査（更新）
+
+### 調査対象
+`.ai/` 配下の全MDファイル（最新計測: 2026-03-23 08:30 JST）
+
+### ファイル一覧と評価
+
+| ファイル | 行数 | 評価 |
+|---|---|---|
+| AGENT_HANDOFF.md | **665** | ⚠️ 無制限成長中（前回648→+17） |
+| README.md | 246 | ✅ 適正（組織ガイド） |
+| STRATEGY.md | 81 | ⚠️ 複数エントリ蓄積 |
+| channels/general.md | 117 | ⚠️ 無制限成長中 |
+| inbox/planning.md | 57 | ⚠️ 古い"unread"メッセージ残存 |
+| DECISIONS.md | 37 | ⚠️ エントリ1件のみ・活用度低 |
+| SESSION_TEMPLATE.md | 34 | ⚠️ CLAUDE.mdと重複 |
+| UNIT_POLICY.md | 33 | ⚠️ skills/外に孤立 |
+| skills/*.md | ~900 | ✅ 適正（11ファイル） |
+| lessons/*.md | 83 | 📦 アーカイブ候補 |
+| reviews/*.md | 132 | 📦 アーカイブ候補 |
+| issues/*.md | 116 | 📦 アーカイブ候補 |
+| specs/DONE.md | 21 | 📦 完了済み（成長継続） |
+
+### 主な問題点
+
+#### 🔴 高優先度
+
+**1. AGENT_HANDOFF.md（648行）— 最大の問題**
+- 全セッションが無制限に蓄積。将来コンテキストを圧迫する主因。
+- 解決案: `head -N` ポリシーを設け、古いエントリは `.ai/archive/HANDOFF_ARCHIVE.md` に定期移動。「直近5エントリのみをライブ保持」ルールを追加。
+
+**2. inbox/planning.md（57行）— 陳腐化した"unread"**
+- SPEC-C-01・SPEC-B-01 の依頼が STATUS: unread のまま残存。両者はすでに完了・進行中。
+- 解決案: 本日セッションで即時 `STATUS: read` にマーク。inbox は「処理済みは翌日削除」ルール化を推奨。
+
+#### 🟡 中優先度
+
+**3. SESSION_TEMPLATE.md（34行）— CLAUDE.md と重複**
+- CLAUDE.md の「handoff テンプレート」セクションに同等内容が埋め込み済み。二重管理。
+- 解決案: SESSION_TEMPLATE.md を削除。CLAUDE.md の記述を正本とする。
+
+**4. channels/general.md（117行）— 無制限成長**
+- 古いスレッドが全て残存。セッションが増えるほど肥大化する。
+- 解決案: 「7日以上前のスレッドは `.ai/archive/channels/general_YYYY-MM.md` に移動」ルールを追加。
+
+**5. STRATEGY.md（81行）— 古い方針エントリ蓄積**
+- 複数の日付の方針が混在。古いものは現行エージェントが読む必要なし。
+- 解決案: 最新エントリのみアクティブ保持。それ以前は `.ai/archive/STRATEGY_ARCHIVE.md` へ。
+
+#### 🟢 低優先度
+
+**6. DECISIONS.md — 活用度が低い**
+- エントリ1件のみ。SESSION_TEMPLATE.md と同様、CLAUDE.md 上の記述で代替可能。
+- 解決案: DECISIONS.md の記録は AGENT_HANDOFF.md の "Decision" セクションに統合。ファイル自体は残すが CLAUDE.md の「セッション開始時確認リスト」から外す。
+
+**7. UNIT_POLICY.md — skills/ 外に孤立**
+- `.ai/skills/README.md` から `../UNIT_POLICY.md` として参照中。skills ディレクトリの外に置かれており一貫性がない。
+- 解決案: `.ai/skills/SKILL_UNIT_POLICY.md` にリネーム移動し、skills カタログに正式統合。
+
+**8. lessons/, reviews/, issues/ — 参照頻度ゼロ**
+- 331行のアーカイブ的コンテンツ。日常セッションでは読み込まれない。
+- 解決案: `.ai/archive/` 以下に移動。README から参照リンクだけ維持。
+
+### 新機能提案: `.ai/CONTEXT_MANIFEST.md`
+
+エージェントごとに「セッション開始時に読むべきファイル」を明示した軽量インデックスを新設する。
+
+```markdown
+## 企画・調査エージェント
+必読: STRATEGY.md(latest), RESEARCH.md(head-50), specs/PENDING.md
+参照: channels/general.md(head-20), inbox/planning.md
+```
+
+これにより各エージェントが全ファイルをスキャンせず、必要なコンテキストのみロードできる。
+
+### Learning TD への示唆
+- 現状のコンテキスト量は1日分で許容範囲内だが、30日後に AGENT_HANDOFF.md が5,000行超になることが予測される
+- 「アーカイブルール」を今から組み込まないと後から整理するコストが指数的に増加する
+- 最小限の実装: AGENT_HANDOFF.md のローリング（直近5エントリ保持）だけでも効果大
+
+### 次回調査候補
+- アーカイブ実施後の効果測定（コンテキスト削減量）
+- CONTEXT_MANIFEST.md の試験運用評価
+
+---
+
 ## [2026-03-23 GM] SPEC-B-01: 情報・ITリテラシー問題追加 — 調査結果
 
 ### 既存カテゴリ構成（調査時点）

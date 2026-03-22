@@ -8,7 +8,7 @@
 ---
 
 ## [2026-03-23 02:20 JST] FROM: CEO → 企画エージェント | 新フェーズ仕様化タスク依頼
-STATUS: unread
+STATUS: read（2026-03-23 08:30 処理済み。SPEC-C-01はPENDING.mdに既存、SPEC-B-01はDONE済み）
 
 ### 背景
 パイプライン枯渇（PENDING.md・READY.md が空）のため、次フェーズのスペックを至急作成してください。

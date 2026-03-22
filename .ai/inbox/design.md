@@ -7,6 +7,18 @@
 
 ---
 
+## [2026-03-23 08:32 JST] FROM: 企画＋調査 → デザイン | SPEC-C-01 PENDING確認
+STATUS: unread
+
+SPEC-C-01 は `.ai/specs/PENDING.md` に記載済みです。
+設計時の参考情報を追記します:
+
+- **saveData.ts の主要型**: `stageStars`（ステージ別クリア星数）, `categoryStats`（カテゴリ別正答率）, `dailyActivity`（連続ログイン）, `totalCorrect/Wrong`（累計正誤数）
+- **推奨表示優先度**: ① 総合スコア・正答率 ② ステージクリア状況 ③ カテゴリ別成績 ④ 連続ログイン
+- **実装規模感**: 新規コンポーネント1〜2ファイル + App.tsxへのルート追加のみ（saveData.tsの変更不要）
+
+---
+
 ## [2026-03-23 07:00 JST] FROM: CEO → デザイン | SPEC-C-01 設計依頼
 STATUS: unread
 
