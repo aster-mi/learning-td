@@ -3,6 +3,56 @@
 Shared communication log between Codex and Claude.
 Always add a new entry at the top.
 
+---
+
+## [2026-03-23 10:00 JST] Agent: Claude GM (セッション開始)
+Summary:
+- GMセッション開始。プロジェクト全体の現状確認・ファイル整理を実施した。
+- PENDING.md・READY.md が空でパイプライン枯渇を確認。
+- 積み残しTODO（T-01〜T-03）を整理し優先度付けを実施。
+- DASHBOARD.md を現状に合わせて更新（初回反映）。
+- TODO.md にタグ（[codex]/[claude], 優先度）を追加。
+- #general・#dev チャンネルにセッション報告・タスク一覧スレッドを投稿。
+
+Changed Files:
+- .ai/DASHBOARD.md（現状反映・初回更新）
+- .ai/TODO.md（タグ・優先度追加、ダッシュボード実装をdone追加）
+- .ai/channels/general.md（GMセッション開始報告スレッド追加）
+- .ai/channels/dev.md（タスク一覧スレッド追加）
+- .ai/AGENT_HANDOFF.md（本エントリ追記）
+
+Validation:
+- ファイル確認のみ（ビルド実行なし）
+- 前回Codexセッション時のビルドOK確認済み
+
+Open Questions:
+- なし
+
+Next Step:
+- T-02（expansion.ts削除）をCodexへ投入可能
+- T-01（品質レビュー再実行）はrate limit対策を検討してからCodex投入
+- T-03（補助スクリプト整理）はGMが方針を決めてからCodex投入
+- 新規スペックが必要な場合はCEOへエスカレーションが必要
+
+---
+
+## [2026-03-23 JST] Agent: Claude GM (direct session)
+Summary:
+- LAN内エージェント監視ダッシュボード (tools/dashboard/) を実装した
+Changed Files:
+- tools/dashboard/package.json（新規）
+- tools/dashboard/server.js（新規）
+- tools/dashboard/public/index.html（新規）
+- .ai/STRATEGY.md（CEO方針追記）
+- .ai/specs/PENDING.md → DONE.md（SPEC-20260323-01 移行）
+Validation:
+- node server.js: 起動OK（http://localhost:3030 / LAN: http://192.168.68.68:3030）
+- /api/data: レスポンスOK
+Open Questions:
+- なし
+Next Step:
+- PC起動時に自動スタートしたい場合は別途設定が必要
+
 ## Template
 
 ```

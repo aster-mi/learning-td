@@ -57,14 +57,18 @@ codex exec -C /d/game/tower/learning-td \
 
 ### 3. プロンプトテンプレート
 
-Codex に渡すプロンプトには以下を含める:
+Codex に渡すプロンプトには以下を必ず含める:
 
 ```
 作業ルール:
 - .codex/CODEX.md に従うこと
+- 作業開始前に必ずブランチを切ること:
+  git checkout main && git pull origin main && git checkout -b codex/<task-name>
 - 変更対象は以下のファイルのみに限定: [ファイルリスト]
 - 以下のファイルは絶対に変更しないこと: [排他ファイルリスト]
 - 完了後に npm run build で成功を確認すること
+- ビルド成功後に git push origin codex/<task-name> すること
+- PRの作成・マージは Claude が行うので、Codex はブランチをプッシュするだけでよい
 - コミットメッセージは `<scope>: <summary>` 形式
 
 タスク:
@@ -83,29 +87,41 @@ Codex に渡すプロンプトには以下を含める:
 - 逐次実行に切り替える（依存タスクを後に回す）
 - または共有ファイルの変更を Claude 側で事前に行い、Codex は個別ファイルのみ担当
 
-### Step 3: 並行起動
+### Step 3: 並行起動（各 Codex は専用ブランチで作業）
 ```bash
-# Bash ツールの run_in_background で並行実行
-# タスク A
-codex exec -C /d/game/tower/learning-td --full-auto "..."
-
-# タスク B（別の Bash 呼び出しで同時起動）
-codex exec -C /d/game/tower/learning-td --full-auto "..."
+# run_in_background: true で並行実行
+codex exec -C /d/game/tower/learning-td --full-auto "..."  # → codex/task-a ブランチ
+codex exec -C /d/game/tower/learning-td --full-auto "..."  # → codex/task-b ブランチ
 ```
 
-### Step 4: 結果確認
-各 Codex の完了を待ち、以下を検証:
+### Step 4: PR作成（Codex 完了後に Claude が実施）
 ```bash
-git log --oneline -5     # コミット確認
-npm run build             # ビルド通過
-npm test                  # テスト通過
+gh pr create \
+  --base main \
+  --head codex/<branch-name> \
+  --title "<scope>: <変更内容の要約>" \
+  --body "## 変更内容\n- ...\n\n## Validation\n- [ ] npm run build: OK"
 ```
 
-### Step 5: コンフリクト解消（発生時）
+### Step 5: レビュー＆マージ
 ```bash
-git status                # 状態確認
-git diff                  # 差分確認
-# 必要なら手動マージ
+gh pr list --state open        # 一覧確認
+gh pr diff <PR番号>             # diff確認
+gh pr checkout <PR番号>         # チェックアウト
+npm run build                   # ビルド検証
+gh pr merge <PR番号> --merge --delete-branch  # マージ
+```
+
+### Step 6: コンフリクト解消（発生時）
+```bash
+gh pr checkout <PR番号>
+git rebase main
+# コンフリクトを手動解消
+git add <resolved-files>
+git rebase --continue
+npm run build
+git push --force-with-lease origin codex/<branch-name>
+gh pr merge <PR番号> --merge --delete-branch
 ```
 
 ## Claude 側の並行作業
@@ -152,12 +168,13 @@ Codex B: src/data/__tests__/ のテスト
 | エラー | 対処 |
 |--------|------|
 | `spawn EINVAL` | Windows 環境の問題。`codex exec` のパスを確認 |
-| Codex がコミットせず終了 | `git diff` で変更を確認し、Claude が手動コミット |
-| ビルド失敗 | `npm run build` のエラーを確認し、Claude が修正 |
-| ファイル競合 | `git status` → 手動マージ → 新規コミット |
+| Codex がコミットせず終了 | `git diff` で変更を確認し、Claude が手動コミット＆プッシュしてPR作成 |
+| ビルド失敗 | PRをクローズし、TODO に `[todo][codex]` で再追記 |
+| PRマージ時に競合 | `gh pr checkout` → `git rebase main` → 解消 → `push --force-with-lease` |
 
 ## NG
 - 同じファイルを複数 Codex に同時編集させる
 - Codex 実行中に Claude が同じファイルを編集する
 - プロンプトにファイル制約を書かずに実行する
-- 結果を検証せずにプッシュする
+- Codex に main へ直接コミット・プッシュさせる
+- レビューなしでマージする

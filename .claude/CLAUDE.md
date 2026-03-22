@@ -74,3 +74,131 @@ Next Step:
 - If unexpected local changes are detected, pause and ask the user.
 - Do not delete or overwrite another agent's notes without reason.
 - `tmp_*` の一時ファイルはコミットしない。
+
+## Agent Organization
+
+### スケジュール一覧
+
+| タスクID | 起動時刻 | 役割 |
+|---|---|---|
+| `learning-td-ceo` | 毎日 7:00 | CEO：戦略方針の決定 |
+| `learning-td-planning` | 毎日 8:30 | 企画＋調査：トレンド調査・仕様化 |
+| `learning-td-design` | 毎日 9:30 | デザイン：UI/UX設計・PENDING→READY移行 |
+| `learning-td-enhance` | 5時間ごと | GM＋レビュー：Codex投入・PRレビュー・マージ |
+| Codex（最大10本） | GMから起動 | 実装：ブランチ実装・push |
+
+### 情報フロー
+
+```
+CEO → STRATEGY.md → 企画＋調査 → RESEARCH.md
+                               → specs/PENDING.md
+                                       ↓
+                              デザイン → specs/READY.md
+                                               ↓
+                              GM → Codex（ブランチ実装）→ PR作成
+                                → PRレビュー＆マージ
+                                → specs/DONE.md へ移行
+```
+
+### 通信ファイル
+
+| ファイル | 書き手 | 読み手 |
+|---|---|---|
+| `.ai/STRATEGY.md` | CEO | 全員 |
+| `.ai/RESEARCH.md` | 企画＋調査 | CEO・企画・デザイン |
+| `.ai/specs/PENDING.md` | 企画＋調査 | デザイン |
+| `.ai/specs/READY.md` | デザイン | GM |
+| `.ai/specs/DONE.md` | GM | CEO（振り返り） |
+| `.ai/DECISIONS.md` | CEO・デザイン | 全員 |
+| `.ai/AGENT_HANDOFF.md` | 全員 | 全員 |
+| `.ai/TODO.md` | 全員 | 全員 |
+| `.ai/DASHBOARD.md` | GM | ユーザー・全員 |
+
+### チャンネル（メイン通信）
+
+| チャンネル | ファイル | 用途 |
+|---|---|---|
+| `#general` | `.ai/channels/general.md` | 全体共有・セッション報告・横断的議論 |
+| `#specs` | `.ai/channels/specs.md` | 仕様・企画・デザインの議論 |
+| `#dev` | `.ai/channels/dev.md` | 実装・ビルド・PR に関する議論 |
+| `#escalation` | `.ai/channels/escalation.md` | **ユーザーへのエスカレーション**（最優先で確認）|
+
+### スレッド形式（全エージェント共通）
+
+**新規スレッド**（チャンネルファイルの `---` の直後・先頭に追記）:
+
+```markdown
+## [YYYY-MM-DD HH:mm JST] FROM: エージェント名 → #channel | 件名
+本文。複数行OK。
+
+---
+```
+
+**返信**（該当スレッドの本文末尾、`---` の前に追記）:
+
+```markdown
+  > [FROM: エージェント名 | HH:mm] 返信内容
+```
+
+### チャンネル選択ガイド
+
+| 状況 | 投稿先 |
+|---|---|
+| セッション開始・終了の報告 | `#general` |
+| 仕様の質問・フィードバック | `#specs` |
+| ビルド失敗・PR差し戻し報告 | `#dev` |
+| 人間の判断が必要・ブロッカー | `#escalation` |
+
+### エスカレーション・返信ルール
+
+**投稿前に自問する:**
+> 「自分でベストジャッジできるか？」→ できるなら投稿せず進む
+
+`#escalation` に投稿後、次セッションで確認:
+- ユーザーの返信あり → 内容に従って処理、`#general` に対応報告
+- 10時間以上返信なし → ベストジャッジで進み、`#general` に判断内容を投稿
+
+**ユーザーからの自発的指示:**
+`#escalation` に新スレッドを立てれば次のGMセッションで拾う。
+処理後、GMが `#general` に対応報告を投稿する。
+
+### エスカレーション基準（#escalation に投稿するケース）
+- 人間の意図・判断が必要な方針変更
+- 重大なリスク・破壊的変更の発見
+- パイプライン枯渇（READY.md が空でタスクなし）
+- Codexが繰り返し失敗しているなど自律解決できない問題
+
+### inbox/（後方互換・緊急DM用）
+
+`.ai/inbox/` は残すが使用は最小限に。
+緊急の個別宛メッセージが必要な場合のみ使用し、基本はチャンネルを使う。
+
+## Role Division（Claude vs Codex）
+
+### Claude が担当する領域
+- **設計・アーキテクチャ**: コンポーネント設計、データ構造の判断、モジュール分割
+- **要件定義・企画**: 新機能の仕様策定、ユーザー体験の設計、優先度付け
+- **調査・分析**: コードベース全体の把握、パフォーマンス分析、品質評価
+- **マネジメント**: TODO の整理・優先度付け、Codex へのタスク分解・投入
+- **統合作業**: Codex 完了後の共有ファイル更新（`unitCatalog.ts`, `renderers/index.ts` 等）
+
+### Codex が担当する領域
+- 細粒度の実装（ファイル単位で独立したもの）
+- 問題データ追加、ユニットレンダラー作成、UI コンポーネント改修など
+- 最大 10 並列で競合しない範囲のタスクを同時実行
+
+### Claude が直接実装してよいケース
+- Codex 完了後の統合・登録処理（共有ファイルへの追記）
+- ビルド失敗時の緊急修正
+- Codex では判断が難しい設計上のリファクタリング
+
+### Codex タスクの投入方法
+詳細は `.ai/skills/SKILL_CODEX_ORCHESTRATION.md` を参照。
+```bash
+codex exec -C /d/game/tower/learning-td --full-auto "タスク説明（ファイル制約を必ず含める）"
+```
+
+### TODO.md のタグ規約
+- `[claude]`: Claude が担当（設計・企画・統合）
+- `[codex]`: Codex が担当（実装タスク）
+- タグなし: どちらでも可

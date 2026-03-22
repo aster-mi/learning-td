@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Learning TD Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1117;
+    --surface: #1a1d27;
+    --surface2: #22263a;
+    --border: #2e3250;
+    --text: #e2e8f0;
+    --muted: #8892a4;
+    --accent: #6c8ef7;
+    --green: #4ade80;
+    --red: #f87171;
+    --yellow: #facc15;
+    --orange: #fb923c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--text); font-family: 'Segoe UI', system-ui, sans-serif; font-size: 14px; line-height: 1.6; }
+
+  header {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: sticky; top: 0; z-index: 100;
+  }
+  header h1 { font-size: 16px; font-weight: 600; color: var(--accent); }
+  header h1 span { color: var(--muted); font-weight: 400; margin-left: 8px; font-size: 13px; }
+  .header-right { display: flex; align-items: center; gap: 16px; }
+  .build-badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 600; }
+  .build-ok  { background: #14532d; color: var(--green); }
+  .build-ng  { background: #450a0a; color: var(--red); }
+  .build-unk { background: #2e3250; color: var(--muted); }
+  .refresh-info { font-size: 12px; color: var(--muted); }
+
+  nav {
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    padding: 0 24px;
+    gap: 4px;
+  }
+  nav button {
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); padding: 10px 16px; font-size: 13px;
+    border-bottom: 2px solid transparent; transition: all .15s;
+    position: relative;
+  }
+  nav button:hover { color: var(--text); }
+  nav button.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .badge {
+    position: absolute; top: 6px; right: 4px;
+    background: var(--red); color: #fff;
+    border-radius: 10px; font-size: 10px; font-weight: 700;
+    padding: 1px 5px; min-width: 16px; text-align: center;
+  }
+
+  main { padding: 24px; max-width: 1100px; margin: 0 auto; }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .grid3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 800px) { .grid2, .grid3 { grid-template-columns: 1fr; } }
+
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px; overflow: hidden;
+  }
+  .card-header {
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+    font-size: 12px; font-weight: 600; color: var(--muted);
+    text-transform: uppercase; letter-spacing: .05em;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .card-body { padding: 16px; overflow-y: auto; max-height: 480px; }
+  .card-body.tall { max-height: 600px; }
+  .card-body.short { max-height: 200px; }
+
+  .md { color: var(--text); }
+  .md h1, .md h2 { font-size: 15px; color: var(--accent); margin: 16px 0 8px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
+  .md h3 { font-size: 13px; color: var(--text); margin: 12px 0 6px; }
+  .md p { margin: 6px 0; color: var(--muted); }
+  .md ul, .md ol { padding-left: 20px; margin: 6px 0; }
+  .md li { margin: 3px 0; }
+  .md code { background: var(--surface2); padding: 1px 5px; border-radius: 4px; font-size: 12px; font-family: 'Cascadia Code', monospace; }
+  .md pre { background: var(--surface2); border: 1px solid var(--border); border-radius: 6px; padding: 12px; overflow-x: auto; margin: 8px 0; }
+  .md pre code { background: none; padding: 0; }
+  .md table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+  .md th, .md td { border: 1px solid var(--border); padding: 6px 10px; font-size: 13px; }
+  .md th { background: var(--surface2); color: var(--muted); }
+  .md strong { color: var(--text); }
+  .md blockquote { border-left: 3px solid var(--accent); padding-left: 12px; color: var(--muted); margin: 8px 0; }
+  .md hr { border-color: var(--border); margin: 12px 0; }
+
+  /* Inbox */
+  .msg {
+    border: 1px solid var(--border); border-radius: 8px;
+    margin-bottom: 12px; overflow: hidden;
+  }
+  .msg-header {
+    padding: 10px 14px; background: var(--surface2);
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  }
+  .msg-from { font-size: 12px; font-weight: 600; color: var(--accent); }
+  .msg-subj { font-size: 13px; color: var(--text); flex: 1; }
+  .msg-status { font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+  .status-unread  { background: #450a0a; color: var(--red); }
+  .status-replied { background: #14532d; color: var(--green); }
+  .status-done    { background: #1a3a2a; color: #6ee7b7; }
+  .status-auto    { background: #2e2a14; color: var(--yellow); }
+  .status-other   { background: var(--surface); color: var(--muted); }
+  .msg-body { padding: 12px 14px; font-size: 13px; color: var(--muted); white-space: pre-wrap; }
+  .msg-reply-form { padding: 12px 14px; border-top: 1px solid var(--border); background: var(--surface); }
+  .msg-reply-form textarea {
+    width: 100%; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 8px; color: var(--text); font-size: 13px;
+    resize: vertical; min-height: 60px;
+  }
+  .msg-reply-form button {
+    margin-top: 8px; background: var(--accent); color: #fff;
+    border: none; border-radius: 6px; padding: 6px 16px;
+    font-size: 13px; cursor: pointer; font-weight: 600;
+  }
+  .msg-reply-form button:hover { opacity: .85; }
+
+  /* Instruct form */
+  .instruct-form {
+    background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px; padding: 16px; margin-bottom: 20px;
+  }
+  .instruct-form h3 { font-size: 13px; color: var(--accent); margin-bottom: 12px; }
+  .instruct-form input, .instruct-form textarea {
+    width: 100%; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 6px; padding: 8px 10px; color: var(--text);
+    font-size: 13px; margin-bottom: 8px;
+  }
+  .instruct-form textarea { resize: vertical; min-height: 70px; }
+  .instruct-form button {
+    background: var(--accent); color: #fff; border: none;
+    border-radius: 6px; padding: 7px 18px; font-size: 13px;
+    cursor: pointer; font-weight: 600;
+  }
+  .instruct-form button:hover { opacity: .85; }
+
+  /* Spec pipeline */
+  .pipeline { display: flex; align-items: stretch; gap: 0; margin-bottom: 20px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+  .pipeline-stage { flex: 1; padding: 16px; text-align: center; border-right: 1px solid var(--border); }
+  .pipeline-stage:last-child { border-right: none; }
+  .pipeline-stage .count { font-size: 32px; font-weight: 700; color: var(--accent); }
+  .pipeline-stage .label { font-size: 11px; color: var(--muted); text-transform: uppercase; margin-top: 4px; }
+  .pipeline-stage .arrow { color: var(--border); font-size: 20px; }
+
+  .spec-list { list-style: none; }
+  .spec-list li { padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--muted); }
+  .spec-list li:last-child { border-bottom: none; }
+  .spec-list li::before { content: '•'; color: var(--accent); margin-right: 8px; }
+
+  /* PR list */
+  .pr-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+  .pr-item:last-child { border-bottom: none; }
+  .pr-num { font-size: 12px; color: var(--muted); min-width: 36px; }
+  .pr-title { font-size: 13px; flex: 1; }
+  .pr-branch { font-size: 11px; color: var(--muted); background: var(--surface2); padding: 2px 6px; border-radius: 4px; }
+
+  /* Handoff entries */
+  .hf-entry { margin-bottom: 16px; border-left: 3px solid var(--accent); padding-left: 12px; }
+  .hf-meta { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+  .hf-body { font-size: 13px; color: var(--muted); white-space: pre-wrap; max-height: 200px; overflow: hidden; position: relative; }
+  .hf-body.expanded { max-height: none; }
+  .hf-expand { background: none; border: none; color: var(--accent); cursor: pointer; font-size: 12px; margin-top: 4px; }
+
+  .empty { color: var(--muted); font-size: 13px; text-align: center; padding: 32px; }
+
+  /* Channels */
+  .ch-layout { display: flex; gap: 0; height: calc(100vh - 120px); min-height: 500px; }
+  .ch-sidebar {
+    width: 180px; flex-shrink: 0;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 10px 0 0 10px; padding: 12px 8px;
+  }
+  .ch-sidebar-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; padding: 4px 8px 8px; }
+  .ch-tab {
+    display: block; width: 100%; text-align: left;
+    background: none; border: none; cursor: pointer;
+    color: var(--muted); padding: 7px 10px; border-radius: 6px;
+    font-size: 13px; margin-bottom: 2px; transition: all .15s;
+    position: relative;
+  }
+  .ch-tab:hover { background: var(--surface2); color: var(--text); }
+  .ch-tab.active { background: var(--surface2); color: var(--text); }
+  .ch-tab .ch-badge {
+    position: absolute; right: 8px; top: 50%; transform: translateY(-50%);
+    background: var(--red); color: #fff; border-radius: 10px;
+    font-size: 10px; font-weight: 700; padding: 1px 5px;
+  }
+  .ch-main {
+    flex: 1; border: 1px solid var(--border); border-left: none;
+    border-radius: 0 10px 10px 0; background: var(--surface);
+    display: flex; flex-direction: column; overflow: hidden;
+  }
+  #ch-threads { flex: 1; overflow-y: auto; padding: 16px; }
+  .ch-post-form {
+    border-top: 1px solid var(--border); padding: 12px 16px;
+    background: var(--surface2);
+  }
+  .ch-post-form input, .ch-post-form textarea {
+    width: 100%; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 6px; padding: 7px 10px; color: var(--text);
+    font-size: 13px; margin-bottom: 6px;
+  }
+  .ch-post-form textarea { resize: vertical; min-height: 55px; }
+  .ch-post-form button {
+    background: var(--accent); color: #fff; border: none;
+    border-radius: 6px; padding: 6px 16px; font-size: 13px;
+    cursor: pointer; font-weight: 600;
+  }
+  .ch-post-form button:hover { opacity: .85; }
+
+  /* Thread */
+  .thread {
+    margin-bottom: 14px; border: 1px solid var(--border);
+    border-radius: 8px; overflow: hidden;
+  }
+  .thread-header {
+    padding: 9px 14px; background: var(--surface2);
+    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+    cursor: pointer;
+  }
+  .thread-header:hover { background: #282d43; }
+  .thread-toggle {
+    font-size: 12px; color: var(--muted); min-width: 16px;
+    transition: transform .15s ease;
+  }
+  .thread-from { font-size: 12px; font-weight: 700; color: var(--accent); }
+  .thread-subject { font-size: 13px; flex: 1; color: var(--text); }
+  .thread-time { font-size: 11px; color: var(--muted); }
+  .thread-content { display: none; }
+  .thread.open .thread-content { display: block; }
+  .thread.open .thread-toggle { transform: rotate(90deg); }
+  .thread-body {
+    padding: 14px 16px 12px; font-size: 13px; color: var(--muted);
+    overflow-x: auto;
+  }
+  .thread-body .md p { color: var(--muted); }
+  .thread-body .md table { border-collapse: collapse; width: 100%; }
+  .thread-body .md th, .thread-body .md td { border: 1px solid var(--border); padding: 6px 10px; }
+  .thread-replies { border-top: 1px solid var(--border); }
+  .thread-reply {
+    padding: 8px 14px 8px 28px; border-bottom: 1px solid var(--border);
+    font-size: 13px; display: flex; gap: 10px; align-items: flex-start;
+  }
+  .thread-reply:last-child { border-bottom: none; }
+  .thread-reply-from { font-size: 11px; font-weight: 700; color: var(--green); min-width: 80px; }
+  .thread-reply-body { color: var(--muted); flex: 1; white-space: pre-wrap; }
+  .thread-reply-time { font-size: 10px; color: var(--border); }
+  .thread-reply-form {
+    padding: 8px 14px; border-top: 1px solid var(--border);
+    background: var(--surface); display: flex; gap: 8px; align-items: center;
+  }
+  .thread-reply-form input {
+    flex: 1; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 6px; padding: 6px 10px; color: var(--text); font-size: 13px;
+  }
+  .thread-reply-form button {
+    background: var(--surface2); color: var(--accent); border: 1px solid var(--border);
+    border-radius: 6px; padding: 6px 12px; font-size: 12px; cursor: pointer; font-weight: 600;
+  }
+  .thread-reply-form button:hover { background: var(--accent); color: #fff; }
+  @media (max-width: 800px) {
+    .thread-header { padding: 10px 12px; }
+    .thread-body { padding: 12px; }
+    .thread-reply { padding: 8px 12px 8px 20px; }
+    .thread-reply-form { padding: 10px 12px; }
+  }
+
+  .toast {
+    position: fixed; bottom: 24px; right: 24px;
+    background: var(--green); color: #000;
+    padding: 10px 20px; border-radius: 8px; font-weight: 600;
+    font-size: 13px; z-index: 9999; opacity: 0; transition: opacity .3s;
+  }
+  .toast.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>📊 Learning TD<span>Agent Dashboard</span></h1>
+  <div class="header-right">
+    <span id="build-badge" class="build-badge build-unk">BUILD —</span>
+    <span id="refresh-info" class="refresh-info">読込中...</span>
+  </div>
+</header>
+
+<nav>
+  <button class="active" onclick="switchTab('dashboard')">ダッシュボード</button>
+  <button onclick="switchTab('channels')" id="channels-btn">チャンネル</button>
+  <button onclick="switchTab('specs')">スペック</button>
+  <button onclick="switchTab('handoff')">ハンドオフ</button>
+  <button onclick="switchTab('strategy')">戦略・調査</button>
+</nav>
+
+<main>
+
+  <!-- ダッシュボード -->
+  <div id="tab-dashboard" class="tab-panel active">
+    <div class="grid2">
+      <div class="card">
+        <div class="card-header">📋 ダッシュボード</div>
+        <div class="card-body tall" id="dashboard-md"></div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="card">
+          <div class="card-header">🔀 オープン PR</div>
+          <div class="card-body" id="pr-list"></div>
+        </div>
+        <div class="card">
+          <div class="card-header">📦 スペックパイプライン</div>
+          <div class="card-body short" id="spec-summary"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- チャンネル -->
+  <div id="tab-channels" class="tab-panel">
+    <div class="ch-layout">
+      <div class="ch-sidebar">
+        <div class="ch-sidebar-title">チャンネル</div>
+        <button class="ch-tab active" onclick="switchChannel('escalation')" id="ch-escalation">
+          📮 #escalation
+        </button>
+        <button class="ch-tab" onclick="switchChannel('general')" id="ch-general">#general</button>
+        <button class="ch-tab" onclick="switchChannel('specs')" id="ch-specs">#specs</button>
+        <button class="ch-tab" onclick="switchChannel('dev')" id="ch-dev">#dev</button>
+      </div>
+      <div class="ch-main">
+        <div id="ch-threads"></div>
+        <div class="ch-post-form">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:8px" id="ch-post-label">新しいスレッドを立てる</div>
+          <input id="ch-subject" type="text" placeholder="件名">
+          <textarea id="ch-body" placeholder="本文（省略可）"></textarea>
+          <button onclick="postToChannel()">投稿 →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 受信トレイ（後方互換） -->
+  <div id="tab-inbox" class="tab-panel" style="display:none">
+    <div id="inbox-msgs"></div>
+  </div>
+
+  <!-- スペック -->
+  <div id="tab-specs" class="tab-panel">
+    <div class="pipeline" id="spec-pipeline"></div>
+    <div class="grid3" id="spec-detail"></div>
+  </div>
+
+  <!-- ハンドオフ -->
+  <div id="tab-handoff" class="tab-panel">
+    <div id="handoff-list"></div>
+  </div>
+
+  <!-- 戦略・調査 -->
+  <div id="tab-strategy" class="tab-panel">
+    <div class="grid2">
+      <div class="card">
+        <div class="card-header">🎯 STRATEGY</div>
+        <div class="card-body tall" id="strategy-md"></div>
+      </div>
+      <div class="card">
+        <div class="card-header">🔍 RESEARCH</div>
+        <div class="card-body tall" id="research-md"></div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<div id="toast" class="toast"></div>
+
+<script>
+let data = null;
+let currentChannel = 'escalation';
+let openThreads = {};
+
+marked.setOptions({ mangle: false, headerIds: false });
+
+function switchTab(name) {
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+
+function switchChannel(name) {
+  currentChannel = name;
+  document.querySelectorAll('.ch-tab').forEach(b => b.classList.remove('active'));
+  document.getElementById('ch-' + name).classList.add('active');
+  document.getElementById('ch-post-label').textContent = `#${name} に新しいスレッドを立てる`;
+  if (data) renderThreads();
+}
+
+function parseThreads(content) {
+  const threads = [];
+  const blocks = content.split(/(?=^## \[)/m).filter(b => b.startsWith('## ['));
+  for (const block of blocks) {
+    const headerMatch = block.match(/^## \[([^\]]+)\] FROM: ([^|→\n]+).*?\| (.+)/);
+    if (!headerMatch) continue;
+    const time = headerMatch[1].trim();
+    const from = headerMatch[2].trim();
+    const subject = headerMatch[3].trim();
+    // 本文（ヘッダー行の後〜最初の > または --- まで）
+    const afterHeader = block.replace(/^## [^\n]+\n/, '');
+    const withoutSep = afterHeader.replace(/\n---[\s\S]*$/, '');
+    const replyStart = withoutSep.search(/^\s*>/m);
+    const body = (replyStart === -1 ? withoutSep : withoutSep.slice(0, replyStart)).trim();
+    // 返信（> で始まる行）
+    const replies = [];
+    const replyRe = /^\s*>\s*\[([^\]]+)\]\s*([^\n]*)/gm;
+    let rm;
+    while ((rm = replyRe.exec(block)) !== null) {
+      const fromTime = rm[1].trim();
+      const replyBody = rm[2].trim();
+      replies.push({ fromTime, body: replyBody });
+    }
+    threads.push({ time, from, subject, body, replies, raw: block });
+  }
+  return threads;
+}
+
+function renderThreads() {
+  const content = data.channels[currentChannel] || '';
+  const threads = parseThreads(content);
+  const el = document.getElementById('ch-threads');
+  openThreads[currentChannel] = openThreads[currentChannel] || {};
+  if (!threads.length) {
+    el.innerHTML = '<div class="empty">スレッドなし</div>';
+    return;
+  }
+  el.innerHTML = threads.map((t, i) => `
+    <div class="thread ${openThreads[currentChannel][i] ? 'open' : ''}">
+      <div class="thread-header" onclick="toggleThread(${i})">
+        <span class="thread-toggle">▶</span>
+        <span class="thread-from">${escHtml(t.from)}</span>
+        <span class="thread-subject">${escHtml(t.subject)}</span>
+        <span class="thread-time">${escHtml(t.time)}</span>
+      </div>
+      <div class="thread-content">
+        ${t.body ? `<div class="thread-body">${md(t.body)}</div>` : ''}
+        ${t.replies.length ? `
+        <div class="thread-replies">
+          ${t.replies.map(r => `
+            <div class="thread-reply">
+              <span class="thread-reply-from">${escHtml(r.fromTime.split('|')[0]?.trim() || r.fromTime)}</span>
+              <span class="thread-reply-body">${escHtml(r.body)}</span>
+              <span class="thread-reply-time">${escHtml(r.fromTime.split('|')[1]?.trim() || '')}</span>
+            </div>`).join('')}
+        </div>` : ''}
+        <div class="thread-reply-form">
+          <input id="ch-reply-${i}" type="text" placeholder="返信する...">
+          <button onclick="replyToThread(${i})">返信</button>
+        </div>
+      </div>
+    </div>`).join('');
+  window._chThreads = threads;
+}
+
+function toggleThread(i) {
+  openThreads[currentChannel] = openThreads[currentChannel] || {};
+  openThreads[currentChannel][i] = !openThreads[currentChannel][i];
+  renderThreads();
+}
+
+async function replyToThread(i) {
+  const t = window._chThreads[i];
+  const reply = document.getElementById('ch-reply-' + i).value.trim();
+  if (!reply) return;
+  await fetch('/api/channel/reply', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ channel: currentChannel, threadSubject: t.subject, reply })
+  });
+  showToast('返信しました ✅');
+  await loadData();
+}
+
+async function postToChannel() {
+  const subject = document.getElementById('ch-subject').value.trim();
+  const body = document.getElementById('ch-body').value.trim();
+  if (!subject) { showToast('件名を入力してください'); return; }
+  await fetch('/api/channel/post', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ channel: currentChannel, subject, body })
+  });
+  document.getElementById('ch-subject').value = '';
+  document.getElementById('ch-body').value = '';
+  showToast(`#${currentChannel} に投稿しました 🚀`);
+  await loadData();
+}
+
+function md(text) {
+  if (!text) return '<div class="empty">データなし</div>';
+  return '<div class="md">' + marked.parse(text) + '</div>';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function renderDashboard() {
+  document.getElementById('dashboard-md').innerHTML = md(data.dashboard);
+  const badge = document.getElementById('build-badge');
+  if (data.buildStatus === 'OK') {
+    badge.className = 'build-badge build-ok'; badge.textContent = 'BUILD ✅';
+  } else if (data.buildStatus === 'NG') {
+    badge.className = 'build-badge build-ng'; badge.textContent = 'BUILD ❌';
+  } else {
+    badge.className = 'build-badge build-unk'; badge.textContent = 'BUILD —';
+  }
+}
+
+function renderPRs() {
+  const el = document.getElementById('pr-list');
+  if (!data.prs.length) { el.innerHTML = '<div class="empty">オープンPRなし</div>'; return; }
+  el.innerHTML = data.prs.map(pr => `
+    <div class="pr-item">
+      <span class="pr-num">#${pr.number}</span>
+      <span class="pr-title">${pr.title}</span>
+      <span class="pr-branch">${pr.headRefName}</span>
+    </div>`).join('');
+}
+
+function renderSpecSummary() {
+  const s = data.specs;
+  document.getElementById('spec-summary').innerHTML = `
+    <div style="display:flex;gap:24px;justify-content:center;padding:8px 0">
+      <div style="text-align:center"><div style="font-size:28px;font-weight:700;color:#facc15">${s.pending.count}</div><div style="font-size:11px;color:var(--muted)">PENDING</div></div>
+      <div style="color:var(--border);font-size:20px;align-self:center">→</div>
+      <div style="text-align:center"><div style="font-size:28px;font-weight:700;color:#6c8ef7">${s.ready.count}</div><div style="font-size:11px;color:var(--muted)">READY</div></div>
+      <div style="color:var(--border);font-size:20px;align-self:center">→</div>
+      <div style="text-align:center"><div style="font-size:28px;font-weight:700;color:#4ade80">${s.done.count}</div><div style="font-size:11px;color:var(--muted)">DONE</div></div>
+    </div>`;
+}
+
+function renderInbox() {
+  const msgs = parseInboxMessages(data.inbox);
+  if (!msgs.length) {
+    document.getElementById('inbox-msgs').innerHTML = '<div class="empty">メッセージなし</div>';
+    return;
+  }
+  document.getElementById('inbox-msgs').innerHTML = msgs.map((m, i) => `
+    <div class="msg">
+      <div class="msg-header">
+        <span class="msg-from">${m.from}</span>
+        <span class="msg-subj">${m.subject}</span>
+        <span class="msg-status ${statusClass(m.status)}">${m.status}</span>
+        <span style="font-size:11px;color:var(--muted)">${m.date}</span>
+      </div>
+      <div class="msg-body">${escHtml(m.body)}</div>
+      ${m.status === 'unread' ? `
+      <div class="msg-reply-form">
+        <textarea id="reply-${i}" placeholder="返信を入力..."></textarea>
+        <button onclick="postReply(${i})">返信する</button>
+      </div>` : ''}
+    </div>`).join('');
+  window._inboxMsgs = msgs;
+}
+
+function statusClass(s) {
+  if (s === 'unread') return 'status-unread';
+  if (s === 'replied') return 'status-replied';
+  if (s === 'done') return 'status-done';
+  if (s === 'auto-resolved') return 'status-auto';
+  return 'status-other';
+}
+
+function parseInboxMessages(content) {
+  const msgs = [];
+  const blocks = content.split(/(?=^## \[(?!指示))/m).filter(b => b.includes('STATUS:'));
+  for (const block of blocks) {
+    const fromMatch = block.match(/FROM:\s*([^|→\n]+)/);
+    const subjMatch = block.match(/\*\*Subject:\*\*\s*(.+)/);
+    const statusMatch = block.match(/STATUS:\s*(\S+)/);
+    const dateMatch = block.match(/\[([^\]]+)\]/);
+    const bodyMatch = block.match(/\*\*Subject:\*\*.+\n([\s\S]*?)(?:Reply:|---\s*$)/);
+    msgs.push({
+      from: fromMatch ? fromMatch[1].trim() : '不明',
+      subject: subjMatch ? subjMatch[1].trim() : '（件名なし）',
+      status: statusMatch ? statusMatch[1].trim() : 'unknown',
+      date: dateMatch ? dateMatch[1] : '',
+      body: bodyMatch ? bodyMatch[1].trim() : '',
+      raw: block,
+    });
+  }
+  return msgs;
+}
+
+function renderSpecs() {
+  const s = data.specs;
+  document.getElementById('spec-pipeline').innerHTML = `
+    <div class="pipeline-stage">
+      <div class="count">${s.pending.count}</div>
+      <div class="label">⏳ PENDING<br>設計待ち</div>
+    </div>
+    <div style="display:flex;align-items:center;padding:0 8px;color:var(--border);font-size:24px">→</div>
+    <div class="pipeline-stage">
+      <div class="count">${s.ready.count}</div>
+      <div class="label">🔷 READY<br>実装待ち</div>
+    </div>
+    <div style="display:flex;align-items:center;padding:0 8px;color:var(--border);font-size:24px">→</div>
+    <div class="pipeline-stage">
+      <div class="count">${s.done.count}</div>
+      <div class="label">✅ DONE<br>完了</div>
+    </div>`;
+
+  function specCard(title, stage, content, titles) {
+    const list = titles.length
+      ? `<ul class="spec-list">${titles.map(t => `<li>${escHtml(t)}</li>`).join('')}</ul>`
+      : '<div class="empty">なし</div>';
+    return `<div class="card"><div class="card-header">${title}</div><div class="card-body">${list}</div></div>`;
+  }
+  document.getElementById('spec-detail').innerHTML =
+    specCard('⏳ PENDING', 'pending', s.pending.content, s.pending.titles) +
+    specCard('🔷 READY',   'ready',   s.ready.content,   s.ready.titles) +
+    specCard('✅ DONE',    'done',    s.done.content,    s.done.titles);
+}
+
+function renderHandoff() {
+  if (!data.handoffEntries.length) {
+    document.getElementById('handoff-list').innerHTML = '<div class="empty">ログなし</div>';
+    return;
+  }
+  document.getElementById('handoff-list').innerHTML = data.handoffEntries.map((entry, i) => {
+    const metaMatch = entry.match(/^## (\[[^\]]+\] Agent: .+)/m);
+    const meta = metaMatch ? metaMatch[1] : entry.split('\n')[0];
+    const body = entry.replace(/^##[^\n]+\n/, '').trim();
+    return `
+      <div class="hf-entry">
+        <div class="hf-meta">${escHtml(meta)}</div>
+        <div class="hf-body" id="hf-body-${i}">${escHtml(body)}</div>
+        <button class="hf-expand" onclick="toggleHF(${i})">もっと見る ▼</button>
+      </div>`;
+  }).join('');
+}
+
+function toggleHF(i) {
+  const el = document.getElementById('hf-body-' + i);
+  const btn = el.nextElementSibling;
+  el.classList.toggle('expanded');
+  btn.textContent = el.classList.contains('expanded') ? '閉じる ▲' : 'もっと見る ▼';
+}
+
+function renderStrategy() {
+  document.getElementById('strategy-md').innerHTML = md(data.strategy);
+  document.getElementById('research-md').innerHTML = md(data.research);
+}
+
+function renderChannelBadges() {
+  const chBtn = document.getElementById('channels-btn');
+  const oldBadge = chBtn.querySelector('.badge');
+  if (oldBadge) oldBadge.remove();
+  if (data.escalationUnread > 0) {
+    const b = document.createElement('span');
+    b.className = 'badge'; b.textContent = data.escalationUnread;
+    chBtn.appendChild(b);
+  }
+  const escBtn = document.getElementById('ch-escalation');
+  const oldEscBadge = escBtn.querySelector('.ch-badge');
+  if (oldEscBadge) oldEscBadge.remove();
+  if (data.escalationUnread > 0) {
+    const b = document.createElement('span');
+    b.className = 'ch-badge'; b.textContent = data.escalationUnread;
+    escBtn.appendChild(b);
+  }
+}
+
+async function postReply(i) {
+  const msg = window._inboxMsgs[i];
+  const reply = document.getElementById('reply-' + i).value.trim();
+  if (!reply) return;
+  await fetch('/api/inbox/reply', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ original: msg.raw, reply })
+  });
+  showToast('返信を送信しました ✅');
+  await loadData();
+}
+
+async function postInstruct() {
+  const subject = document.getElementById('instr-subject').value.trim();
+  const body = document.getElementById('instr-body').value.trim();
+  if (!subject) { showToast('件名を入力してください'); return; }
+  await fetch('/api/inbox/instruct', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ subject, body })
+  });
+  document.getElementById('instr-subject').value = '';
+  document.getElementById('instr-body').value = '';
+  showToast('指示を送信しました 🚀');
+  await loadData();
+}
+
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+async function loadData() {
+  try {
+    const res = await fetch('/api/data');
+    data = await res.json();
+    renderDashboard();
+    renderPRs();
+    renderSpecSummary();
+    renderInbox();
+    renderSpecs();
+    renderHandoff();
+    renderStrategy();
+    renderChannelBadges();
+    renderThreads();
+    const t = new Date(data.updatedAt);
+    document.getElementById('refresh-info').textContent =
+      `更新: ${t.toLocaleTimeString('ja-JP')} (30秒ごと自動更新)`;
+  } catch (e) {
+    document.getElementById('refresh-info').textContent = '⚠ 取得エラー';
+  }
+}
+
+loadData();
+setInterval(loadData, 30000);
+</script>
+</body>
+</html>

@@ -7,6 +7,13 @@
       "runtimeArgs": ["node_modules/vite/bin/vite.js", "--port", "5173"],
       "port": 5173,
       "cwd": "D:/game/tower/learning-td"
+    },
+    {
+      "name": "dashboard",
+      "runtimeExecutable": "node.exe",
+      "runtimeArgs": ["server.js"],
+      "port": 3030,
+      "cwd": "D:/game/tower/learning-td/tools/dashboard"
     }
   ]
 }
