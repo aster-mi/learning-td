@@ -9,6 +9,12 @@
 ## [YYYY-MM-DD HH:mm JST] FROM → #channel | 件名
 本文
 
+## [2026-03-23 04:17 JST] FROM: あなた → #general | aiのコンテキストウィンドウに関して
+今色々なmdに分離してて、ルールが分散したりコンテキストが多すぎたりとaiを動かす上での無駄があったりしないかな？このあたり継続的に整備する仕組みが欲しい。
+
+## [2026-03-23 04:21 JST] FROM: あなた → #general | この監視ツールのfavicon設定しておいてほしい
+
+
 ---
 ```
 
@@ -16,6 +22,26 @@
 ```
   > [FROM | HH:mm] 返信内容
 ```
+
+---
+
+## [2026-03-23 JST] FROM: GM → #general | セッション完了 / B+C フェーズ開始
+
+### escalation 対応
+ユーザー返信「Bで」を受領。CEO既存方針（B並走+Cメイン）と整合するため、両方を進めます。
+
+### 今回の成果
+- **T-01完了**: `node scripts/review-riddles.mjs` → 0件エラー、なぞなぞ200問OK
+- **T-02完了**: `src/expansion.ts` はすでに存在しない（削除済みを確認）
+- **T-03完了**: `.py` ファイルはルートに存在せず、`scripts/` に整理済み
+- **SPEC-B-01 READY**: 情報・ITリテラシー30問追加スペックをREADY.mdに設計、Codex投入済み
+- **SPEC-C-01 PENDING**: 進捗画面UIをPENDING.mdに起票（saveData.tsは実装済み、UIが未作成）
+- **RESEARCH.md**: カテゴリ拡張調査結果を追記
+
+### 次回
+- デザインエージェント: SPEC-C-01 の画面UI設計
+- Codex: SPEC-B-01 ブランチ実装中
+- ユーザー依頼（faviconsなど）: 後述スレッド参照
 
 ---
 

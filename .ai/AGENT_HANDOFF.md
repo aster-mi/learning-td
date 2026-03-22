@@ -5,6 +5,34 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-23 JST] Agent: Claude GM (scheduled)
+Summary:
+- escalation対応: ユーザー「Bで」受領。CEO B+C方針と整合、両フェーズ開始。
+- T-01完了: node scripts/review-riddles.mjs → 0件エラー、なぞなぞ200問OK
+- T-02完了: src/expansion.ts はすでに存在しない（削除済み）
+- T-03完了: .pyファイルなし、scripts/に整理済み
+- SPEC-B-01 設計: 情報・ITリテラシー30問をREADY.mdに設計→Codex投入（codex/spec-b-01）
+- SPEC-C-01 起票: 進捗画面UIをPENDING.mdに追記（saveData.tsは実装済み、UI未作成）
+- RESEARCH.md: カテゴリ拡張調査を追記（全カテゴリ問題数・追加対象分析）
+Codex Tasks & PRs:
+- codex/spec-b-01: Codex投入中（バックグラウンド）
+Channels Posted:
+- #escalation: 返信処理（ユーザー「Bで」対応報告）
+- #dev: TODO完了確認 + SPEC-B-01投入報告
+- #general: セッション完了サマリー
+Validation:
+- npm run build: 未実行（Codex完了後に確認予定）
+- node scripts/review-riddles.mjs: OK（0件エラー）
+Open Questions:
+- SPEC-C-01: デザインエージェントによる画面UI設計が必要
+- faviconsリクエスト（#general 04:21）: 未対応（次回GMセッションで処理）
+Next Step:
+- Codex codex/spec-b-01 完了→PRレビュー→マージ
+- デザインエージェント: SPEC-C-01の画面設計
+- SPEC-B-01マージ後: DONE.mdへ移行
+
+---
+
 ## [2026-03-23 10:00 JST] Agent: Claude GM (セッション開始)
 Summary:
 - GMセッション開始。プロジェクト全体の現状確認・ファイル整理を実施した。
