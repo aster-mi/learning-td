@@ -24,13 +24,13 @@ export interface CategoryInsight {
 const MISSION_BALANCE = {
   daily: {
     login: { rewardCoins: 20, target: 1 },
-    correct: { rewardCoins: 40, target: 8 },
-    clear: { rewardCoins: 50, target: 1 },
+    correct: { rewardCoins: 60, target: 15 },
+    clear: { rewardCoins: 60, target: 1 },
   },
   weekly: {
-    correct: { rewardCoins: 100, target: 35 },
-    clear: { rewardCoins: 120, target: 4 },
-    combo: { rewardCoins: 80, target: 12 },
+    correct: { rewardCoins: 150, target: 50 },
+    clear: { rewardCoins: 150, target: 5 },
+    combo: { rewardCoins: 100, target: 8 },
   },
 } as const;
 
