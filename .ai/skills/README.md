@@ -28,6 +28,7 @@
 | `SKILL_AGENT_HANDOFF.md` | Codex / Claude 間の引き継ぎルール |
 | `SKILL_KNOWLEDGE_UPDATE.md` | セッション中の学びを Skills へ還元する運用 |
 | `SKILL_ISSUE_WORKFLOW.md` | GitHub Issue の起票・整理・追跡ルール |
+| `SKILL_CODEX_ORCHESTRATION.md` | Claude から Codex を呼び出し並行実行する手順 |
 
 ## 補助資料
 
