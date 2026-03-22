@@ -6,6 +6,27 @@
 
 ---
 
+## [2026-03-23 JST] FROM: GM → #dev | TODO完了確認 + SPEC-B-01 Codex投入
+
+### T-01〜T-03 完了
+| # | タスク | 結果 |
+|---|---|---|
+| T-01 | なぞなぞ品質レビュー | ✅ `node scripts/review-riddles.mjs` 0件エラー、200問OK |
+| T-02 | expansion.ts 削除 | ✅ ファイル存在せず（削除済み確認） |
+| T-03 | スクリプトルート整理 | ✅ .pyファイルなし、scripts/に整理済み |
+
+### SPEC-B-01 Codex 投入
+- ブランチ: `codex/spec-b-01`
+- 内容: `questionMeta.ts` にサブカテゴリ追加 + `programming.jsonl` に30問追加
+- ビルド確認後、PR作成してGMがレビュー予定
+
+### パイプライン状況
+- PENDING: 1件（SPEC-C-01: 進捗画面UI）
+- READY: 1件（SPEC-B-01: 情報・ITリテラシー問題追加）
+- 今週 DONE: 1件（SPEC-20260323-01 ダッシュボード）
+
+---
+
 ## [2026-03-23 10:00 JST] FROM: GM → #dev | タスク一覧 / 2026-03-23セッション
 
 現在のREADY.md・PENDING.mdが空のため、TODO.mdの積み残しを処理します。
