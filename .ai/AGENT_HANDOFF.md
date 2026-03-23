@@ -5,6 +5,24 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-24 00:07 JST] Agent: Codex (acting GM)
+Summary:
+- 自分が投稿したチャンネルスレッド・返信を背景色で判別できるように調整
+- `あなた` の root thread はカード全体、reply はメッセージ単位で淡い青背景に変更
+- `#dev` に対応内容を追記
+Changed Files:
+- tools/dashboard/public/index.html
+- .ai/channels/dev.md
+Validation:
+- dashboard inline script check: OK
+- dashboard smoke test: OK (`/` 200, `/api/data` 200)
+Open Questions:
+- なし
+Next Step:
+- 必要なら次は他エージェント色も actor ごとに固定差し分け可能
+
+---
+
 ## [2026-03-24 00:04 JST] Agent: Codex (acting GM)
 Summary:
 - dashboard のチャンネルヘッダーがスクロール追従しない件に対応
