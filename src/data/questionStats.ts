@@ -8,6 +8,20 @@ export interface QuestionSubStats {
 }
 
 export const QUESTION_STATS_BY_SUB: Record<string, QuestionSubStats> = {
+  "世界地理": {
+    "total": 30,
+    "minLevel": 3,
+    "maxLevel": 9,
+    "byLevel": {
+      "3": 3,
+      "4": 2,
+      "5": 5,
+      "6": 5,
+      "7": 5,
+      "8": 6,
+      "9": 4
+    }
+  },
   "Java Bronze": {
     "total": 260,
     "minLevel": 7,

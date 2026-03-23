@@ -56,6 +56,7 @@ export const SUB_CATEGORIES: SubCategoryDef[] = [
   { main: "理科", name: "生物・地学", emoji: "🌿", color: "#34d399", desc: "動植物・地球・宇宙" },
   { main: "社会", name: "地理", emoji: "🗾", color: "#f59e0b", desc: "日本と世界の地理" },
   { main: "社会", name: "歴史", emoji: "🏯", color: "#fbbf24", desc: "日本史・世界史" },
+  { main: "社会", name: "世界地理", emoji: "🌍", color: "#f97316", desc: "世界の国・地形・首都・地名" },
   { main: "英語", name: "英単語", emoji: "🔤", color: "#ef4444", desc: "単語の意味・用法" },
   { main: "英語", name: "英文法", emoji: "📏", color: "#f87171", desc: "文法・語形変化" },
   { main: "英語", name: "TOEIC頻出語", emoji: "💼", color: "#fb7185", desc: "ビジネス英語・実用頻出語" },

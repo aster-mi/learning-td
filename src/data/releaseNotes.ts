@@ -1,4 +1,4 @@
-export const APP_VERSION = "1.0.1";
+export const APP_VERSION = "1.0.2";
 
 export type ReleaseNote = {
   version: string;
@@ -7,6 +7,14 @@ export type ReleaseNote = {
 };
 
 export const RELEASE_NOTES: ReleaseNote[] = [
+  {
+    version: "1.0.2",
+    date: "2026-03-24",
+    items: [
+      "社会カテゴリに 世界地理 を追加",
+      "世界地理問題30問追加",
+    ],
+  },
   {
     version: "1.0.1",
     date: "2026-03-23",
