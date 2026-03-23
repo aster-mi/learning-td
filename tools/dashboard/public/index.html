@@ -601,6 +601,7 @@ let data = null;
 let currentChannel = 'escalation';
 let openThreads = {};
 let channelSettingsOpen = false;
+let pendingChannelScrollToBottom = true;
 
 const AVATAR_STORAGE_KEY = 'learning-td-dashboard-actor-icons';
 const CHANNEL_DESCRIPTIONS = {
@@ -626,6 +627,10 @@ function switchTab(name) {
   document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   event.target.classList.add('active');
+  if (name === 'channels') {
+    pendingChannelScrollToBottom = true;
+    if (data) renderThreads();
+  }
 }
 
 function switchChannel(name) {
@@ -633,6 +638,7 @@ function switchChannel(name) {
   document.querySelectorAll('.ch-tab').forEach(b => b.classList.remove('active'));
   document.getElementById('ch-' + name).classList.add('active');
   document.getElementById('ch-post-label').textContent = `#${name} に新しいスレッドを立てる`;
+  pendingChannelScrollToBottom = true;
   if (data) renderThreads();
 }
 
@@ -854,13 +860,17 @@ function renderReplyMessage(reply) {
 
 function renderThreads() {
   const content = data.channels[currentChannel] || '';
-  const threads = parseThreads(content);
+  const threads = parseThreads(content).reverse();
   const el = document.getElementById('ch-threads');
+  const previousScrollTop = el.scrollTop;
+  const shouldStickToBottom =
+    pendingChannelScrollToBottom || el.scrollHeight - el.scrollTop - el.clientHeight < 40;
   openThreads[currentChannel] = openThreads[currentChannel] || {};
   renderChannelHeader(threads);
   renderChannelSettings(threads);
   if (!threads.length) {
     el.innerHTML = '<div class="empty">スレッドなし</div>';
+    pendingChannelScrollToBottom = false;
     return;
   }
   el.innerHTML = threads.map((t, i) => `
@@ -895,6 +905,10 @@ function renderThreads() {
       </div>
     </div>`).join('');
   window._chThreads = threads;
+  requestAnimationFrame(() => {
+    el.scrollTop = shouldStickToBottom ? el.scrollHeight : previousScrollTop;
+    pendingChannelScrollToBottom = false;
+  });
 }
 
 function toggleThread(i) {

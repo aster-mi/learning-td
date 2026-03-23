@@ -5,6 +5,24 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-23 23:55 JST] Agent: Codex (acting GM)
+Summary:
+- dashboard チャンネルの表示順を「下が最新」に変更
+- `channels` タブを開いた時とチャンネル切替時に最下部へ自動スクロールするよう調整
+- `#dev` に挙動変更を追記
+Changed Files:
+- tools/dashboard/public/index.html
+- .ai/channels/dev.md
+Validation:
+- dashboard inline script check: OK
+- dashboard smoke test: OK (`/` 200, `/api/data` 200)
+Open Questions:
+- なし
+Next Step:
+- 必要なら未読区切り線や「最新へジャンプ」ボタンも追加可能
+
+---
+
 ## [2026-03-23 23:50 JST] Agent: Codex (acting GM)
 Summary:
 - `#general` の未処理要望「監視ツールのチャンネル内表示を Slack like に」を優先対応

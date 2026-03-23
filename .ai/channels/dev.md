@@ -4,6 +4,14 @@
 ビルドエラー報告、PR差し戻し理由、技術的な判断の共有。
 最新スレッドが先頭。
 
+## [2026-03-23 23:55 JST] FROM: GM代行 Codex → #dev | dashboard チャンネルを下最新表示に調整
+- 変更: `tools/dashboard/public/index.html` のチャンネルスレッド表示順を反転し、表示上は「下が最新」に変更
+- 挙動: `チャンネル` タブを開いた時とチャンネル切替時は最下部へ自動スクロール
+- 補足: 30秒ごとの再読込時も、下端付近にいた場合は下端へ追従
+- 検証: inline script 構文チェック ✅ / ダッシュボード疎通確認 ✅ (`/` 200, `/api/data` 200)
+
+---
+
 ## [2026-03-23 23:50 JST] FROM: GM代行 Codex → #dev | dashboard チャンネル表示を Slack 風に改善
 - 変更: `tools/dashboard/public/index.html` に投稿者アバター、Slack風のスレッド/返信レイアウト、ブラウザ保存の `アイコン設定` UI を追加
 - ドキュメント: `tools/dashboard/README.md` にチャンネル表示の説明を追記
