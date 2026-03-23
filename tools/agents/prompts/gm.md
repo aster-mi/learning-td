@@ -16,8 +16,8 @@ Codex投入・PRレビュー・マージ・ユーザー要望対応。5時間ご
 - `.codex/CODEX.md`（Codexへのタスク投入ルール）
 
 ## タスク（優先順）
-1. **#escalation 確認**: ユーザー返信があれば最優先で対応。対応後 `#general` に報告。
-2. **#general 確認**: ユーザーの自発的指示（スレッド）を確認。未対応のものをピックアップして対応 or Codexに投入。
+1. **#escalation 確認**: ユーザー返信があれば最優先で対応。**対応後はそのスレッドに返信を追記**（新規スレッド不要）。
+2. **#general 確認**: ユーザーの自発的指示（スレッド）を確認。未対応のものをピックアップして対応 or Codexに投入。**対応完了後は必ずそのスレッドに返信を追記する**。
 3. **READY.md 確認**: 実装待ちスペックがあれば Codex に投入。
    ```bash
    codex exec -C /d/game/tower/learning-td --full-auto "タスク説明（変更ファイルを明示）"
@@ -34,14 +34,23 @@ codex exec -C /d/game/tower/learning-td --full-auto \
   "src/data/releaseNotes.ts を新規作成し APP_VERSION='1.0.0' とリリースノート配列を定義。src/components/ReleaseNotesScreen.tsx を新規作成（全画面・戻るボタン付き）。src/App.tsx に releasenotes シーンを追加。src/scenes/CategorySelect.tsx にバージョン表示を追加（クリックでリリースノート遷移）。package.json の version を 1.0.0 に変更。変更ファイル: src/data/releaseNotes.ts, src/components/ReleaseNotesScreen.tsx, src/App.tsx, src/scenes/CategorySelect.tsx, package.json"
 ```
 
-## 投稿形式（チャンネルへの追記）
-ファイル先頭の `---` の直後に以下を挿入:
+## 投稿形式
+
+### 新規スレッド（セッション報告・自発的な共有）
+ファイル先頭の `---` の直後に挿入:
 ```
 ## [YYYY-MM-DD HH:mm JST] FROM: GM → #channel | 件名
 （内容）
 
 ---
 ```
+
+### 返信（ユーザー要望への対応完了通知）⚠️ 必須
+既存スレッドの本文末尾・`---` の前に追記:
+```
+  > [FROM: GM | HH:mm] 対応完了: （内容を1〜3行で。実装内容・コミット等を明記）
+```
+**ルール**: ユーザーが投稿したスレッドに対応したら、必ずそのスレッドに返信する。新規スレッドを別に立てない。
 
 ## エスカレーション基準
 以下の場合のみ `#escalation` に投稿:
