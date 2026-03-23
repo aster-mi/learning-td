@@ -5,6 +5,30 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-23 14:30 JST] Agent: Claude GM (scheduled)
+Summary:
+- ユーザー要望「定期実行で拾う仕組み」に対応
+- tools/agents/ に Windows Task Scheduler 用スクリプトを作成・登録（4エージェント）
+- リリースノート Codex タスク再投入（b6x7e0tff, バックグラウンド実行中）
+Changed Files:
+- tools/agents/prompts/ceo.md（新規）
+- tools/agents/prompts/planning.md（新規）
+- tools/agents/prompts/design.md（新規）
+- tools/agents/prompts/gm.md（新規）
+- tools/agents/run-agent.ps1（新規）
+- tools/agents/setup-task-scheduler.ps1（新規）
+- tools/agents/README.md（新規）
+- .ai/channels/general.md（セッション報告追記）
+Validation:
+- Task Scheduler 登録: OK（4タスク: ceo/planning/design/gm）
+- Codex b6x7e0tff: 実行中
+Open Questions:
+- Codex タスク b6x7e0tff 完了後に npm run build 確認・コミットが必要
+Next Step:
+- Codex 完了後: ビルド確認 → git commit/push
+
+---
+
 ## [2026-03-23 14:07 JST] Agent: Claude GM (scheduled)
 Summary:
 - SPEC-C-01・SPEC-20260323-02 の実装確認・ビルドOK確認
