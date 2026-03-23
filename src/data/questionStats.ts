@@ -111,6 +111,17 @@ export const QUESTION_STATS_BY_SUB: Record<string, QuestionSubStats> = {
       "8": 5
     }
   },
+  "TOEIC頻出語": {
+    "total": 30,
+    "minLevel": 6,
+    "maxLevel": 9,
+    "byLevel": {
+      "6": 8,
+      "7": 10,
+      "8": 8,
+      "9": 4
+    }
+  },
   "漢字・読み": {
     "total": 185,
     "minLevel": 1,

@@ -58,6 +58,7 @@ export const SUB_CATEGORIES: SubCategoryDef[] = [
   { main: "社会", name: "歴史", emoji: "🏯", color: "#fbbf24", desc: "日本史・世界史" },
   { main: "英語", name: "英単語", emoji: "🔤", color: "#ef4444", desc: "単語の意味・用法" },
   { main: "英語", name: "英文法", emoji: "📏", color: "#f87171", desc: "文法・語形変化" },
+  { main: "英語", name: "TOEIC頻出語", emoji: "💼", color: "#fb7185", desc: "ビジネス英語・実用頻出語" },
   { main: "プログラミング", name: "Web基礎", emoji: "🌐", color: "#06b6d4", desc: "HTML/CSS/JavaScript入門" },
   { main: "プログラミング", name: "Java Bronze", emoji: "☕", color: "#f97316", desc: "Javaの基礎文法・オブジェクト指向入門" },
   { main: "プログラミング", name: "Java Silver", emoji: "🥈", color: "#94a3b8", desc: "Java SE開発者向け中級" },

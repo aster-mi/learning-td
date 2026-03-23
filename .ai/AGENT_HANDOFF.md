@@ -5,6 +5,28 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-23 23:27 JST] Agent: Codex
+Summary:
+- 英語カテゴリに新サブカテゴリ `TOEIC頻出語` を追加
+- `english.jsonl` に TOEIC/実用英語の頻出語彙問題を30問追加（e251-e280）
+- 問題数表示用 stats とリリースノート/バージョンを 1.0.1 に更新
+Changed Files:
+- src/data/questionMeta.ts
+- src/data/questionStats.ts
+- src/data/questionBanks/english.jsonl
+- src/data/releaseNotes.ts
+- package.json
+- package-lock.json
+Validation:
+- npm run build: OK
+- npm run quiz:validate: OK（既存 warning 3件あり: m385, jb146, jb224）
+Open Questions:
+- なし
+Next Step:
+- 次候補は英語の文脈問題追加か、社会カテゴリの世界地理拡張
+
+---
+
 ## [2026-03-23 21:00 JST] Agent: Claude GM (scheduled)
 Summary:
 - セッション開始確認: 前回（20:00）からの変更なし
@@ -209,4 +231,3 @@ Next Step:
 - SPEC-B-01マージ後: DONE.mdへ移行
 
 ---
-

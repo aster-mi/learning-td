@@ -1,4 +1,4 @@
-export const APP_VERSION = "1.0.0";
+export const APP_VERSION = "1.0.1";
 
 export type ReleaseNote = {
   version: string;
@@ -7,6 +7,14 @@ export type ReleaseNote = {
 };
 
 export const RELEASE_NOTES: ReleaseNote[] = [
+  {
+    version: "1.0.1",
+    date: "2026-03-23",
+    items: [
+      "英語カテゴリに TOEIC頻出語 を追加",
+      "TOEIC頻出語問題30問追加",
+    ],
+  },
   {
     version: "1.0.0",
     date: "2026-03-23",

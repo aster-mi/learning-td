@@ -198,3 +198,33 @@
 {"id":"e248","main":"英語","sub":"英文法","level":4,"question":"「There are five books on the desk.」で本は何冊？","choices":["3冊","4冊","5冊","6冊"],"answer":"5冊"}
 {"id":"e249","main":"英語","sub":"英単語","level":4,"question":"「Wednesday」は何曜日？","choices":["月曜日","水曜日","金曜日","日曜日"],"answer":"水曜日"}
 {"id":"e250","main":"英語","sub":"英文法","level":6,"question":"「If I were you, I would study harder.」は何法？","choices":["命令法","仮定法","直接法","受動態"],"answer":"仮定法"}
+{"id":"e251","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"deadline\" の意味は？","choices":["締め切り","報酬","在庫","休暇"],"answer":"締め切り"}
+{"id":"e252","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"schedule\" の意味は？","choices":["予定・日程","売上","設備","署名"],"answer":"予定・日程"}
+{"id":"e253","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"delay\" の意味は？","choices":["遅延","改善","成功","契約"],"answer":"遅延"}
+{"id":"e254","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"customer\" の意味は？","choices":["顧客","従業員","工場","見積もり"],"answer":"顧客"}
+{"id":"e255","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"available\" の意味は？","choices":["利用できる","危険な","秘密の","高価な"],"answer":"利用できる"}
+{"id":"e256","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"reserve\" の意味は？","choices":["予約する","延期する","返品する","紹介する"],"answer":"予約する"}
+{"id":"e257","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"receipt\" の意味は？","choices":["領収書","履歴書","申込書","名刺"],"answer":"領収書"}
+{"id":"e258","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"confirm\" の意味は？","choices":["確認する","否定する","配送する","保管する"],"answer":"確認する"}
+{"id":"e259","main":"英語","sub":"TOEIC頻出語","level":7,"question":"\"invoice\" の意味は？","choices":["請求書","注文書","契約書","名札"],"answer":"請求書"}
+{"id":"e260","main":"英語","sub":"TOEIC頻出語","level":7,"question":"\"shipment\" の意味は？","choices":["出荷・発送","採用面接","予算会議","休憩時間"],"answer":"出荷・発送"}
+{"id":"e261","main":"英語","sub":"TOEIC頻出語","level":7,"question":"\"colleague\" の意味は？","choices":["同僚","顧客","取引先","社長"],"answer":"同僚"}
+{"id":"e262","main":"英語","sub":"TOEIC頻出語","level":7,"question":"\"applicant\" の意味は？","choices":["応募者","案内係","配達員","編集者"],"answer":"応募者"}
+{"id":"e263","main":"英語","sub":"TOEIC頻出語","level":7,"question":"\"branch\" の意味は？","choices":["支店","倉庫","本社","入口"],"answer":"支店"}
+{"id":"e264","main":"英語","sub":"TOEIC頻出語","level":7,"question":"\"equipment\" の意味は？","choices":["設備・機器","規則","見出し","栄養"],"answer":"設備・機器"}
+{"id":"e265","main":"英語","sub":"TOEIC頻出語","level":7,"question":"\"refund\" の意味は？","choices":["返金","採点","翻訳","採用"],"answer":"返金"}
+{"id":"e266","main":"英語","sub":"TOEIC頻出語","level":7,"question":"\"negotiate\" の意味は？","choices":["交渉する","印刷する","署名する","修理する"],"answer":"交渉する"}
+{"id":"e267","main":"英語","sub":"TOEIC頻出語","level":7,"question":"\"postpone\" の意味は？","choices":["延期する","提出する","強調する","検査する"],"answer":"延期する"}
+{"id":"e268","main":"英語","sub":"TOEIC頻出語","level":7,"question":"\"annual\" の意味は？","choices":["毎年の","毎週の","毎月の","臨時の"],"answer":"毎年の"}
+{"id":"e269","main":"英語","sub":"TOEIC頻出語","level":8,"question":"\"contract\" の意味は？","choices":["契約","支払い","受付","輸送"],"answer":"契約"}
+{"id":"e270","main":"英語","sub":"TOEIC頻出語","level":8,"question":"\"supplier\" の意味は？","choices":["供給業者","応募者","通訳者","観光客"],"answer":"供給業者"}
+{"id":"e271","main":"英語","sub":"TOEIC頻出語","level":8,"question":"\"maintenance\" の意味は？","choices":["保守点検","宣伝広告","市場調査","現金払い"],"answer":"保守点検"}
+{"id":"e272","main":"英語","sub":"TOEIC頻出語","level":8,"question":"\"proposal\" の意味は？","choices":["提案","延期","苦情","事故"],"answer":"提案"}
+{"id":"e273","main":"英語","sub":"TOEIC頻出語","level":8,"question":"\"budget\" の意味は？","choices":["予算","資格","割引","通勤"],"answer":"予算"}
+{"id":"e274","main":"英語","sub":"TOEIC頻出語","level":8,"question":"\"supervise\" の意味は？","choices":["監督する","配送する","録音する","設計する"],"answer":"監督する"}
+{"id":"e275","main":"英語","sub":"TOEIC頻出語","level":8,"question":"\"resign\" の意味は？","choices":["辞職する","採用する","昇進する","応募する"],"answer":"辞職する"}
+{"id":"e276","main":"英語","sub":"TOEIC頻出語","level":8,"question":"\"complaint\" の意味は？","choices":["苦情","契約更新","議事録","領収書"],"answer":"苦情"}
+{"id":"e277","main":"英語","sub":"TOEIC頻出語","level":9,"question":"\"merger\" の意味は？","choices":["合併","返品","予約","面接"],"answer":"合併"}
+{"id":"e278","main":"英語","sub":"TOEIC頻出語","level":9,"question":"\"revenue\" の意味は？","choices":["収益","在庫","経歴","手数料"],"answer":"収益"}
+{"id":"e279","main":"英語","sub":"TOEIC頻出語","level":9,"question":"\"vacancy\" の意味は？","choices":["空席・欠員","昇給","棚卸し","会議録"],"answer":"空席・欠員"}
+{"id":"e280","main":"英語","sub":"TOEIC頻出語","level":9,"question":"\"purchase order\" の意味は？","choices":["発注書","領収書","求人票","旅程表"],"answer":"発注書"}
