@@ -215,6 +215,52 @@
     border-radius: 0 10px 10px 0; background: var(--surface);
     display: flex; flex-direction: column; overflow: hidden;
   }
+  .ch-toolbar {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 12px 16px; border-bottom: 1px solid var(--border);
+    background: linear-gradient(180deg, rgba(108,142,247,.12), rgba(108,142,247,0));
+  }
+  .ch-toolbar-copy { min-width: 0; }
+  .ch-channel-title { font-size: 16px; font-weight: 700; color: var(--text); }
+  .ch-channel-subtitle { font-size: 12px; color: var(--muted); margin-top: 2px; }
+  .ch-settings-toggle {
+    background: var(--surface2); color: var(--text); border: 1px solid var(--border);
+    border-radius: 999px; padding: 7px 12px; font-size: 12px; cursor: pointer; font-weight: 600;
+    min-height: 40px; white-space: nowrap;
+  }
+  .ch-settings-toggle:hover { border-color: var(--accent); color: var(--accent); }
+  .ch-settings {
+    display: none; padding: 12px 16px; border-bottom: 1px solid var(--border);
+    background: rgba(8, 10, 16, 0.45);
+  }
+  .ch-settings.open { display: block; }
+  .ch-settings-note { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+  .actor-settings-list {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px;
+  }
+  .actor-setting {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px 12px; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 10px;
+  }
+  .actor-setting-copy { min-width: 0; flex: 1; }
+  .actor-setting-name { font-size: 13px; font-weight: 700; color: var(--text); }
+  .actor-setting-hint { font-size: 11px; color: var(--muted); }
+  .actor-setting-input {
+    width: 64px; background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+    color: var(--text); text-align: center; font-size: 18px; padding: 7px 8px;
+  }
+  .actor-setting-reset {
+    background: transparent; color: var(--muted); border: 1px solid var(--border);
+    border-radius: 8px; padding: 7px 10px; cursor: pointer; font-size: 11px; min-height: 38px;
+  }
+  .actor-setting-reset:hover { color: var(--text); border-color: var(--accent); }
+  .actor-avatar {
+    width: 38px; height: 38px; border-radius: 12px;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 700; flex-shrink: 0; border: 1px solid transparent;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,.03);
+  }
   #ch-threads { flex: 1; overflow-y: auto; padding: 16px; }
   .ch-post-form {
     border-top: 1px solid var(--border); padding: 12px 16px;
@@ -237,62 +283,82 @@
   /* Thread */
   .thread {
     margin-bottom: 14px; border: 1px solid var(--border);
-    border-radius: 8px; overflow: hidden;
+    border-radius: 12px; overflow: hidden;
+    background: linear-gradient(180deg, rgba(255,255,255,.01), rgba(0,0,0,.08));
   }
   .thread-header {
-    padding: 9px 14px; background: var(--surface2);
-    display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
-    cursor: pointer;
-    min-height: 44px;
+    padding: 12px 14px; background: rgba(255,255,255,.02);
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    cursor: pointer; min-height: 56px;
   }
   .thread-header:hover { background: #282d43; }
+  .thread-header-main { display: flex; align-items: flex-start; gap: 12px; min-width: 0; flex: 1; }
+  .thread-header-copy { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 4px; }
+  .thread-header-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
   .thread-toggle {
     font-size: 12px; color: var(--muted); min-width: 16px;
     transition: transform .15s ease;
   }
   .thread-from { font-size: 12px; font-weight: 700; color: var(--accent); }
+  .thread-subject-row { display: flex; align-items: center; gap: 8px; min-width: 0; }
   .thread-subject {
-    font-size: 13px; flex: 1; color: var(--text);
+    font-size: 14px; flex: 1; color: var(--text); font-weight: 700;
     min-width: 0; overflow-wrap: anywhere; word-break: break-word;
   }
+  .thread-preview {
+    font-size: 12px; color: var(--muted);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  }
+  .thread-reply-count {
+    flex-shrink: 0; font-size: 11px; font-weight: 700;
+    color: var(--muted); background: rgba(255,255,255,.04);
+    border: 1px solid var(--border); border-radius: 999px; padding: 2px 8px;
+  }
   .thread-time { font-size: 11px; color: var(--muted); }
-  .thread-content { display: none; }
+  .thread-content { display: none; background: rgba(3, 5, 10, 0.22); }
   .thread.open .thread-content { display: block; }
   .thread.open .thread-toggle { transform: rotate(90deg); }
-  .thread-body {
-    padding: 14px 16px 12px; font-size: 13px; color: var(--muted);
-    overflow-x: auto;
+  .thread-message {
+    display: flex; gap: 12px; padding: 14px 16px;
+    align-items: flex-start;
   }
-  .thread-body .md p { color: var(--muted); }
-  .thread-body .md table { border-collapse: collapse; width: 100%; }
-  .thread-body .md th, .thread-body .md td { border: 1px solid var(--border); padding: 6px 10px; }
+  .thread-message-root { border-top: 1px solid var(--border); }
+  .thread-message-main { min-width: 0; flex: 1; }
+  .thread-message-meta {
+    display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+    margin-bottom: 6px;
+  }
+  .thread-message-name { font-size: 13px; font-weight: 700; color: var(--text); }
+  .thread-message-time { font-size: 11px; color: var(--muted); }
+  .thread-message-body { font-size: 13px; color: var(--muted); overflow-x: auto; }
+  .thread-message-body .md p { color: var(--muted); }
+  .thread-message-body .md p:first-child { margin-top: 0; }
+  .thread-message-body .md p:last-child { margin-bottom: 0; }
+  .thread-message-body .md table { border-collapse: collapse; width: 100%; }
+  .thread-message-body .md th, .thread-message-body .md td { border: 1px solid var(--border); padding: 6px 10px; }
+  .thread-body-empty { font-size: 12px; color: var(--muted); font-style: italic; }
   .thread-replies { border-top: 1px solid var(--border); }
   .thread-reply {
-    padding: 8px 14px 8px 28px; border-bottom: 1px solid var(--border);
-    font-size: 13px; display: flex; gap: 10px; align-items: flex-start;
+    border-bottom: 1px solid var(--border);
   }
   .thread-reply:last-child { border-bottom: none; }
-  .thread-reply-from { font-size: 11px; font-weight: 700; color: var(--green); min-width: 80px; }
-  .thread-reply-body { color: var(--muted); flex: 1; white-space: pre-wrap; }
-  .thread-reply-time { font-size: 10px; color: var(--border); }
   .thread-reply-form {
-    padding: 8px 14px; border-top: 1px solid var(--border);
+    padding: 10px 16px 14px; border-top: 1px solid var(--border);
     background: var(--surface); display: flex; gap: 8px; align-items: center;
   }
   .thread-reply-form input {
     flex: 1; background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 6px; padding: 6px 10px; color: var(--text); font-size: 13px;
+    border-radius: 8px; padding: 8px 10px; color: var(--text); font-size: 13px;
   }
   .thread-reply-form button {
     background: var(--surface2); color: var(--accent); border: 1px solid var(--border);
-    border-radius: 6px; padding: 6px 12px; font-size: 12px; cursor: pointer; font-weight: 600;
+    border-radius: 8px; padding: 8px 12px; font-size: 12px; cursor: pointer; font-weight: 600;
     min-height: 44px;
   }
   .thread-reply-form button:hover { background: var(--accent); color: #fff; }
   @media (max-width: 800px) {
     .thread-header { padding: 10px 12px; }
-    .thread-body { padding: 12px; }
-    .thread-reply { padding: 8px 12px 8px 20px; }
+    .thread-message { padding: 12px; }
     .thread-reply-form { padding: 10px 12px; }
   }
 
@@ -346,8 +412,19 @@
       border-radius: 10px;
       min-height: 0;
     }
+    .ch-toolbar {
+      padding: 12px;
+      align-items: flex-start;
+      flex-direction: column;
+    }
+    .ch-settings {
+      padding: 12px;
+    }
     #ch-threads { padding: 12px; }
     .ch-post-form { padding: 12px; }
+    .actor-settings-list {
+      grid-template-columns: 1fr;
+    }
 
     .thread-header {
       align-items: flex-start;
@@ -369,7 +446,7 @@
       width: 100%;
     }
     .thread-reply {
-      padding: 10px 12px;
+      padding: 0;
     }
     .thread-reply-form {
       padding: 12px;
@@ -466,6 +543,14 @@
         <button class="ch-tab" onclick="switchChannel('dev')" id="ch-dev">#dev</button>
       </div>
       <div class="ch-main">
+        <div class="ch-toolbar">
+          <div class="ch-toolbar-copy">
+            <div class="ch-channel-title" id="ch-title">#escalation</div>
+            <div class="ch-channel-subtitle" id="ch-subtitle">ユーザー指示の確認用チャンネル</div>
+          </div>
+          <button class="ch-settings-toggle" id="ch-settings-toggle" onclick="toggleChannelSettings()">アイコン設定</button>
+        </div>
+        <div id="ch-settings"></div>
         <div id="ch-threads"></div>
         <div class="ch-post-form">
           <div style="font-size:12px;color:var(--muted);margin-bottom:8px" id="ch-post-label">新しいスレッドを立てる</div>
@@ -515,6 +600,24 @@
 let data = null;
 let currentChannel = 'escalation';
 let openThreads = {};
+let channelSettingsOpen = false;
+
+const AVATAR_STORAGE_KEY = 'learning-td-dashboard-actor-icons';
+const CHANNEL_DESCRIPTIONS = {
+  escalation: 'ユーザー指示や緊急判断を優先確認',
+  general: '全体共有と要望の集約',
+  specs: '仕様議論と設計の受け渡し',
+  dev: '実装・ビルド・レビューの技術ログ',
+};
+const ACTOR_PALETTES = [
+  { bg: 'rgba(108, 142, 247, .16)', border: 'rgba(108, 142, 247, .45)', text: '#a8beff' },
+  { bg: 'rgba(74, 222, 128, .16)', border: 'rgba(74, 222, 128, .45)', text: '#9bf7bf' },
+  { bg: 'rgba(248, 113, 113, .16)', border: 'rgba(248, 113, 113, .45)', text: '#ffb2b2' },
+  { bg: 'rgba(250, 204, 21, .16)', border: 'rgba(250, 204, 21, .42)', text: '#ffe27a' },
+  { bg: 'rgba(251, 146, 60, .16)', border: 'rgba(251, 146, 60, .42)', text: '#ffc18d' },
+  { bg: 'rgba(192, 132, 252, .16)', border: 'rgba(192, 132, 252, .42)', text: '#e0b6ff' },
+];
+let actorIconOverrides = loadActorIconOverrides();
 
 marked.setOptions({ mangle: false, headerIds: false });
 
@@ -531,6 +634,163 @@ function switchChannel(name) {
   document.getElementById('ch-' + name).classList.add('active');
   document.getElementById('ch-post-label').textContent = `#${name} に新しいスレッドを立てる`;
   if (data) renderThreads();
+}
+
+function loadActorIconOverrides() {
+  try {
+    const raw = localStorage.getItem(AVATAR_STORAGE_KEY);
+    return raw ? JSON.parse(raw) : {};
+  } catch {
+    return {};
+  }
+}
+
+function saveActorIconOverrides() {
+  try {
+    localStorage.setItem(AVATAR_STORAGE_KEY, JSON.stringify(actorIconOverrides));
+  } catch {}
+}
+
+function normalizeActorName(name) {
+  return String(name || '').replace(/^FROM:\s*/i, '').trim();
+}
+
+function hashString(value) {
+  let hash = 0;
+  for (const char of value) {
+    hash = ((hash << 5) - hash + char.charCodeAt(0)) | 0;
+  }
+  return Math.abs(hash);
+}
+
+function getActorPalette(name) {
+  return ACTOR_PALETTES[hashString(normalizeActorName(name)) % ACTOR_PALETTES.length];
+}
+
+function getDefaultActorIcon(name) {
+  const normalized = normalizeActorName(name);
+  if (!normalized) return '💬';
+  if (normalized === 'あなた' || /human/i.test(normalized)) return '🙂';
+  if (/codex/i.test(normalized)) return '🤖';
+  if (/ceo/i.test(normalized)) return '👑';
+  if (/gm/i.test(normalized)) return '🎮';
+  if (/design|デザイン/i.test(normalized)) return '🎨';
+  if (/企画|調査|planning/i.test(normalized)) return '🔎';
+  if (/system/i.test(normalized)) return '⚙️';
+  if (/claude/i.test(normalized)) return '🧠';
+  return normalized.slice(0, 1);
+}
+
+function getActorIcon(name) {
+  const normalized = normalizeActorName(name);
+  return actorIconOverrides[normalized] || getDefaultActorIcon(normalized);
+}
+
+function getActorStyle(name) {
+  const palette = getActorPalette(name);
+  return `background:${palette.bg};border-color:${palette.border};color:${palette.text};`;
+}
+
+function renderActorAvatar(name) {
+  const normalized = normalizeActorName(name);
+  return `<span class="actor-avatar" style="${getActorStyle(normalized)}" title="${escAttr(normalized)}">${escHtml(getActorIcon(normalized))}</span>`;
+}
+
+function parseReplyMeta(fromTime) {
+  const parts = String(fromTime || '').split('|');
+  return {
+    from: normalizeActorName(parts[0] || ''),
+    time: parts.slice(1).join('|').trim(),
+  };
+}
+
+function getThreadPreview(thread) {
+  const source = thread.body || thread.replies[0]?.body || '';
+  const compact = String(source)
+    .replace(/[#>*`|_-]/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+  if (!compact) return '';
+  return compact.length > 88 ? `${compact.slice(0, 85)}...` : compact;
+}
+
+function collectActors(threads) {
+  const actors = new Set();
+  for (const thread of threads) {
+    actors.add(normalizeActorName(thread.from));
+    for (const reply of thread.replies) {
+      actors.add(normalizeActorName(reply.from));
+    }
+  }
+  return [...actors].filter(Boolean).sort((left, right) => left.localeCompare(right, 'ja'));
+}
+
+function renderChannelHeader(threads) {
+  const actors = collectActors(threads);
+  document.getElementById('ch-title').textContent = `#${currentChannel}`;
+  document.getElementById('ch-subtitle').textContent =
+    `${CHANNEL_DESCRIPTIONS[currentChannel] || 'チャンネル表示'} ・ 参加者 ${actors.length}人`;
+  document.getElementById('ch-settings-toggle').textContent =
+    channelSettingsOpen ? 'アイコン設定を閉じる' : 'アイコン設定';
+}
+
+function renderChannelSettings(threads) {
+  const el = document.getElementById('ch-settings');
+  if (!channelSettingsOpen) {
+    el.className = 'ch-settings';
+    el.innerHTML = '';
+    return;
+  }
+
+  const actors = collectActors(threads);
+  el.className = 'ch-settings open';
+  if (!actors.length) {
+    el.innerHTML = '<div class="ch-settings-note">アイコン設定できる投稿者はまだいません。</div>';
+    return;
+  }
+
+  el.innerHTML = `
+    <div class="ch-settings-note">表示用のアイコンだけをこのブラウザに保存します。絵文字を入れると、投稿者ごとに見分けやすくなります。</div>
+    <div class="actor-settings-list">
+      ${actors.map((actor) => `
+        <div class="actor-setting">
+          ${renderActorAvatar(actor)}
+          <div class="actor-setting-copy">
+            <div class="actor-setting-name">${escHtml(actor)}</div>
+            <div class="actor-setting-hint">既定: ${escHtml(getDefaultActorIcon(actor))}</div>
+          </div>
+          <input
+            class="actor-setting-input"
+            type="text"
+            value="${escAttr(actorIconOverrides[actor] || '')}"
+            placeholder="${escAttr(getDefaultActorIcon(actor))}"
+            data-actor="${escAttr(actor)}"
+            oninput="setActorIcon(this.dataset.actor, this.value)"
+          >
+          <button class="actor-setting-reset" data-actor="${escAttr(actor)}" onclick="resetActorIcon(this.dataset.actor)">戻す</button>
+        </div>`).join('')}
+    </div>`;
+}
+
+function setActorIcon(name, value) {
+  const normalized = normalizeActorName(name);
+  const next = String(value || '').trim();
+  if (next) actorIconOverrides[normalized] = next;
+  else delete actorIconOverrides[normalized];
+  saveActorIconOverrides();
+  renderThreads();
+}
+
+function resetActorIcon(name) {
+  const normalized = normalizeActorName(name);
+  delete actorIconOverrides[normalized];
+  saveActorIconOverrides();
+  renderThreads();
+}
+
+function toggleChannelSettings() {
+  channelSettingsOpen = !channelSettingsOpen;
+  renderThreads();
 }
 
 function parseThreads(content) {
@@ -552,13 +812,44 @@ function parseThreads(content) {
     const replyRe = /^\s*>\s*\[([^\]]+)\]\s*([^\n]*)/gm;
     let rm;
     while ((rm = replyRe.exec(block)) !== null) {
-      const fromTime = rm[1].trim();
+      const parsedMeta = parseReplyMeta(rm[1].trim());
       const replyBody = rm[2].trim();
-      replies.push({ fromTime, body: replyBody });
+      replies.push({ from: parsedMeta.from, time: parsedMeta.time, body: replyBody });
     }
     threads.push({ time, from, subject, body, replies, raw: block });
   }
   return threads;
+}
+
+function renderRootMessage(thread) {
+  const bodyHtml = thread.body
+    ? md(thread.body)
+    : '<div class="thread-body-empty">本文はありません</div>';
+  return `
+    <div class="thread-message thread-message-root">
+      ${renderActorAvatar(thread.from)}
+      <div class="thread-message-main">
+        <div class="thread-message-meta">
+          <span class="thread-message-name">${escHtml(normalizeActorName(thread.from))}</span>
+          <span class="thread-message-time">${escHtml(thread.time)}</span>
+        </div>
+        <div class="thread-message-body">${bodyHtml}</div>
+      </div>
+    </div>`;
+}
+
+function renderReplyMessage(reply) {
+  return `
+    <div class="thread-message thread-reply">
+      ${renderActorAvatar(reply.from)}
+      <div class="thread-message-main">
+        <div class="thread-message-meta">
+          <span class="thread-message-name">${escHtml(normalizeActorName(reply.from))}</span>
+          <span class="thread-message-time">${escHtml(reply.time)}</span>
+        </div>
+        <div class="thread-message-body">${escHtml(reply.body)}</div>
+      </div>
+    </div>`;
 }
 
 function renderThreads() {
@@ -566,6 +857,8 @@ function renderThreads() {
   const threads = parseThreads(content);
   const el = document.getElementById('ch-threads');
   openThreads[currentChannel] = openThreads[currentChannel] || {};
+  renderChannelHeader(threads);
+  renderChannelSettings(threads);
   if (!threads.length) {
     el.innerHTML = '<div class="empty">スレッドなし</div>';
     return;
@@ -573,21 +866,27 @@ function renderThreads() {
   el.innerHTML = threads.map((t, i) => `
     <div class="thread ${openThreads[currentChannel][i] ? 'open' : ''}">
       <div class="thread-header" onclick="toggleThread(${i})">
+        <div class="thread-header-main">
+          ${renderActorAvatar(t.from)}
+          <div class="thread-header-copy">
+            <div class="thread-header-top">
+              <span class="thread-from">${escHtml(normalizeActorName(t.from))}</span>
+              <span class="thread-time">${escHtml(t.time)}</span>
+            </div>
+            <div class="thread-subject-row">
+              <span class="thread-subject">${escHtml(t.subject)}</span>
+              <span class="thread-reply-count">返信 ${t.replies.length}</span>
+            </div>
+            ${getThreadPreview(t) ? `<div class="thread-preview">${escHtml(getThreadPreview(t))}</div>` : ''}
+          </div>
+        </div>
         <span class="thread-toggle">▶</span>
-        <span class="thread-from">${escHtml(t.from)}</span>
-        <span class="thread-subject">${escHtml(t.subject)}</span>
-        <span class="thread-time">${escHtml(t.time)}</span>
       </div>
       <div class="thread-content">
-        ${t.body ? `<div class="thread-body">${md(t.body)}</div>` : ''}
+        ${renderRootMessage(t)}
         ${t.replies.length ? `
         <div class="thread-replies">
-          ${t.replies.map(r => `
-            <div class="thread-reply">
-              <span class="thread-reply-from">${escHtml(r.fromTime.split('|')[0]?.trim() || r.fromTime)}</span>
-              <span class="thread-reply-body">${escHtml(r.body)}</span>
-              <span class="thread-reply-time">${escHtml(r.fromTime.split('|')[1]?.trim() || '')}</span>
-            </div>`).join('')}
+          ${t.replies.map(renderReplyMessage).join('')}
         </div>` : ''}
         <div class="thread-reply-form">
           <input id="ch-reply-${i}" type="text" placeholder="返信する...">
@@ -836,6 +1135,10 @@ async function postInstruct() {
 
 function escHtml(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function escAttr(s) {
+  return escHtml(s).replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
 async function loadData() {

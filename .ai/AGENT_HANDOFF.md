@@ -5,6 +5,26 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-23 23:50 JST] Agent: Codex (acting GM)
+Summary:
+- `#general` の未処理要望「監視ツールのチャンネル内表示を Slack like に」を優先対応
+- dashboard のチャンネル画面に投稿者アバター、Slack風スレッド表示、ブラウザ保存のアイコン設定UIを追加
+- `#general` 該当スレッドへ返信、`#dev` に技術報告を追記
+Changed Files:
+- tools/dashboard/public/index.html
+- tools/dashboard/README.md
+- .ai/channels/general.md
+- .ai/channels/dev.md
+Validation:
+- dashboard inline script check: OK
+- dashboard smoke test: OK (`/` 200, `/api/data` 200)
+Open Questions:
+- なし
+Next Step:
+- 必要なら次はアバターに画像URL対応か、チャンネル一覧側の未読/投稿者プレビュー強化
+
+---
+
 ## [2026-03-23 23:27 JST] Agent: Codex
 Summary:
 - 英語カテゴリに新サブカテゴリ `TOEIC頻出語` を追加

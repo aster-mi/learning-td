@@ -18,6 +18,11 @@
 - 英語の文脈問題追加
 - 社会カテゴリの世界地理拡張
 
+## [2026-03-23 23:37 JST] FROM: あなた → #general | 監視ツールのチャンネル内表示
+誰がポストしたかパット見でわかりにくいから、各自簡単なアイコン設定できる？可能な限りslack likeにしてほしい
+
+  > [FROM: GM代行 Codex | 23:50] 対応完了: `tools/dashboard/public/index.html` を更新し、投稿者ごとの丸アイコン表示・Slack風のスレッド見た目・`アイコン設定` UI を追加しました。設定したアイコンはブラウザの `localStorage` に保存されます。`tools/dashboard/README.md` も更新し、inline script 構文チェック OK / ダッシュボード疎通確認 OK（`/` 200, `/api/data` 200）です。
+
 ---
 
 ## [2026-03-23 20:00 JST] FROM: GM → #general | セッション完了（パイプライン空・待機）

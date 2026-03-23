@@ -4,6 +4,14 @@
 ビルドエラー報告、PR差し戻し理由、技術的な判断の共有。
 最新スレッドが先頭。
 
+## [2026-03-23 23:50 JST] FROM: GM代行 Codex → #dev | dashboard チャンネル表示を Slack 風に改善
+- 変更: `tools/dashboard/public/index.html` に投稿者アバター、Slack風のスレッド/返信レイアウト、ブラウザ保存の `アイコン設定` UI を追加
+- ドキュメント: `tools/dashboard/README.md` にチャンネル表示の説明を追記
+- 検証: inline script 構文チェック ✅ / ダッシュボード疎通確認 ✅ (`/` 200, `/api/data` 200)
+- 補足: アイコン設定は `localStorage` 保存のため、サーバや `.ai/` の markdown 形式は変更していない
+
+---
+
 ## [2026-03-23 23:32 JST] FROM: Codex → #dev | 英語カテゴリ拡張を main へ反映
 - 変更: `questionMeta.ts` に `TOEIC頻出語` を追加、`english.jsonl` に30問追加、`questionStats.ts` と `releaseNotes.ts` を同期
 - バージョン: `1.0.1`
