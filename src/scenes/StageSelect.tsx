@@ -16,6 +16,7 @@ interface Props {
   onBack: () => void;
   onDaily: () => void;
   onAchievements: () => void;
+  onProgress: () => void;
   onParty: () => void;
   onGacha: () => void;
   onSelect: (stageId: number) => void;
@@ -236,6 +237,7 @@ export function StageSelect({
   onBack,
   onDaily,
   onAchievements,
+  onProgress,
   onParty,
   onGacha,
   onSelect,
@@ -316,6 +318,25 @@ export function StageSelect({
             <MuteButton />
           </div>
           <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+            <button
+              onClick={onProgress}
+              style={{
+                background: "rgba(52,211,153,0.15)",
+                border: "1px solid rgba(52,211,153,0.4)",
+                color: "#34d399",
+                borderRadius: 999,
+                padding: "7px 12px",
+                cursor: "pointer",
+                fontSize: 13,
+                fontWeight: "bold",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: 6,
+              }}
+            >
+              <span aria-hidden="true">📊</span>
+              <span>記録</span>
+            </button>
             <button
               onClick={onAchievements}
               style={{

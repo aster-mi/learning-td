@@ -13,6 +13,7 @@ import { getTodayChallenge } from "./data/dailyChallenge";
 import { claimMission, ensureLoginProgress } from "./data/progression";
 import { AchievementToast } from "./components/AchievementToast";
 import { AchievementList } from "./components/AchievementList";
+import { ProgressScreen } from "./components/ProgressScreen";
 import { GachaModal, type GachaReward } from "./components/GachaModal";
 import { useWindowSize } from "./hooks/useWindowSize";
 import { Tutorial } from "./components/Tutorial";
@@ -53,7 +54,7 @@ function saveLevel(level: number) {
 
 export default function App() {
   const { isMobile } = useWindowSize();
-  const [scene, setSceneRaw]              = useState<"category" | "select" | "party" | "gacha" | "game" | "achievements">("category");
+  const [scene, setSceneRaw]              = useState<"category" | "select" | "party" | "gacha" | "game" | "achievements" | "progress">("category");
   const setScene = useCallback((s: typeof scene) => { window.scrollTo(0, 0); setSceneRaw(s); }, []);
   const [activeStageId, setActiveStageId] = useState<number>(1);
   const [clearedStages, setClearedStages] = useState<Set<number>>(loadCleared);
@@ -215,6 +216,7 @@ export default function App() {
           onBack={() => { setSaveData(loadSave()); setScene("category"); }}
           onDaily={handleDailyChallenge}
           onAchievements={() => setScene("achievements")}
+          onProgress={() => setScene("progress")}
           onParty={() => setScene("party")}
           onGacha={() => { setSaveData(loadSave()); setScene("gacha"); }}
           onSelect={handleStageSelect}
@@ -246,6 +248,12 @@ export default function App() {
       {scene === "achievements" && (
         <div key="achievements"><AchievementList
           unlockedIds={saveData.achievements}
+          onClose={() => setScene("select")}
+        /></div>
+      )}
+      {scene === "progress" && (
+        <div key="progress"><ProgressScreen
+          saveData={saveData}
           onClose={() => setScene("select")}
         /></div>
       )}

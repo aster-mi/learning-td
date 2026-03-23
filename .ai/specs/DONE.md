@@ -4,6 +4,24 @@ GMがPRマージ後にREADY.mdからここへ移す。
 
 ---
 
+## [SPEC-C-01] プレイヤー進捗画面UI
+
+実装完了: 2026-03-23
+担当: デザイン（設計）+ Claude GM（実装）
+変更: `src/components/ProgressScreen.tsx`（新規）, `src/App.tsx`, `src/scenes/StageSelect.tsx`
+ビルド: OK
+
+---
+
+## [SPEC-20260323-02] AIコンテキスト整備
+
+実装完了: 2026-03-23
+担当: Claude GM（直接実施）
+変更: `.ai/SESSION_TEMPLATE.md`（削除）, `.ai/CONTEXT_MANIFEST.md`（新設）, `.ai/archive/`（新設）, `.ai/AGENT_HANDOFF.md`（ローリング済み）
+ビルド: 該当なし
+
+---
+
 ## [SPEC-B-01] 情報・ITリテラシー問題追加
 
 実装完了: 2026-03-23
