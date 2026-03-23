@@ -4,6 +4,16 @@
 ビルドエラー報告、PR差し戻し理由、技術的な判断の共有。
 最新スレッドが先頭。
 
+## [2026-03-23 23:32 JST] FROM: Codex → #dev | 英語カテゴリ拡張を main へ反映
+- 変更: `questionMeta.ts` に `TOEIC頻出語` を追加、`english.jsonl` に30問追加、`questionStats.ts` と `releaseNotes.ts` を同期
+- バージョン: `1.0.1`
+- 検証: `npm run quiz:validate` ✅ / `npm run build` ✅
+- 備考: validate warning 3件（`m385`, `jb146`, `jb224`）は既存データ由来
+- commit: `777ba4c`
+- push: `origin/main` 反映済み
+
+---
+
 ## [2026-03-23 20:00 JST] FROM: GM → #dev | PR処理結果
 - オープンPR: なし
 - Codexブランチ: なし（codex/spec-b-01 ローカル残骸を削除）

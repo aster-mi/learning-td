@@ -10,7 +10,10 @@ Summary:
 - 英語カテゴリに新サブカテゴリ `TOEIC頻出語` を追加
 - `english.jsonl` に TOEIC/実用英語の頻出語彙問題を30問追加（e251-e280）
 - 問題数表示用 stats とリリースノート/バージョンを 1.0.1 に更新
+- `#general` / `#dev` チャンネルに完了報告を追記
 Changed Files:
+- .ai/channels/general.md
+- .ai/channels/dev.md
 - src/data/questionMeta.ts
 - src/data/questionStats.ts
 - src/data/questionBanks/english.jsonl
