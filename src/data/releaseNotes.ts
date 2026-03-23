@@ -11,7 +11,7 @@ export const RELEASE_NOTES: ReleaseNote[] = [
     version: "1.0.2",
     date: "2026-03-24",
     items: [
-      "社会カテゴリに 世界地理 を追加",
+      "社会カテゴリに世界地理を追加",
       "世界地理問題30問追加",
     ],
   },
