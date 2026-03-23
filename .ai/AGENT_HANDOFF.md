@@ -5,6 +5,24 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-24 00:04 JST] Agent: Codex (acting GM)
+Summary:
+- dashboard のチャンネルヘッダーがスクロール追従しない件に対応
+- `.ch-toolbar` を sticky 化し、`ch-main` の overflow を見直して mobile でも追従するよう調整
+- `#dev` に対応内容を追記
+Changed Files:
+- tools/dashboard/public/index.html
+- .ai/channels/dev.md
+Validation:
+- dashboard inline script check: OK
+- dashboard smoke test: OK (`/` 200, `/api/data` 200)
+Open Questions:
+- 実機で top オフセットが高すぎる/低すぎる場合は 56px を微調整
+Next Step:
+- 必要なら sticky 対象にアイコン設定パネルも含める
+
+---
+
 ## [2026-03-23 23:59 JST] Agent: Codex (acting GM)
 Summary:
 - PCでは効いていた下端スクロールが mobile で効かない件に対応

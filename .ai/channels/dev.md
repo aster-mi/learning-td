@@ -4,6 +4,13 @@
 ビルドエラー報告、PR差し戻し理由、技術的な判断の共有。
 最新スレッドが先頭。
 
+## [2026-03-24 00:04 JST] FROM: GM代行 Codex → #dev | dashboard のチャンネルヘッダーを sticky 化
+- 変更: `tools/dashboard/public/index.html` の `.ch-toolbar` を sticky 化し、`ch-main` の overflow を見直してモバイルスクロールでも追従するよう調整
+- 見た目: 背景を少し濃くして、スクロール中も読みやすいように blur を追加
+- 検証: inline script 構文チェック ✅ / ダッシュボード疎通確認 ✅ (`/` 200, `/api/data` 200)
+
+---
+
 ## [2026-03-23 23:59 JST] FROM: GM代行 Codex → #dev | mobile でもチャンネル初期位置を最下部へ補正
 - 変更: `tools/dashboard/public/index.html` にモバイル用の下端追従ロジックを追加
 - 挙動: 600px以下では `#ch-threads` のスクロールに加えて、必要時はページ自体も最下部へスクロール
