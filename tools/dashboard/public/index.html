@@ -642,6 +642,31 @@ function switchChannel(name) {
   if (data) renderThreads();
 }
 
+function isMobileChannelLayout() {
+  return window.matchMedia('(max-width: 600px)').matches;
+}
+
+function isPageNearBottom() {
+  const scroller = document.scrollingElement || document.documentElement;
+  return scroller.scrollHeight - scroller.scrollTop - window.innerHeight < 80;
+}
+
+function stickChannelToBottom() {
+  const threadEl = document.getElementById('ch-threads');
+  if (!threadEl) return;
+
+  threadEl.scrollTop = threadEl.scrollHeight;
+
+  if (isMobileChannelLayout()) {
+    const scroller = document.scrollingElement || document.documentElement;
+    const postForm = document.querySelector('.ch-post-form');
+    const targetBottom = postForm
+      ? postForm.getBoundingClientRect().bottom + window.scrollY
+      : scroller.scrollHeight;
+    window.scrollTo({ top: Math.max(0, targetBottom - window.innerHeight), behavior: 'auto' });
+  }
+}
+
 function loadActorIconOverrides() {
   try {
     const raw = localStorage.getItem(AVATAR_STORAGE_KEY);
@@ -864,7 +889,10 @@ function renderThreads() {
   const el = document.getElementById('ch-threads');
   const previousScrollTop = el.scrollTop;
   const shouldStickToBottom =
-    pendingChannelScrollToBottom || el.scrollHeight - el.scrollTop - el.clientHeight < 40;
+    pendingChannelScrollToBottom ||
+    (isMobileChannelLayout()
+      ? isPageNearBottom()
+      : el.scrollHeight - el.scrollTop - el.clientHeight < 40);
   openThreads[currentChannel] = openThreads[currentChannel] || {};
   renderChannelHeader(threads);
   renderChannelSettings(threads);
@@ -906,8 +934,14 @@ function renderThreads() {
     </div>`).join('');
   window._chThreads = threads;
   requestAnimationFrame(() => {
-    el.scrollTop = shouldStickToBottom ? el.scrollHeight : previousScrollTop;
-    pendingChannelScrollToBottom = false;
+    requestAnimationFrame(() => {
+      if (shouldStickToBottom) {
+        stickChannelToBottom();
+      } else {
+        el.scrollTop = previousScrollTop;
+      }
+      pendingChannelScrollToBottom = false;
+    });
   });
 }
 

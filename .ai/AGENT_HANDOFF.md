@@ -5,6 +5,24 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-23 23:59 JST] Agent: Codex (acting GM)
+Summary:
+- PCでは効いていた下端スクロールが mobile で効かない件に対応
+- 600px以下ではページ全体のスクロール位置も最下部に補正するよう dashboard を調整
+- `#dev` に追加報告を追記
+Changed Files:
+- tools/dashboard/public/index.html
+- .ai/channels/dev.md
+Validation:
+- dashboard inline script check: OK
+- dashboard smoke test: OK (`/` 200, `/api/data` 200)
+Open Questions:
+- 実機のブラウザ差でまだズレる場合は、さらに `最新へ移動` ボタンを付ける余地あり
+Next Step:
+- 実機確認結果に応じて微調整
+
+---
+
 ## [2026-03-23 23:55 JST] Agent: Codex (acting GM)
 Summary:
 - dashboard チャンネルの表示順を「下が最新」に変更
