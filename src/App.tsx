@@ -17,6 +17,7 @@ import { ProgressScreen } from "./components/ProgressScreen";
 import { GachaModal, type GachaReward } from "./components/GachaModal";
 import { useWindowSize } from "./hooks/useWindowSize";
 import { Tutorial } from "./components/Tutorial";
+import { ReleaseNotesScreen } from "./components/ReleaseNotesScreen";
 import type { Achievement } from "./data/achievements";
 
 const STORAGE_KEY        = "learning_td_cleared";
@@ -54,7 +55,7 @@ function saveLevel(level: number) {
 
 export default function App() {
   const { isMobile } = useWindowSize();
-  const [scene, setSceneRaw]              = useState<"category" | "select" | "party" | "gacha" | "game" | "achievements" | "progress">("category");
+  const [scene, setSceneRaw]              = useState<"category" | "select" | "party" | "gacha" | "game" | "achievements" | "progress" | "releasenotes">("category");
   const setScene = useCallback((s: typeof scene) => { window.scrollTo(0, 0); setSceneRaw(s); }, []);
   const [activeStageId, setActiveStageId] = useState<number>(1);
   const [clearedStages, setClearedStages] = useState<Set<number>>(loadCleared);
@@ -205,6 +206,7 @@ export default function App() {
           onConfirm={handleCategoryConfirm}
           wrongCount={getWrongCount()}
           onReview={handleReviewStart}
+          onReleaseNotes={() => setScene("releasenotes")}
         /></div>
       )}
       {scene === "select" && (
@@ -255,6 +257,11 @@ export default function App() {
         <div key="progress"><ProgressScreen
           saveData={saveData}
           onClose={() => setScene("select")}
+        /></div>
+      )}
+      {scene === "releasenotes" && (
+        <div key="releasenotes"><ReleaseNotesScreen
+          onClose={() => setScene("category")}
         /></div>
       )}
       {scene === "game" && (

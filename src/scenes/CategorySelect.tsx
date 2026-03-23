@@ -8,6 +8,7 @@ import {
   SUB_CATEGORIES,
   type MainCategory,
 } from "../data/questionMeta";
+import { APP_VERSION } from "../data/releaseNotes";
 import { useWindowSize } from "../hooks/useWindowSize";
 
 interface Props {
@@ -16,9 +17,17 @@ interface Props {
   onConfirm: (selected: string[], level: number) => void;
   wrongCount: number;
   onReview: () => void;
+  onReleaseNotes: () => void;
 }
 
-export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrongCount, onReview }: Props) {
+export function CategorySelect({
+  initialSelected,
+  initialLevel,
+  onConfirm,
+  wrongCount,
+  onReview,
+  onReleaseNotes,
+}: Props) {
   const { isMobile } = useWindowSize();
   const allSubs = SUB_CATEGORIES.map((subCategory) => subCategory.name);
 
@@ -410,6 +419,30 @@ export function CategorySelect({ initialSelected, initialLevel, onConfirm, wrong
         }}
       >
         ステージ選択へ
+      </button>
+      <button
+        onClick={onReleaseNotes}
+        style={{
+          position: "fixed",
+          right: isMobile ? 12 : 20,
+          bottom: isMobile ? 12 : 20,
+          minWidth: 36,
+          minHeight: 36,
+          padding: "8px 12px",
+          background: "rgba(15, 23, 42, 0.88)",
+          color: "#94a3b8",
+          border: "1px solid #334155",
+          borderRadius: 999,
+          fontSize: 12,
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          backdropFilter: "blur(6px)",
+        }}
+        aria-label={`バージョン ${APP_VERSION} のリリースノートを開く`}
+      >
+        v{APP_VERSION}
       </button>
     </div>
   );
