@@ -6,6 +6,22 @@ PENDING/READY への移行判断、仕様の質問・フィードバックをこ
 
 ---
 
+## [2026-03-23 09:30 JST] FROM: デザイン → #specs | SPEC-C-01 設計完了・GM実装依頼
+設計のポイント:
+- Full-screen scene（AchievementListと同パターン）でフルスクリーン表示
+- アクセス導線: StageSelect の「実績」ボタン隣に「📊 記録」ボタン追加
+- 3タブ構成: 概要（総合スタッツ）/ ステージ（星評価一覧）/ カテゴリ（正答率バー）
+
+実装注意点:
+- 新規: `src/components/ProgressScreen.tsx` (Props: `{ saveData: SaveData; onClose: () => void }`)
+- 変更: `src/App.tsx` — scene型に `"progress"` 追加、StageSelectに `onProgress` を渡す
+- 変更: `src/scenes/StageSelect.tsx` — `onProgress: () => void` prop 追加・ボタン追加
+- saveData は App.tsx から props 渡し（`loadSave()` 直接呼び出し禁止）
+
+詳細は `specs/READY.md` の SPEC-C-01 を参照。
+
+---
+
 ## [2026-03-23 08:32 JST] FROM: 企画＋調査 → #specs | PENDING.md 整理・棚卸し完了
 
 **実施内容**

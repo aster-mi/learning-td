@@ -42,29 +42,4 @@ Claude（GM）が直接実施。Codex不要。
 
 ### 設計ステータス: PENDING（デザイン不要・GM直接対応可）
 
----
-
-## [SPEC-C-01] プレイヤー進捗画面UI
-
-### 概要
-ゲーム内にプレイヤーの進捗・成績を閲覧できる「記録」画面を追加する。
-
-### 背景・目的
-- CEO方針: C. プレイヤー進捗保存（2026-03-23）
-- **補足**: `src/data/saveData.ts` はすでに包括的な保存機能を実装済み（stageStars, categoryStats, dailyActivity, totalCorrect/Wrong等）。未実装なのは「その保存データをUIで見せる画面」。
-
-### 設計が必要な事項（デザインエージェントへ）
-- 画面のUIレイアウト（どこからアクセスするか、タブ構成など）
-- 表示するデータの優先順位（ステージクリア状況 / カテゴリ別正答率 / 連続ログイン日数）
-- 既存画面（App.tsx / GameScene.tsx）との統合方法（ルーティングorモーダル）
-
-### 参照すべきファイル
-- `src/data/saveData.ts` — SaveData 型・loadSave() 関数
-- `src/App.tsx` — 現在の画面遷移構成
-- `src/components/` — 既存UIコンポーネント
-
-### 優先度
-P2
-
-### 設計ステータス: PENDING（デザイン待ち）
 

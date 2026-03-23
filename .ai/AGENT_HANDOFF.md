@@ -5,6 +5,21 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-23 09:30 JST] Agent: Claude デザイン (scheduled)
+Summary:
+- SPEC-C-01「プレイヤー進捗画面UI」の UI/UX設計を完了
+- 3タブ構成（概要・ステージ・カテゴリ）、Full-screen scene パターン、アクセス導線を確定
+- PENDING.md から READY.md へ移行完了
+Specs Moved to READY:
+- SPEC-C-01: プレイヤー進捗画面UI
+Channels Posted:
+- #specs: GM向け実装依頼（ProgressScreen.tsx 新規・App.tsx・StageSelect.tsx 変更）
+- #general: 活動報告
+Open Questions:
+- なし（設計上の未解決事項なし）
+
+---
+
 ## [2026-03-23 08:30 JST] Agent: Claude 企画＋調査 (scheduled)
 Summary:
 - CEO指示「AIコンテキスト整備の課題調査」を実施。`.ai/` 全35ファイルを棚卸し。
