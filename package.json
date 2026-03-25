@@ -5,10 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build --configLoader native",
     "quiz:validate": "node scripts/validate-questions.mjs",
     "lint": "eslint .",
-    "test": "vitest run",
+    "test": "node scripts/run-vitest.mjs run",
     "test:watch": "vitest",
     "preview": "vite preview"
   },

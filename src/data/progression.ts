@@ -21,18 +21,86 @@ export interface CategoryInsight {
   wrong: number;
 }
 
-const MISSION_BALANCE = {
-  daily: {
-    login: { rewardCoins: 20, target: 1 },
-    correct: { rewardCoins: 60, target: 15 },
-    clear: { rewardCoins: 60, target: 1 },
+interface MissionProgressSnapshot {
+  todayKey: string;
+  weekKey: string;
+  today: DailyActivity;
+  weekTotal: DailyActivity;
+}
+
+interface MissionTemplate {
+  key: string;
+  scope: MissionDef["scope"];
+  target: number;
+  rewardCoins: number;
+  getId: (snapshot: MissionProgressSnapshot) => string;
+  getProgress: (snapshot: MissionProgressSnapshot) => number;
+  title: (target: number) => string;
+  desc: (target: number) => string;
+}
+
+const MISSION_TEMPLATES: readonly MissionTemplate[] = [
+  {
+    key: "daily-login",
+    scope: "daily",
+    target: 1,
+    rewardCoins: 20,
+    getId: ({ todayKey }) => `daily-login-${todayKey}`,
+    getProgress: () => 1,
+    title: () => "今日のログイン",
+    desc: () => "1回ログインしてコインを受け取る",
   },
-  weekly: {
-    correct: { rewardCoins: 150, target: 50 },
-    clear: { rewardCoins: 150, target: 5 },
-    combo: { rewardCoins: 100, target: 8 },
+  {
+    key: "daily-correct",
+    scope: "daily",
+    target: 8,
+    rewardCoins: 40,
+    getId: ({ todayKey }) => `daily-correct-${todayKey}`,
+    getProgress: ({ today }) => today.correct,
+    title: (target) => `今日の${target}問正解`,
+    desc: (target) => `今日は${target}問正解して学習ペースを作る`,
   },
-} as const;
+  {
+    key: "daily-clear",
+    scope: "daily",
+    target: 1,
+    rewardCoins: 40,
+    getId: ({ todayKey }) => `daily-clear-${todayKey}`,
+    getProgress: ({ today }) => today.clears,
+    title: (target) => `今日の${target}ステージクリア`,
+    desc: (target) => `どれか${target}つのステージをクリアする`,
+  },
+  {
+    key: "weekly-correct",
+    scope: "weekly",
+    target: 35,
+    rewardCoins: 100,
+    getId: ({ weekKey }) => `weekly-correct-${weekKey}`,
+    getProgress: ({ weekTotal }) => weekTotal.correct,
+    title: (target) => `今週の${target}問正解`,
+    desc: (target) => `1週間で${target}問正解して安定して積み上げる`,
+  },
+  {
+    key: "weekly-clear",
+    scope: "weekly",
+    target: 4,
+    rewardCoins: 120,
+    getId: ({ weekKey }) => `weekly-clear-${weekKey}`,
+    getProgress: ({ weekTotal }) => weekTotal.clears,
+    title: (target) => `今週の${target}ステージクリア`,
+    desc: (target) => `1週間で${target}ステージクリアして攻略を進める`,
+  },
+  {
+    key: "weekly-combo",
+    scope: "weekly",
+    target: 12,
+    rewardCoins: 80,
+    getId: ({ weekKey }) => `weekly-combo-${weekKey}`,
+    getProgress: ({ weekTotal }) => weekTotal.bestCombo,
+    title: (target) => `今週の${target}コンボ`,
+    desc: (target) => `1週間のどこかで${target}コンボに到達する`,
+  },
+] as const;
 
 export function getDateKey(date = new Date()): string {
   const y = date.getFullYear();
@@ -100,68 +168,26 @@ export function getDailyWeeklyMissions(save: SaveData, date = new Date()): Missi
     { plays: 0, clears: 0, correct: 0, wrong: 0, bestCombo: 0, coinsEarned: 0 },
   );
 
+  const snapshot: MissionProgressSnapshot = {
+    todayKey,
+    weekKey,
+    today,
+    weekTotal,
+  };
   const claims = new Set(save.missionClaims);
-  const missions: Omit<MissionDef, "claimed">[] = [
-    {
-      id: `daily-login-${todayKey}`,
-      title: "今日のログイン",
-      desc: "1回ログインしてコインを受け取る",
-      rewardCoins: MISSION_BALANCE.daily.login.rewardCoins,
-      progress: 1,
-      target: MISSION_BALANCE.daily.login.target,
-      scope: "daily",
-    },
-    {
-      id: `daily-correct-${todayKey}`,
-      title: "今日の8問正解",
-      desc: "今日は8問正解して学習ペースを作る",
-      rewardCoins: MISSION_BALANCE.daily.correct.rewardCoins,
-      progress: today.correct,
-      target: MISSION_BALANCE.daily.correct.target,
-      scope: "daily",
-    },
-    {
-      id: `daily-clear-${todayKey}`,
-      title: "今日の1ステージクリア",
-      desc: "どれか1つのステージをクリアする",
-      rewardCoins: MISSION_BALANCE.daily.clear.rewardCoins,
-      progress: today.clears,
-      target: MISSION_BALANCE.daily.clear.target,
-      scope: "daily",
-    },
-    {
-      id: `weekly-correct-${weekKey}`,
-      title: "今週の35問正解",
-      desc: "1週間で35問正解して安定して積み上げる",
-      rewardCoins: MISSION_BALANCE.weekly.correct.rewardCoins,
-      progress: weekTotal.correct,
-      target: MISSION_BALANCE.weekly.correct.target,
-      scope: "weekly",
-    },
-    {
-      id: `weekly-clear-${weekKey}`,
-      title: "今週の4ステージクリア",
-      desc: "1週間で4ステージクリアして攻略を進める",
-      rewardCoins: MISSION_BALANCE.weekly.clear.rewardCoins,
-      progress: weekTotal.clears,
-      target: MISSION_BALANCE.weekly.clear.target,
-      scope: "weekly",
-    },
-    {
-      id: `weekly-combo-${weekKey}`,
-      title: "今週の12コンボ",
-      desc: "1週間のどこかで12コンボに到達する",
-      rewardCoins: MISSION_BALANCE.weekly.combo.rewardCoins,
-      progress: weekTotal.bestCombo,
-      target: MISSION_BALANCE.weekly.combo.target,
-      scope: "weekly",
-    },
-  ];
-
-  return missions.map((mission) => ({
-    ...mission,
-    claimed: claims.has(mission.id),
-  }));
+  return MISSION_TEMPLATES.map((mission) => {
+    const id = mission.getId(snapshot);
+    return {
+      id,
+      title: mission.title(mission.target),
+      desc: mission.desc(mission.target),
+      rewardCoins: mission.rewardCoins,
+      progress: mission.getProgress(snapshot),
+      target: mission.target,
+      claimed: claims.has(id),
+      scope: mission.scope,
+    };
+  });
 }
 
 export function claimMission(save: SaveData, missionId: string, rewardCoins: number): SaveData {
