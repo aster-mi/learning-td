@@ -213,12 +213,14 @@
   .ch-main {
     flex: 1; border: 1px solid var(--border); border-left: none;
     border-radius: 0 10px 10px 0; background: var(--surface);
-    display: flex; flex-direction: column; overflow: hidden;
+    display: flex; flex-direction: column; overflow: visible;
   }
   .ch-toolbar {
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
     padding: 12px 16px; border-bottom: 1px solid var(--border);
-    background: linear-gradient(180deg, rgba(108,142,247,.12), rgba(108,142,247,0));
+    background: linear-gradient(180deg, rgba(108,142,247,.16), rgba(26,29,39,.96));
+    position: sticky; top: 56px; z-index: 25;
+    backdrop-filter: blur(10px);
   }
   .ch-toolbar-copy { min-width: 0; }
   .ch-channel-title { font-size: 16px; font-weight: 700; color: var(--text); }
@@ -231,7 +233,7 @@
   .ch-settings-toggle:hover { border-color: var(--accent); color: var(--accent); }
   .ch-settings {
     display: none; padding: 12px 16px; border-bottom: 1px solid var(--border);
-    background: rgba(8, 10, 16, 0.45);
+    background: rgba(8, 10, 16, 0.68);
   }
   .ch-settings.open { display: block; }
   .ch-settings-note { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
@@ -286,12 +288,23 @@
     border-radius: 12px; overflow: hidden;
     background: linear-gradient(180deg, rgba(255,255,255,.01), rgba(0,0,0,.08));
   }
+  .thread.thread-own {
+    border-color: rgba(108, 142, 247, .45);
+    box-shadow: 0 0 0 1px rgba(108, 142, 247, .18);
+    background: linear-gradient(180deg, rgba(108,142,247,.10), rgba(0,0,0,.08));
+  }
   .thread-header {
     padding: 12px 14px; background: rgba(255,255,255,.02);
     display: flex; align-items: center; justify-content: space-between; gap: 12px;
     cursor: pointer; min-height: 56px;
   }
   .thread-header:hover { background: #282d43; }
+  .thread.thread-own .thread-header {
+    background: linear-gradient(180deg, rgba(108,142,247,.18), rgba(108,142,247,.05));
+  }
+  .thread.thread-own .thread-header:hover {
+    background: linear-gradient(180deg, rgba(108,142,247,.26), rgba(108,142,247,.10));
+  }
   .thread-header-main { display: flex; align-items: flex-start; gap: 12px; min-width: 0; flex: 1; }
   .thread-header-copy { min-width: 0; flex: 1; display: flex; flex-direction: column; gap: 4px; }
   .thread-header-top { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -324,6 +337,12 @@
   }
   .thread-message-root { border-top: 1px solid var(--border); }
   .thread-message-main { min-width: 0; flex: 1; }
+  .thread-message-own .thread-message-main {
+    background: rgba(108, 142, 247, .12);
+    border: 1px solid rgba(108, 142, 247, .32);
+    border-radius: 12px;
+    padding: 10px 12px;
+  }
   .thread-message-meta {
     display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
     margin-bottom: 6px;
@@ -686,6 +705,10 @@ function normalizeActorName(name) {
   return String(name || '').replace(/^FROM:\s*/i, '').trim();
 }
 
+function isOwnActor(name) {
+  return normalizeActorName(name) === 'あなた';
+}
+
 function hashString(value) {
   let hash = 0;
   for (const char of value) {
@@ -857,7 +880,7 @@ function renderRootMessage(thread) {
     ? md(thread.body)
     : '<div class="thread-body-empty">本文はありません</div>';
   return `
-    <div class="thread-message thread-message-root">
+    <div class="thread-message thread-message-root ${isOwnActor(thread.from) ? 'thread-message-own' : ''}">
       ${renderActorAvatar(thread.from)}
       <div class="thread-message-main">
         <div class="thread-message-meta">
@@ -871,7 +894,7 @@ function renderRootMessage(thread) {
 
 function renderReplyMessage(reply) {
   return `
-    <div class="thread-message thread-reply">
+    <div class="thread-message thread-reply ${isOwnActor(reply.from) ? 'thread-message-own' : ''}">
       ${renderActorAvatar(reply.from)}
       <div class="thread-message-main">
         <div class="thread-message-meta">
@@ -902,7 +925,7 @@ function renderThreads() {
     return;
   }
   el.innerHTML = threads.map((t, i) => `
-    <div class="thread ${openThreads[currentChannel][i] ? 'open' : ''}">
+    <div class="thread ${openThreads[currentChannel][i] ? 'open' : ''} ${isOwnActor(t.from) ? 'thread-own' : ''}">
       <div class="thread-header" onclick="toggleThread(${i})">
         <div class="thread-header-main">
           ${renderActorAvatar(t.from)}
