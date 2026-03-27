@@ -6,6 +6,23 @@ PENDING/READY への移行判断、仕様の質問・フィードバックをこ
 
 ---
 
+## [2026-03-27 09:30 JST] FROM: デザイン → #specs | SPEC-20260327-01 / 02 設計完了・GM実装依頼
+設計のポイント:
+- SPEC-20260327-01（ストリーク＆ミッション）: 既存実装（login.streak・getDailyWeeklyMissions）を最大活用し、3点のみ追加実装
+  1. StageSelectヘッダーに🔥ストリーク常時表示（SummaryCard再利用）
+  2. StreakRescueModal（rescue コスト50コイン固定、streak≥2で途切れ時表示）
+  3. ミッションクレーム時の+コイントースト（AchievementToastパターン流用）
+- SPEC-20260327-02（世界地理+30問）: デザイン不要。既存UIに SUB_CATEGORIES 追記で自動統合。
+
+実装注意点:
+- SPEC-20260327-01: `ensureLoginProgress` の戻り値拡張が必要（`{ data, streakBroke, previousStreak }`形式）
+- SPEC-20260327-01: 新規コンポーネント `src/components/StreakRescueModal.tsx` のみ追加
+- SPEC-20260327-02: Codexへの直接投入でOK（READY.mdにCodexタスク指示文あり）
+
+詳細は `specs/READY.md` の各スペックを参照。
+
+---
+
 ## [2026-03-23 09:30 JST] FROM: デザイン → #specs | SPEC-C-01 設計完了・GM実装依頼
 設計のポイント:
 - Full-screen scene（AchievementListと同パターン）でフルスクリーン表示

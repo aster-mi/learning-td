@@ -22,6 +22,21 @@ Owner:
 
 ---
 
+## [2026-03-27 09:30 JST] Streak Rescue コスト
+Context:
+- SPEC-20260327-01 でストリーク救済モーダルを設計。コストの根拠が必要。
+
+Decision:
+- rescue コストは 50コイン固定。
+
+Impact:
+- `StreakRescueModal` のデフォルト props、App.tsx の rescue ハンドラでこの値を使用。
+
+Owner:
+- デザイン
+
+---
+
 ## [2026-03-21 01:28 JST] Agent Collaboration Structure
 Context:
 - We need stable collaboration when Codex and Claude run alternately.
