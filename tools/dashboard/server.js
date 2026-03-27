@@ -105,6 +105,9 @@ function runPowerShellJson(script) {
 
 function readScheduledTasks() {
   const script = `
+    $ProgressPreference = 'SilentlyContinue'
+    $InformationPreference = 'SilentlyContinue'
+    $WarningPreference = 'SilentlyContinue'
     $tasks = Get-ScheduledTask | Where-Object { $_.TaskName -like 'learning-td-*' } | ForEach-Object {
       $info = Get-ScheduledTaskInfo -TaskName $_.TaskName
       $trigger = $_.Triggers | Select-Object -First 1

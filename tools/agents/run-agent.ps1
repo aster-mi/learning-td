@@ -35,6 +35,51 @@ function Write-RunnerLog {
     $Line | Tee-Object -FilePath $LogFile -Append | Out-Host
 }
 
+function Get-LastRunMarker {
+    param(
+        [string]$Path,
+        [string]$Label
+    )
+
+    if (-not (Test-Path -LiteralPath $Path)) {
+        return $null
+    }
+
+    $Pattern = "^\s*$([regex]::Escape($Label)):\s*(.+)$"
+    $Lines = Get-Content -LiteralPath $Path -Encoding UTF8
+    for ($Index = $Lines.Count - 1; $Index -ge 0; $Index--) {
+        if ($Lines[$Index] -match $Pattern) {
+            return $matches[1].Trim()
+        }
+    }
+
+    return $null
+}
+
+function Ensure-RunMarkers {
+    param(
+        [string]$Path,
+        [int]$ExitCode
+    )
+
+    $ExistingResult = Get-LastRunMarker -Path $Path -Label "RUN RESULT"
+    $ExistingSummary = Get-LastRunMarker -Path $Path -Label "RUN SUMMARY"
+
+    if (-not $ExistingResult) {
+        $FallbackResult = if ($ExitCode -eq 0) { "success" } else { "failed" }
+        Write-RunnerLog "RUN RESULT: $FallbackResult"
+    }
+
+    if (-not $ExistingSummary) {
+        $FallbackSummary = if ($ExitCode -eq 0) {
+            "Runner completed without explicit run summary"
+        } else {
+            "Runner exit code $ExitCode"
+        }
+        Write-RunnerLog "RUN SUMMARY: $FallbackSummary"
+    }
+}
+
 function Import-EnvFile {
     param(
         [string]$Path,
@@ -132,5 +177,6 @@ if ($Agent -eq "gm") {
     }
 }
 
+Ensure-RunMarkers -Path $LogFile -ExitCode $exitCode
 Write-RunnerLog "Agent $Agent completed. Log: $LogFile"
 exit $exitCode

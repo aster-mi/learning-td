@@ -5,6 +5,26 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-28 03:19 JST] Agent: Codex
+Summary:
+- dashboard の Task Scheduler 読み取りで PowerShell progress が `dashboard.err.log` を CLIXML で汚染していたため抑止した。
+- `run-agent.ps1` に `RUN RESULT` / `RUN SUMMARY` の補完を追加し、agent 本文に marker が無い run でも dashboard が最新ログを判定できるようにした。
+Changed Files:
+- `tools/dashboard/server.js`
+- `tools/agents/run-agent.ps1`
+Validation:
+- `node --check tools/dashboard/server.js`: OK
+- `tools/dashboard/start-dashboard.ps1 -ForceRestart`: OK
+- `http://localhost:3030/api/status`: OK
+- `dashboard.err.log` 再確認: OK（CLIXML 汚染なし）
+- `tools/agents/run-agent.ps1 -Agent gm -Runner claude`: NG（`claude` が `uv_spawn 'reg'` で EPERM）
+Open Questions:
+- `claude` CLI が `reg` 実行で EPERM になるため、GM 本体の再実行は runner 側制約で失敗する。marker 補完と dashboard 反映までは確認済み。
+Next Step:
+- `claude` の Windows 実行制約（`uv_spawn 'reg'`）を別途 maintainer で切り分け、必要なら runner 側設定を修正する。
+
+---
+
 ## [2026-03-28 03:14 JST] Agent: Codex
 Summary:
 - GitHub Pages deploy failure was caused by `vite build --configLoader native` on GitHub Actions Linux runner.
