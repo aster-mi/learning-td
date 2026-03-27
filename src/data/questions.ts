@@ -1,6 +1,6 @@
 import {
   MAIN_CATEGORY_ORDER,
-  SUB_CATEGORIES,
+  SUB_CATEGORIES as QUESTION_META_SUB_CATEGORIES,
   type MainCategory,
   type Question,
 } from "./questionMeta";
@@ -10,11 +10,16 @@ export {
   LEVEL_DEFS,
   MAIN_CATEGORY_META,
   MAIN_CATEGORY_ORDER,
-  SUB_CATEGORIES,
   type Level,
   type MainCategory,
   type Question,
 } from "./questionMeta";
+
+export const SUB_CATEGORIES = QUESTION_META_SUB_CATEGORIES.map((subCategory) =>
+  subCategory.main === "社会" && subCategory.name === "世界地理"
+    ? { ...subCategory, emoji: "🌍", color: "#10b981" }
+    : subCategory,
+);
 
 type QuestionModule = { default: string };
 
