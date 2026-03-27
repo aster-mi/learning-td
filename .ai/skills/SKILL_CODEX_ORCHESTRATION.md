@@ -1,5 +1,8 @@
 # SKILL: Codex オーケストレーション
 
+> **推奨**: `claude_teammate_*` ツールが使える場合は `SKILL_AGENT_TEAMS_ORCHESTRATION.md` を優先。
+> Codex はAgent Teamsが使えない環境でのフォールバック。
+
 ## 目的
 Claude Code セッション内から Codex CLI を呼び出し、複数タスクを並行実行する。
 ファイル競合を防ぎつつ、両エージェントの長所を活かして生産性を最大化する。

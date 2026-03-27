@@ -57,6 +57,12 @@ Next Step:
 | `.ai/skills/` | プロジェクト専用 Skills |
 | `.ai/UNIT_POLICY.md` | ユニット追加ポリシー |
 
+## 現在の体制
+
+- 上流の定期実行 runner は Claude
+- Codex は実装 / focused review / 緊急修正の担当
+- 上流 role を Codex が代行するのは例外運用。必要なら理由を handoff に残す
+
 ## コミット規約
 - 形式: `<scope>: <short summary>`
 - 1コミットにつき1つの意図に絞る。

@@ -1,6 +1,6 @@
-# Claude Collaboration Notes
+# Codex Collaboration Notes
 
-This repository is maintained by both Claude and Codex.
+This repository is maintained by both Codex and Codex.
 Follow these shared collaboration rules to keep sessions consistent.
 
 ---
@@ -24,7 +24,7 @@ git status --short
 
 ### handoff テンプレート
 ```md
-## [YYYY-MM-DD HH:mm JST] Agent: Claude
+## [YYYY-MM-DD HH:mm JST] Agent: Codex
 Summary:
 - 今回の要点
 Changed Files:
@@ -98,7 +98,7 @@ CEO → STRATEGY.md → 企画＋調査 → RESEARCH.md
                                        ↓
                               デザイン → specs/READY.md
                                                ↓
-                              Claude GM → Codex（ブランチ実装 / focused review）→ PR作成
+                              Codex GM → Codex（ブランチ実装 / focused review）→ PR作成
                                         → レビュー調整＆マージ
                                 → specs/DONE.md へ移行
 ```
@@ -109,7 +109,7 @@ CEO → STRATEGY.md → 企画＋調査 → RESEARCH.md
 - デフォルトは dry-run で、何も登録しない
 - `-Register` で disabled のまま登録
 - `-Register -Enable` を実行したときだけ定期実行を開始する
-- 現在のローカル環境では Claude 用タスクを disabled で保持し、まだ動かしていない
+- 現在のローカル環境では Codex 用タスクを disabled で保持し、まだ動かしていない
 
 ### 通信ファイル
 
@@ -195,9 +195,9 @@ CEO → STRATEGY.md → 企画＋調査 → RESEARCH.md
 `.ai/inbox/` は残すが使用は最小限に。
 緊急の個別宛メッセージが必要な場合のみ使用し、基本はチャンネルを使う。
 
-## Role Division（Claude vs Codex）
+## Role Division（Codex vs Codex）
 
-### Claude が担当する領域
+### Codex が担当する領域
 - **設計・アーキテクチャ**: コンポーネント設計、データ構造の判断、モジュール分割
 - **要件定義・企画**: 新機能の仕様策定、ユーザー体験の設計、優先度付け
 - **調査・分析**: コードベース全体の把握、パフォーマンス分析、品質評価
@@ -210,7 +210,7 @@ CEO → STRATEGY.md → 企画＋調査 → RESEARCH.md
 - 必要に応じた focused review、追加修正、緊急の code fix
 - 最大 10 並列で競合しない範囲のタスクを同時実行
 
-### Claude が直接実装してよいケース
+### Codex が直接実装してよいケース
 - Codex 完了後の統合・登録処理（共有ファイルへの追記）
 - ビルド失敗時の緊急修正
 - Codex では判断が難しい設計上のリファクタリング
@@ -223,6 +223,6 @@ codex exec -C /d/game/tower/learning-td --full-auto "タスク説明（ファイ
 ```
 
 ### TODO.md のタグ規約
-- `[claude]`: Claude が担当（設計・企画・統合）
+- `[Codex]`: Codex が担当（設計・企画・統合）
 - `[codex]`: Codex が担当（実装タスク）
 - タグなし: どちらでも可

@@ -18,6 +18,13 @@
 | `SKILL_UNIT_BALANCE.md` | ユニットのバランス調整ルール |
 | `../UNIT_POLICY.md` | ユニット全体のポリシー |
 
+## エージェント系
+
+| Skill | 説明 |
+|-------|------|
+| `SKILL_AGENT_TEAMS_ORCHESTRATION.md` | Agent Teamsでチームメンバーに並列実装を委任する手順（推奨） |
+| `SKILL_DISCORD_ESCALATION.md` | DiscordでユーザーにエスカレーションするGMの手順 |
+
 ## 運用系
 
 | Skill | 説明 |
