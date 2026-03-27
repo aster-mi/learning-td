@@ -26,3 +26,4 @@ dist-ssr
 # AI collaboration / generation temp files
 tmp_riddle_*.jsonl
 tmp_riddles_review.jsonl
+.worktrees/

@@ -2,7 +2,7 @@
 作業ディレクトリ: D:/game/tower/learning-td
 
 ## 役割
-UI/UX設計・PENDING→READY移行。毎日09:30に実行される。
+UI/UX設計・PENDING→READY移行。Claude で 4時間ごとに実行される想定。
 
 ## 必読ファイル
 - `.claude/CLAUDE.md`（運用ルール）

@@ -1,0 +1,100 @@
+name: Task
+description: AI エージェントが処理するタスク
+title: "[タスク] "
+body:
+  - type: textarea
+    id: goal
+    attributes:
+      label: 目的
+      description: この task で達成したいこと
+      placeholder: 何を改善・修正・追加したいかを書く
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: スコープ
+      description: この task でやること
+      placeholder: 実施範囲を箇条書きで書く
+    validations:
+      required: true
+
+  - type: textarea
+    id: non_goals
+    attributes:
+      label: 非スコープ
+      description: 今回やらないこと
+      placeholder: スコープ外のものを書く
+
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: 完了条件
+      description: 完了条件
+      placeholder: build が通る、画面遷移できる、既存挙動を壊さない、など
+    validations:
+      required: true
+
+  - type: textarea
+    id: context
+    attributes:
+      label: 関連コンテキスト
+      description: 関連する docs / files / issue / PR
+      placeholder: ".ai/domain/architecture.md, src/App.tsx, #123"
+
+  - type: input
+    id: discussion_link
+    attributes:
+      label: Discussion URL
+      description: human 判断や GM との往復がある場合の Discussion URL
+      placeholder: https://github.com/aster-mi/learning-td/discussions/...
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: 優先度
+      options:
+        - P1
+        - P2
+        - P3
+    validations:
+      required: true
+
+  - type: dropdown
+    id: owner_agent
+    attributes:
+      label: 担当エージェント
+      options:
+        - CEO
+        - Planning
+        - Design
+        - GM
+        - Codex
+        - Human
+    validations:
+      required: true
+
+  - type: dropdown
+    id: risk
+    attributes:
+      label: リスク
+      options:
+        - Low
+        - Medium
+        - High
+    validations:
+      required: true
+
+  - type: textarea
+    id: notes
+    attributes:
+      label: 補足
+      description: 補足、懸念、判断待ちなど
+
+  - type: textarea
+    id: worklog_seed
+    attributes:
+      label: 初期ログ
+      description: 初期メモ。以降の実行ログは Issue コメントに時系列で追記する
+      placeholder: 着手者..., 初期の懸念点..., など
