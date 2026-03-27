@@ -182,9 +182,10 @@ if ([string]::IsNullOrWhiteSpace($Token)) {
 }
 
 $Payload = @{ content = $Content } | ConvertTo-Json -Depth 4 -Compress
+$PayloadBytes = [System.Text.Encoding]::UTF8.GetBytes($Payload)
 $Headers = @{
     Authorization = "Bot $Token"
-    "Content-Type" = "application/json"
+    "Content-Type" = "application/json; charset=utf-8"
     "User-Agent" = "learning-td-gm-session-report"
 }
 
@@ -193,7 +194,7 @@ try {
         -Method Post `
         -Uri "https://discord.com/api/v10/channels/$ThreadId/messages" `
         -Headers $Headers `
-        -Body $Payload | Out-Null
+        -Body $PayloadBytes | Out-Null
 } catch {
     $Response = $_.Exception.Response
     if ($Response -and $Response.StatusCode -eq 401) {

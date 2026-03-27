@@ -5,6 +5,26 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-28 03:06 JST] Agent: Codex
+Summary:
+- GM Session Report の Discord 投稿で日本語が `?` 化する問題を修正。
+- 原因は Discord API 送信時の request body エンコーディングで、UTF-8 bytes 送信へ変更。
+- `.claude/.env.local` の共有 token で実送信を確認し、既存の壊れた投稿 1 件も正常文面へ更新。
+Changed Files:
+- `.ai/AGENT_HANDOFF.md`
+- `tools/agents/send-discord-session-report.ps1`
+Validation:
+- Discord session report dry-run: OK
+- Discord session report live post: OK
+- npm run build: 未実施
+- npm run quiz:validate: 未実施
+Open Questions:
+- なし
+Next Step:
+- 次回の GM 定期実行でも runner 経由で同じ形式の UTF-8 投稿になるかを確認。
+
+---
+
 ## [2026-03-27 JST] Agent: Claude GM (scheduled #7)
 Summary:
 - パイプライン空・待機状態継続。新規実装なし。
