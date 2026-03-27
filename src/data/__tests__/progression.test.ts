@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { getDailyWeeklyMissions } from "../progression";
+import { getDailyWeeklyMissions, ensureLoginProgress } from "../progression";
 import type { SaveData } from "../saveData";
 
 function createSave(overrides: Partial<SaveData> = {}): SaveData {
@@ -18,7 +18,7 @@ function createSave(overrides: Partial<SaveData> = {}): SaveData {
     dailyActivity: {},
     missionClaims: [],
     unitMastery: {},
-    login: { lastDate: "", streak: 0 },
+    login: { lastDate: "", streak: 0, rescueCount: 0 },
     ...overrides,
   };
 }
@@ -142,5 +142,51 @@ describe("getDailyWeeklyMissions", () => {
     expect(summary["weekly-correct-2026-03-23"]).toEqual({ progress: 35, claimed: false });
     expect(summary["weekly-clear-2026-03-23"]).toEqual({ progress: 3, claimed: true });
     expect(summary["weekly-combo-2026-03-23"]).toEqual({ progress: 12, claimed: false });
+  });
+});
+
+describe("ensureLoginProgress (streak rescue)", () => {
+  const day = (dateStr: string) => new Date(`${dateStr}T09:00:00+09:00`);
+
+  it("increments streak on consecutive day", () => {
+    const save = createSave({ login: { lastDate: "2026-03-24", streak: 5, rescueCount: 0 } });
+    const result = ensureLoginProgress(save, day("2026-03-25"));
+    expect(result.login.streak).toBe(6);
+    expect(result.login.rescueCount).toBe(0);
+  });
+
+  it("resets streak when 2+ days missed even with rescue", () => {
+    const save = createSave({ login: { lastDate: "2026-03-22", streak: 5, rescueCount: 2 } });
+    const result = ensureLoginProgress(save, day("2026-03-25"));
+    expect(result.login.streak).toBe(1);
+    expect(result.login.rescueCount).toBe(2); // rescue not consumed
+  });
+
+  it("uses rescue when exactly 1 day missed and rescue available", () => {
+    const save = createSave({ login: { lastDate: "2026-03-23", streak: 5, rescueCount: 1 } });
+    const result = ensureLoginProgress(save, day("2026-03-25"));
+    expect(result.login.streak).toBe(6);
+    expect(result.login.rescueCount).toBe(0); // rescue consumed
+  });
+
+  it("resets streak when 1 day missed and no rescue", () => {
+    const save = createSave({ login: { lastDate: "2026-03-23", streak: 5, rescueCount: 0 } });
+    const result = ensureLoginProgress(save, day("2026-03-25"));
+    expect(result.login.streak).toBe(1);
+    expect(result.login.rescueCount).toBe(0);
+  });
+
+  it("replenishes rescue at 7-day streak milestone", () => {
+    const save = createSave({ login: { lastDate: "2026-03-24", streak: 6, rescueCount: 0 } });
+    const result = ensureLoginProgress(save, day("2026-03-25"));
+    expect(result.login.streak).toBe(7);
+    expect(result.login.rescueCount).toBe(1); // replenished at milestone
+  });
+
+  it("does not exceed MAX_RESCUE_COUNT (2) when replenishing", () => {
+    const save = createSave({ login: { lastDate: "2026-03-24", streak: 13, rescueCount: 2 } });
+    const result = ensureLoginProgress(save, day("2026-03-25"));
+    expect(result.login.streak).toBe(14);
+    expect(result.login.rescueCount).toBe(2); // capped at max
   });
 });
