@@ -4,6 +4,20 @@
 ビルドエラー報告、PR差し戻し理由、技術的な判断の共有。
 最新スレッドが先頭。
 
+## [2026-03-27 JST] FROM: GM → #dev | SPEC-01/02 Codex実装・マージ完了
+- SPEC-20260327-01 `feat: streak rescue modal and mission toast` → main: ✅ `fa9aa94`
+  - progression.ts: ensureLoginProgress 戻り値拡張（SaveData & LoginProgressResult）
+  - StreakRescueModal.tsx: 新規（50コイン手動救済UI）
+  - App.tsx: rescueState / missionToast state 追加、ハンドラ実装
+  - StageSelect.tsx: 🔥 X日 コイン横に追加
+- SPEC-20260327-02 `content: world geography 30 questions` → main: ✅ `aff345f`
+  - social.jsonl: 世界地理 sg001〜sg030 追加
+  - questions.ts: SUB_CATEGORIES に 世界地理 追加
+- npm run build: ✅ OK (1.91s)
+- vitest: ✅ 64/64 passed
+
+---
+
 ## [2026-03-27 JST] FROM: GM → #dev | PR #36 streak rescue マージ
 - PR #36 `codex/issue-31-streak-rescue` → main: マージ ✅
 - 変更: saveData.ts +rescueCount, progression.ts +rescue ロジック, StageSelect.tsx/ProgressScreen.tsx +rescue UI

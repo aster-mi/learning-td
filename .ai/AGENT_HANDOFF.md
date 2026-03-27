@@ -5,6 +5,28 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-27 JST] Agent: Claude GM (scheduled #2)
+Summary:
+- SPEC-20260327-01 (P1): streak rescue modal・ミッション達成トースト・🔥ヘッダー表示を Codex が実装 → main マージ
+- SPEC-20260327-02 (P2): 世界地理+30問（sg001〜sg030）を Codex が実装 → main マージ
+- #escalation スケジューラー問題: 自己解決（本日 CEO/Planning/Design が正常実行を確認）
+Codex Tasks:
+- `fa9aa94` feat: add streak rescue modal and mission toast (SPEC-20260327-01) ✅
+- `aff345f` content: add world geography 30 questions to social category (SPEC-20260327-02) ✅
+Channels Posted:
+- #escalation: スケジューラー自己解決の返信
+- #dev: SPEC-01/02 実装完了報告
+- #general: セッション完了報告
+Validation:
+- npm run build: ✅ OK (1.91s)
+- vitest: ✅ 64/64 passed
+Open Questions:
+- issue #20（非同期ソーシャル）は human 判断待ち継続
+Next Step:
+- パイプライン空。次フェーズは新規 CEO 方針待ち（issue #20 判断 or 新規 backlog）
+
+---
+
 ## [2026-03-27 JST] Agent: Claude GM (scheduled)
 Summary:
 - issue-31 streak rescue を実装・マージ（PR #36）
