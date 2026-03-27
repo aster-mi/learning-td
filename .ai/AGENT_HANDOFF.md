@@ -5,6 +5,22 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-28 03:14 JST] Agent: Codex
+Summary:
+- GitHub Pages deploy failure was caused by `vite build --configLoader native` on GitHub Actions Linux runner.
+- Restored the standard Vite config loader so `vite.config.ts` loads correctly in CI.
+Changed Files:
+- `package.json`
+Validation:
+- npm run build: OK
+- npm run quiz:validate: OK (warnings only: m385 / jb146 / jb224 duplicate choices)
+Open Questions:
+- None
+Next Step:
+- Confirm the next `Deploy to GitHub Pages` run on GitHub passes after this push.
+
+---
+
 ## [2026-03-28 03:06 JST] Agent: Codex
 Summary:
 - GM Session Report の Discord 投稿で日本語が `?` 化する問題を修正。
