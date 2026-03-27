@@ -17,6 +17,38 @@ function Write-ReportLog {
     Write-Output "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] $Message"
 }
 
+function Import-EnvFile {
+    param([string]$Path)
+
+    if (-not (Test-Path -LiteralPath $Path)) {
+        return
+    }
+
+    foreach ($RawLine in Get-Content -LiteralPath $Path -Encoding UTF8) {
+        $Line = $RawLine.Trim()
+
+        if (-not $Line -or $Line.StartsWith("#")) {
+            continue
+        }
+
+        $SeparatorIndex = $Line.IndexOf("=")
+        if ($SeparatorIndex -lt 1) {
+            continue
+        }
+
+        $Name = $Line.Substring(0, $SeparatorIndex).Trim()
+        $Value = $Line.Substring($SeparatorIndex + 1).Trim()
+
+        if (($Value.StartsWith('"') -and $Value.EndsWith('"')) -or ($Value.StartsWith("'") -and $Value.EndsWith("'"))) {
+            $Value = $Value.Substring(1, $Value.Length - 2)
+        }
+
+        [Environment]::SetEnvironmentVariable($Name, $Value, "Process")
+    }
+}
+
+Import-EnvFile -Path (Join-Path $ProjectDir ".claude\.env.local")
+
 function Get-LatestHandoffEntry {
     param([string]$HandoffPath)
 
@@ -156,11 +188,21 @@ $Headers = @{
     "User-Agent" = "learning-td-gm-session-report"
 }
 
-Invoke-RestMethod `
-    -Method Post `
-    -Uri "https://discord.com/api/v10/channels/$ThreadId/messages" `
-    -Headers $Headers `
-    -Body $Payload | Out-Null
+try {
+    Invoke-RestMethod `
+        -Method Post `
+        -Uri "https://discord.com/api/v10/channels/$ThreadId/messages" `
+        -Headers $Headers `
+        -Body $Payload | Out-Null
+} catch {
+    $Response = $_.Exception.Response
+    if ($Response -and $Response.StatusCode -eq 401) {
+        Write-ReportLog "Discord session report failed: token was rejected by Discord (401 Unauthorized)."
+        exit 1
+    }
+
+    throw
+}
 
 Write-ReportLog "Discord session report posted to thread $ThreadId."
 exit 0

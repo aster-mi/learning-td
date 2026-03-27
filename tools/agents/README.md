@@ -98,7 +98,9 @@ Get-ScheduledTask | Where-Object { $_.TaskName -like "learning-td-*" }
 
 - `claude` コマンドが PATH に通っている必要があります
 - `-Runner codex` を使う場合は `codex` コマンドも PATH に必要です
-- GM の Discord Session Report には `DISCORD_BOT_TOKEN` が必要です
+- Claude と runner で共用する secret は `.claude/.env.local` に置きます（git ignore 済み）
+- 初回は `.claude/.env.example` を `.claude/.env.local` にコピーして値を入れます
+- GM の Discord Session Report には `.claude/.env.local` 内の `DISCORD_BOT_TOKEN` が必要です
 - レポート先スレッドを変える場合だけ `DISCORD_SESSION_REPORT_THREAD_ID` を設定します
 - ログは `tools/agents/logs/` に保存されます
 - 各エージェントのプロンプトは `tools/agents/prompts/*.md` で変更できます

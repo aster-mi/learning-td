@@ -18,6 +18,7 @@ $LogDir = "$ProjectDir\tools\agents\logs"
 $PromptFile = "$PromptsDir\$Agent.md"
 $RoleFile = "$ProjectDir\.ai\agents\$Agent.md"
 $DiscordSessionReportScript = "$ProjectDir\tools\agents\send-discord-session-report.ps1"
+$SharedEnvFile = "$ProjectDir\.claude\.env.local"
 
 function Assert-CommandExists {
     param([string]$CommandName)
@@ -32,6 +33,43 @@ function Write-RunnerLog {
 
     $Line = "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] $Message"
     $Line | Tee-Object -FilePath $LogFile -Append | Out-Host
+}
+
+function Import-EnvFile {
+    param(
+        [string]$Path,
+        [scriptblock]$Logger
+    )
+
+    if (-not (Test-Path -LiteralPath $Path)) {
+        return
+    }
+
+    foreach ($RawLine in Get-Content -LiteralPath $Path -Encoding UTF8) {
+        $Line = $RawLine.Trim()
+
+        if (-not $Line -or $Line.StartsWith("#")) {
+            continue
+        }
+
+        $SeparatorIndex = $Line.IndexOf("=")
+        if ($SeparatorIndex -lt 1) {
+            continue
+        }
+
+        $Name = $Line.Substring(0, $SeparatorIndex).Trim()
+        $Value = $Line.Substring($SeparatorIndex + 1).Trim()
+
+        if (($Value.StartsWith('"') -and $Value.EndsWith('"')) -or ($Value.StartsWith("'") -and $Value.EndsWith("'"))) {
+            $Value = $Value.Substring(1, $Value.Length - 2)
+        }
+
+        [Environment]::SetEnvironmentVariable($Name, $Value, "Process")
+    }
+
+    if ($Logger) {
+        & $Logger "Loaded shared env file: $Path"
+    }
 }
 
 # Ensure log directory exists
@@ -56,6 +94,7 @@ if (Test-Path $RoleFile) {
     Write-RunnerLog "Role: $RoleFile"
 }
 Write-RunnerLog "Mode: full-auto"
+Import-EnvFile -Path $SharedEnvFile -Logger ${function:Write-RunnerLog}
 
 Set-Location $ProjectDir
 

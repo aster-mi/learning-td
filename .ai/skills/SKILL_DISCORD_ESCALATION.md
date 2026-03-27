@@ -80,7 +80,7 @@ content（本文）:
 通常は `tools/agents/run-agent.ps1` がセッション終了後に自動投稿する。
 
 前提:
-- `DISCORD_BOT_TOKEN` が環境変数で入っていること
+- `DISCORD_BOT_TOKEN` が `.claude/.env.local` か環境変数で入っていること
 - GM が `AGENT_HANDOFF.md` の最新エントリに `Summary` / `Validation` / `Next Step` を書き終えていること
 
 ### 自動投稿の挙動
