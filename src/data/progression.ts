@@ -117,20 +117,49 @@ export function getWeekKey(date = new Date()): string {
   return getDateKey(current);
 }
 
+const MAX_RESCUE_COUNT = 2;
+
 export function ensureLoginProgress(save: SaveData, date = new Date()): SaveData {
   const today = getDateKey(date);
   if (save.login.lastDate === today) return save;
 
   const prevDate = save.login.lastDate ? new Date(save.login.lastDate) : null;
-  const yesterday = new Date(date);
-  yesterday.setDate(yesterday.getDate() - 1);
-  const isConsecutive = prevDate ? getDateKey(prevDate) === getDateKey(yesterday) : false;
+  const currentRescue = save.login.rescueCount ?? 0;
+
+  let newStreak: number;
+  let newRescue = currentRescue;
+
+  if (!prevDate) {
+    // First login ever
+    newStreak = 1;
+  } else {
+    const msPerDay = 86400000;
+    const daysDiff = Math.round((date.getTime() - prevDate.getTime()) / msPerDay);
+
+    if (daysDiff === 1) {
+      // Consecutive day: increment streak
+      newStreak = save.login.streak + 1;
+    } else if (daysDiff === 2 && currentRescue > 0) {
+      // Missed exactly 1 day and has a rescue: use rescue, maintain streak
+      newStreak = save.login.streak + 1;
+      newRescue = currentRescue - 1;
+    } else {
+      // Missed 2+ days, or missed 1 day with no rescue: reset
+      newStreak = 1;
+    }
+  }
+
+  // Replenish 1 rescue at every 7-day streak milestone (up to MAX_RESCUE_COUNT)
+  if (newStreak > save.login.streak && newStreak % 7 === 0) {
+    newRescue = Math.min(newRescue + 1, MAX_RESCUE_COUNT);
+  }
 
   return {
     ...save,
     login: {
       lastDate: today,
-      streak: isConsecutive ? save.login.streak + 1 : 1,
+      streak: newStreak,
+      rescueCount: newRescue,
     },
   };
 }

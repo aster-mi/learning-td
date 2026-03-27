@@ -103,6 +103,7 @@ export function ProgressScreen({ saveData, onClose }: Props) {
               { label: "正答率", value: pct(totalCorrect, totalWrong), color: "#818cf8" },
               { label: "最大コンボ", value: saveData.maxCombo.toLocaleString(), color: "#fbbf24" },
               { label: "ログイン連続", value: `${saveData.login.streak}日`, color: "#60a5fa" },
+              { label: "rescue", value: (saveData.login.rescueCount ?? 0) > 0 ? `x${saveData.login.rescueCount}` : "なし", color: (saveData.login.rescueCount ?? 0) > 0 ? "#a78bfa" : "#475569" },
               { label: "コイン", value: saveData.coins.toLocaleString(), color: "#fbbf24" },
             ].map(({ label, value, color }) => (
               <div key={label} style={{

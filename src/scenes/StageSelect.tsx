@@ -208,6 +208,9 @@ export function StageSelect({
 
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
           <SummaryCard label="騾｣邯壹Ο繧ｰ繧､繝ｳ" value={`${saveData.login.streak}譌･`} color="#38bdf8" />
+          {(saveData.login.rescueCount ?? 0) > 0 && (
+            <SummaryCard label="rescue" value={`x${saveData.login.rescueCount}`} color="#a78bfa" />
+          )}
           <SummaryCard label="蝗ｳ髑鷹＃謌千紫" value={`${collectionRate}%`} color="#f59e0b" />
           <SummaryCard label="邱上せ繧ｿ繝ｼ" value={`${totalStars}`} color="#facc15" />
           <SummaryCard label="邏ｯ險域ｭ｣隗｣" value={`${saveData.totalCorrect}`} color="#4ade80" />

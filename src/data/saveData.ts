@@ -28,6 +28,7 @@ export interface DailyActivity {
 export interface LoginState {
   lastDate: string;
   streak: number;
+  rescueCount: number;
 }
 
 export interface SaveData {
@@ -73,7 +74,7 @@ const DEFAULT_SAVE: SaveData = {
   dailyActivity: {},
   missionClaims: [],
   unitMastery: {},
-  login: { lastDate: "", streak: 0 },
+  login: { lastDate: "", streak: 0, rescueCount: 0 },
 };
 
 function isValidDateKey(value: string): boolean {
@@ -280,7 +281,9 @@ function loadSaveFrom(parsed: Partial<SaveData>): SaveData {
     dailyActivity: parsed.dailyActivity ?? {},
     missionClaims: parsed.missionClaims ?? [],
     unitMastery: parsed.unitMastery ?? {},
-    login: parsed.login ?? { lastDate: "", streak: 0 },
+    login: parsed.login
+      ? { lastDate: parsed.login.lastDate ?? "", streak: parsed.login.streak ?? 0, rescueCount: parsed.login.rescueCount ?? 0 }
+      : { lastDate: "", streak: 0, rescueCount: 0 },
     tutorialSeen: parsed.tutorialSeen ?? false,
   });
 }
