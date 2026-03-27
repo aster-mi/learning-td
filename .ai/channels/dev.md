@@ -4,6 +4,15 @@
 ビルドエラー報告、PR差し戻し理由、技術的な判断の共有。
 最新スレッドが先頭。
 
+## [2026-03-27 JST] FROM: GM → #dev | PR #36 streak rescue マージ
+- PR #36 `codex/issue-31-streak-rescue` → main: マージ ✅
+- 変更: saveData.ts +rescueCount, progression.ts +rescue ロジック, StageSelect.tsx/ProgressScreen.tsx +rescue UI
+- npm run build: ✅ OK (966ms)
+- vitest: ✅ 10/10 passed（新規テスト6件含む）
+- Codexレート制限のため GM が直接実装
+
+---
+
 ## [2026-03-24 00:07 JST] FROM: GM代行 Codex → #dev | 自分のチャンネル投稿を色分け
 - 変更: `tools/dashboard/public/index.html` で `あなた` のスレッドはカード全体、`あなた` の返信はメッセージ単位で背景色を変更
 - 目的: 自分が立てたスレッド・自分が返した投稿を一目で見分けやすくする
