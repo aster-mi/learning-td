@@ -21,6 +21,26 @@ export interface CategoryInsight {
   wrong: number;
 }
 
+export interface LoginProgressResult {
+  data: SaveData;
+  streakBroke: boolean;
+  previousStreak: number;
+}
+
+function attachLoginProgress(
+  data: SaveData,
+  previousStreak: number,
+  streakBroke: boolean,
+): SaveData & LoginProgressResult {
+  const result = { ...data } as SaveData & LoginProgressResult;
+  Object.defineProperties(result, {
+    data: { value: data, enumerable: false },
+    streakBroke: { value: streakBroke, enumerable: false },
+    previousStreak: { value: previousStreak, enumerable: false },
+  });
+  return result;
+}
+
 interface MissionProgressSnapshot {
   todayKey: string;
   weekKey: string;
@@ -119,9 +139,12 @@ export function getWeekKey(date = new Date()): string {
 
 const MAX_RESCUE_COUNT = 2;
 
-export function ensureLoginProgress(save: SaveData, date = new Date()): SaveData {
+export function ensureLoginProgress(save: SaveData, date = new Date()): SaveData & LoginProgressResult {
   const today = getDateKey(date);
-  if (save.login.lastDate === today) return save;
+  const previousStreak = save.login.streak;
+  if (save.login.lastDate === today) {
+    return attachLoginProgress(save, previousStreak, false);
+  }
 
   const prevDate = save.login.lastDate ? new Date(save.login.lastDate) : null;
   const currentRescue = save.login.rescueCount ?? 0;
@@ -154,7 +177,7 @@ export function ensureLoginProgress(save: SaveData, date = new Date()): SaveData
     newRescue = Math.min(newRescue + 1, MAX_RESCUE_COUNT);
   }
 
-  return {
+  const data = {
     ...save,
     login: {
       lastDate: today,
@@ -162,6 +185,12 @@ export function ensureLoginProgress(save: SaveData, date = new Date()): SaveData
       rescueCount: newRescue,
     },
   };
+
+  return attachLoginProgress(
+    data,
+    previousStreak,
+    previousStreak >= 2 && data.login.streak === 1 && data.login.streak !== previousStreak,
+  );
 }
 
 function getActivity(save: SaveData, key: string): DailyActivity {

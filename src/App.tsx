@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { CategorySelect } from "./scenes/CategorySelect";
 import { StageSelect } from "./scenes/StageSelect";
 // WorldSelect is now nested inside StageSelect
@@ -15,6 +15,7 @@ import { AchievementToast } from "./components/AchievementToast";
 import { AchievementList } from "./components/AchievementList";
 import { ProgressScreen } from "./components/ProgressScreen";
 import { GachaModal, type GachaReward } from "./components/GachaModal";
+import { StreakRescueModal } from "./components/StreakRescueModal";
 import { useWindowSize } from "./hooks/useWindowSize";
 import { Tutorial } from "./components/Tutorial";
 import { ReleaseNotesScreen } from "./components/ReleaseNotesScreen";
@@ -23,6 +24,7 @@ import type { Achievement } from "./data/achievements";
 const STORAGE_KEY        = "learning_td_cleared";
 const STORAGE_SUBS_KEY   = "learning_td_subcategories";
 const STORAGE_LEVELS_KEY = "learning_td_level";
+const STREAK_RESCUE_COST = 50;
 
 function loadCleared(): Set<number> {
   try {
@@ -55,6 +57,11 @@ function saveLevel(level: number) {
 
 export default function App() {
   const { isMobile } = useWindowSize();
+  const [initialLoginProgress] = useState(() => {
+    const next = ensureLoginProgress(loadSave());
+    saveSave(next.data);
+    return next;
+  });
   const [scene, setSceneRaw]              = useState<"category" | "select" | "party" | "gacha" | "game" | "achievements" | "progress" | "releasenotes">("category");
   const setScene = useCallback((s: typeof scene) => { window.scrollTo(0, 0); setSceneRaw(s); }, []);
   const [activeStageId, setActiveStageId] = useState<number>(1);
@@ -63,15 +70,24 @@ export default function App() {
   const [selectedLevel, setSelectedLevel] = useState<number>(loadLevel);
   const [reviewMode, setReviewMode]       = useState(false);
   const [isDailyMode, setIsDailyMode]     = useState(false);
-  const [saveData, setSaveData]           = useState(() => {
-    const next = ensureLoginProgress(loadSave());
-    saveSave(next);
-    return next;
-  });
+  const [saveData, setSaveData]           = useState(initialLoginProgress.data);
+  const [rescueState, setRescueState]     = useState<{ previousStreak: number } | null>(
+    initialLoginProgress.streakBroke ? { previousStreak: initialLoginProgress.previousStreak } : null,
+  );
+  const [missionToast, setMissionToast]   = useState<string | null>(null);
   const gameKeyRef = useRef<number>(0);
+  const missionToastTimerRef = useRef<number | null>(null);
 
   // Achievement toast
   const [newAchievements, setNewAchievements] = useState<Achievement[]>([]);
+
+  useEffect(() => {
+    return () => {
+      if (missionToastTimerRef.current !== null) {
+        window.clearTimeout(missionToastTimerRef.current);
+      }
+    };
+  }, []);
 
   const checkAchievements = useCallback(() => {
     const save = loadSave();
@@ -154,8 +170,44 @@ export default function App() {
     setSaveData(save);
   };
 
+  const handleRescue = useCallback(() => {
+    if (!rescueState) return;
+
+    let rescued = false;
+    updateSaveData((current) => {
+      if (current.coins < STREAK_RESCUE_COST) {
+        return current;
+      }
+
+      rescued = true;
+      return {
+        ...current,
+        coins: current.coins - STREAK_RESCUE_COST,
+        login: {
+          ...current.login,
+          streak: rescueState.previousStreak,
+        },
+      };
+    });
+    if (rescued) {
+      setRescueState(null);
+    }
+  }, [rescueState, updateSaveData]);
+
+  const handleDismissRescue = useCallback(() => {
+    setRescueState(null);
+  }, []);
+
   const handleClaimMission = useCallback((missionId: string, rewardCoins: number) => {
     updateSaveData(current => claimMission(current, missionId, rewardCoins));
+    setMissionToast(`+${rewardCoins}コイン`);
+    if (missionToastTimerRef.current !== null) {
+      window.clearTimeout(missionToastTimerRef.current);
+    }
+    missionToastTimerRef.current = window.setTimeout(() => {
+      setMissionToast(null);
+      missionToastTimerRef.current = null;
+    }, 2000);
   }, [updateSaveData]);
 
   const handleClear = (stageId: number) => {
@@ -285,6 +337,32 @@ export default function App() {
         <AchievementToast
           achievements={newAchievements}
           onDone={() => setNewAchievements([])}
+        />
+      )}
+      {missionToast !== null && (
+        <div
+          style={{
+            position: "fixed",
+            bottom: 80,
+            left: "50%",
+            transform: "translateX(-50%)",
+            background: "#1e293b",
+            color: "#fff",
+            padding: "8px 16px",
+            borderRadius: 8,
+            zIndex: 250,
+          }}
+        >
+          {missionToast}
+        </div>
+      )}
+      {rescueState !== null && (
+        <StreakRescueModal
+          previousStreak={rescueState.previousStreak}
+          rescueCost={STREAK_RESCUE_COST}
+          coins={saveData.coins}
+          onRescue={handleRescue}
+          onDismiss={handleDismissRescue}
         />
       )}
     </>

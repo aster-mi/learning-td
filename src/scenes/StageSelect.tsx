@@ -203,6 +203,7 @@ export function StageSelect({
               <span aria-hidden="true">ｪ・</span>
               <span>{coins}</span>
             </div>
+            <span style={{ color: "#fb923c", fontWeight: "bold", fontSize: 14 }}>🔥 {saveData.login.streak}日</span>
           </div>
         </div>
 
