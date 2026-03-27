@@ -1,34 +1,50 @@
-# Learning TD Agent Dashboard
+# Learning TD Agent Summary
 
-エージェント組織の活動状況をブラウザから監視するツール。
+Claude / Codex 運用の全体サマリーを 1 画面で確認する軽量ダッシュボードです。
 
-## 起動方法
+## 起動
 
 ```bash
 cd tools/dashboard
-npm install   # 初回のみ
+npm install
 node server.js
 ```
 
-- ローカル: http://localhost:3030
-- LAN内:   http://<PCのIPアドレス>:3030
+- Local: `http://localhost:3030`
+- LAN: `http://<PCのIP>:3030`
 
-ポート変更: `PORT=8080 node server.js`
+ポートを変える場合:
 
-## 画面構成
+```bash
+PORT=8080 node server.js
+```
 
-| タブ | 内容 |
-|---|---|
-| ダッシュボード | DASHBOARD.md / オープンPR / スペック件数 |
-| 受信トレイ | inbox/human.md の表示・返信・指示投稿 |
-| スペック | PENDING / READY / DONE パイプライン |
-| ハンドオフ | AGENT_HANDOFF.md 最新5件 |
-| 戦略・調査 | STRATEGY.md / RESEARCH.md |
+## 提供する画面と API
 
-## チャンネル表示
+- `/` と `/summary`
+  Claude / Codex の全体サマリー画面
+- `/api/status`
+  agent 状態、次回実行予定、最新ログ summary の JSON
+- `/api/logs/:agent/latest`
+  指定 agent の最新 raw log
 
-- 投稿者ごとの丸アイコンを表示
-- `チャンネル` タブの `アイコン設定` から、投稿者ごとに絵文字アイコンを上書き可能
-- アイコン設定はブラウザの `localStorage` に保存される
+## 現在の方針
 
-30秒ごとに自動更新します。
+- 旧 dashboard UI は廃止済み
+- このツールは summary 表示専用
+- 書き込み系 UI や旧 API は持たない
+
+## 自動起動
+
+Windows ログオン時に自動起動させる場合:
+
+```powershell
+cd D:\game\tower\learning-td\tools\dashboard
+.\register-autostart.ps1
+```
+
+解除する場合:
+
+```powershell
+.\register-autostart.ps1 -Remove
+```
