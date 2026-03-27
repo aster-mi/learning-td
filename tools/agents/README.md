@@ -17,6 +17,7 @@ tools/agents/
 │   └── maintainer.md
 ├── logs/                       # 実行ログ（自動生成）
 ├── run-agent.ps1               # エージェント単体実行スクリプト
+├── send-discord-session-report.ps1 # GM完了後のDiscordレポート送信
 └── setup-task-scheduler.ps1    # Task Scheduler の dry-run / 登録 / 削除
 ```
 
@@ -97,6 +98,8 @@ Get-ScheduledTask | Where-Object { $_.TaskName -like "learning-td-*" }
 
 - `claude` コマンドが PATH に通っている必要があります
 - `-Runner codex` を使う場合は `codex` コマンドも PATH に必要です
+- GM の Discord Session Report には `DISCORD_BOT_TOKEN` が必要です
+- レポート先スレッドを変える場合だけ `DISCORD_SESSION_REPORT_THREAD_ID` を設定します
 - ログは `tools/agents/logs/` に保存されます
 - 各エージェントのプロンプトは `tools/agents/prompts/*.md` で変更できます
 - Claude を上流、Codex を実装 / focused review に固定したい場合は `.ai/README.md` と `.ai/doc/operating-model.md` も合わせて確認してください

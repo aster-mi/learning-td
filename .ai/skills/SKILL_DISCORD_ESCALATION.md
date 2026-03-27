@@ -77,7 +77,16 @@ content（本文）:
 **レポートスレッドID**: `1487013724807106700`（常設・毎回同じスレッドに投稿）
 
 ### タイミング
-セッションの最後（AGENT_HANDOFF.md 更新後）にPythonで投稿する。
+通常は `tools/agents/run-agent.ps1` がセッション終了後に自動投稿する。
+
+前提:
+- `DISCORD_BOT_TOKEN` が環境変数で入っていること
+- GM が `AGENT_HANDOFF.md` の最新エントリに `Summary` / `Validation` / `Next Step` を書き終えていること
+
+### 自動投稿の挙動
+- `run-agent.ps1` は GM 成功終了後に `tools/agents/send-discord-session-report.ps1` を呼ぶ
+- 最新の `.ai/AGENT_HANDOFF.md` 先頭エントリから 3 セクションを要約して同じスレッドへ投稿する
+- token 未設定時は runner ログに `Discord session report skipped: DISCORD_BOT_TOKEN is not set.` を残してスキップする
 
 ### フォーマット
 ```
@@ -89,4 +98,10 @@ content（本文）:
 
 次のステップ:
 - （次回やること）
+```
+
+### 手動フォールバック
+runner を使わず GM を直接実行した場合のみ手動投稿する。
+```bash
+python -c "import os,urllib.request,json; token=os.environ['DISCORD_BOT_TOKEN']; body=json.dumps({'content':'[YYYY-MM-DD HH:mm JST] GM Session Report\\nSummary:\\n- ...'}).encode(); r=urllib.request.Request('https://discord.com/api/v10/channels/1487013724807106700/messages',body,{'Authorization':f'Bot {token}','Content-Type':'application/json','User-Agent':'DiscordBot'},'POST'); print(json.loads(urllib.request.urlopen(r).read())['id'])"
 ```

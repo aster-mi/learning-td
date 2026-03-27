@@ -17,6 +17,7 @@ $PromptsDir = "$ProjectDir\tools\agents\prompts"
 $LogDir = "$ProjectDir\tools\agents\logs"
 $PromptFile = "$PromptsDir\$Agent.md"
 $RoleFile = "$ProjectDir\.ai\agents\$Agent.md"
+$DiscordSessionReportScript = "$ProjectDir\tools\agents\send-discord-session-report.ps1"
 
 function Assert-CommandExists {
     param([string]$CommandName)
@@ -24,6 +25,13 @@ function Assert-CommandExists {
     if (-not (Get-Command $CommandName -ErrorAction SilentlyContinue)) {
         throw "Command not found on PATH: $CommandName"
     }
+}
+
+function Write-RunnerLog {
+    param([string]$Message)
+
+    $Line = "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] $Message"
+    $Line | Tee-Object -FilePath $LogFile -Append | Out-Host
 }
 
 # Ensure log directory exists
@@ -41,13 +49,13 @@ if (-not (Test-Path $PromptFile)) {
 
 $Prompt = Get-Content $PromptFile -Raw -Encoding utf8
 
-Write-Host "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] Starting agent: $Agent"
-Write-Host "Runner: $Runner"
-Write-Host "Prompt: $PromptFile"
+Write-RunnerLog "Starting agent: $Agent"
+Write-RunnerLog "Runner: $Runner"
+Write-RunnerLog "Prompt: $PromptFile"
 if (Test-Path $RoleFile) {
-    Write-Host "Role: $RoleFile"
+    Write-RunnerLog "Role: $RoleFile"
 }
-Write-Host "Mode: full-auto"
+Write-RunnerLog "Mode: full-auto"
 
 Set-Location $ProjectDir
 
@@ -71,5 +79,19 @@ try {
     $exitCode = 1
 }
 
-Write-Host "[$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')] Agent $Agent completed. Log: $LogFile"
+if ($Agent -eq "gm") {
+    if (-not (Test-Path $DiscordSessionReportScript)) {
+        Write-RunnerLog "Discord session report skipped: script not found: $DiscordSessionReportScript"
+    } elseif ($exitCode -ne 0) {
+        Write-RunnerLog "Discord session report skipped: GM exited with code $exitCode"
+    } else {
+        & powershell.exe `
+            -NoProfile `
+            -ExecutionPolicy Bypass `
+            -File $DiscordSessionReportScript `
+            -ProjectDir $ProjectDir 2>&1 | Tee-Object -FilePath $LogFile -Append | Out-Host
+    }
+}
+
+Write-RunnerLog "Agent $Agent completed. Log: $LogFile"
 exit $exitCode
