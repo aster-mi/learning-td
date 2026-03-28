@@ -32,8 +32,8 @@ interface StageSelectPlayTabProps {
 function StarDisplay({ count }: { count: number }) {
   return (
     <span style={{ color: "#facc15", fontSize: 12 }}>
-      {"笘・".repeat(count)}
-      <span style={{ color: "#475569" }}>{"笘・".repeat(Math.max(0, 3 - count))}</span>
+      {"★".repeat(count)}
+      <span style={{ color: "#475569" }}>{"☆".repeat(Math.max(0, 3 - count))}</span>
     </span>
   );
 }
@@ -94,8 +94,8 @@ export function StageSelectPlayTab({
             whiteSpace: "nowrap",
           }}
         >
-          <span style={{ fontSize: isMobile ? 22 : 24 }}>孱</span>
-          繝代・繝・ぅ
+          <span style={{ fontSize: isMobile ? 22 : 24 }}>👥</span>
+          パーティ
         </button>
         <button
           onClick={onGacha}
@@ -116,8 +116,8 @@ export function StageSelectPlayTab({
             whiteSpace: "nowrap",
           }}
         >
-          <span style={{ fontSize: isMobile ? 22 : 24 }}>識</span>
-          繧ｬ繝√Ε
+          <span style={{ fontSize: isMobile ? 22 : 24 }}>🎰</span>
+          ガチャ
         </button>
       </div>
 
@@ -162,7 +162,7 @@ export function StageSelectPlayTab({
               whiteSpace: "nowrap",
             }}
           >
-            {dailyDone ? "繧ｯ繝ｪ繧｢貂医∩" : `+${daily.bonusCoins} 繧ｳ繧､繝ｳ`}
+            {dailyDone ? "クリア済み" : `+${daily.bonusCoins} コイン`}
           </div>
         </div>
       </button>
@@ -239,13 +239,13 @@ export function StageSelectPlayTab({
                     {world.unlocked ? (
                       <>
                         <div style={{ textAlign: "right", minWidth: 50 }}>
-                          <div style={{ fontSize: 11, color: "#94a3b8" }}>繧ｯ繝ｪ繧｢</div>
+                          <div style={{ fontSize: 11, color: "#94a3b8" }}>クリア</div>
                           <div style={{ fontSize: 14, fontWeight: 800, color: allCleared ? "#4ade80" : "#e2e8f0" }}>
                             {world.clearedCount}/{world.stages.length}
                           </div>
                         </div>
                         <div style={{ textAlign: "right", minWidth: 40 }}>
-                          <div style={{ fontSize: 11, color: "#94a3b8" }}>笘・</div>
+                          <div style={{ fontSize: 11, color: "#94a3b8" }}>★</div>
                           <div style={{ fontSize: 14, fontWeight: 800, color: "#facc15" }}>{world.stars}</div>
                         </div>
                         <div
@@ -256,7 +256,7 @@ export function StageSelectPlayTab({
                             transform: isExpanded ? "rotate(180deg)" : "rotate(0deg)",
                           }}
                         >
-                          笆ｼ
+                          ▾
                         </div>
                       </>
                     ) : (
@@ -345,7 +345,7 @@ export function StageSelectPlayTab({
                                 flexShrink: 0,
                               }}
                             >
-                              {stageUnlocked ? (cleared ? "笨・" : index + 1) : "白"}
+                              {stageUnlocked ? (cleared ? "✓" : index + 1) : "🔒"}
                             </div>
                             <div style={{ minWidth: 0 }}>
                               <div style={{ fontSize: isMobile ? 14 : 15, fontWeight: 700, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
@@ -378,7 +378,7 @@ export function StageSelectPlayTab({
                               flexShrink: 0,
                             }}
                           >
-                            {!stageUnlocked ? "LOCK" : cleared ? "蜀肴倦謌ｦ" : "謖第姶"}
+                            {!stageUnlocked ? "LOCK" : cleared ? "CLEAR" : "出撃"}
                           </div>
                         </div>
                       </button>
@@ -449,7 +449,7 @@ export function StageSelectPlayTab({
                   >
                     EXTRA STAGES
                   </div>
-                  <div style={{ fontSize: isMobile ? 18 : 22, fontWeight: 900 }}>鬮倬屮蠎ｦ繝√Ε繝ｬ繝ｳ繧ｸ</div>
+                  <div style={{ fontSize: isMobile ? 18 : 22, fontWeight: 900 }}>高難度チャレンジ</div>
                 </div>
               </div>
 
@@ -462,7 +462,7 @@ export function StageSelectPlayTab({
                     transform: showEX ? "rotate(180deg)" : "rotate(0deg)",
                   }}
                 >
-                  笆ｼ
+                  ▾
                 </div>
               ) : (
                 <div
@@ -475,7 +475,7 @@ export function StageSelectPlayTab({
                     color: "#94a3b8",
                   }}
                 >
-                  蜈ｨ繧ｯ繝ｪ繧｢縺ｧ隗｣謾ｾ
+                  全クリアで解放
                 </div>
               )}
             </div>
@@ -534,7 +534,7 @@ export function StageSelectPlayTab({
                             flexShrink: 0,
                           }}
                         >
-                          {cleared ? "笨・" : "!"}
+                          {cleared ? "✓" : "!"}
                         </div>
                         <div style={{ minWidth: 0 }}>
                           <div style={{ fontSize: isMobile ? 14 : 15, fontWeight: 700 }}>{stage.name}</div>
@@ -565,7 +565,7 @@ export function StageSelectPlayTab({
                           flexShrink: 0,
                         }}
                       >
-                        {cleared ? "蜀肴倦謌ｦ" : "謖第姶"}
+                        {cleared ? "CLEAR" : "出撃"}
                       </div>
                     </div>
                   </button>

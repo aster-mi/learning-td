@@ -143,7 +143,7 @@ export function StageSelect({
                 fontSize: 13,
               }}
             >
-              謌ｻ繧・
+              戻る
             </button>
             <MuteButton />
           </div>
@@ -164,8 +164,8 @@ export function StageSelect({
                 gap: 6,
               }}
             >
-              <span aria-hidden="true">投</span>
-              <span>險倬鹸</span>
+              <span aria-hidden="true">📈</span>
+              <span>進捗</span>
             </button>
             <button
               onClick={onAchievements}
@@ -183,8 +183,8 @@ export function StageSelect({
                 gap: 6,
               }}
             >
-              <span aria-hidden="true">祷</span>
-              <span>螳溽ｸｾ</span>
+              <span aria-hidden="true">🏆</span>
+              <span>実績</span>
             </button>
             <div
               style={{
@@ -200,7 +200,7 @@ export function StageSelect({
                 gap: 6,
               }}
             >
-              <span aria-hidden="true">ｪ・</span>
+              <span aria-hidden="true">💰</span>
               <span>{coins}</span>
             </div>
             <span style={{ color: "#fb923c", fontWeight: "bold", fontSize: 14 }}>🔥 {saveData.login.streak}日</span>
@@ -208,13 +208,13 @@ export function StageSelect({
         </div>
 
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8, alignItems: "center" }}>
-          <SummaryCard label="騾｣邯壹Ο繧ｰ繧､繝ｳ" value={`${saveData.login.streak}譌･`} color="#38bdf8" />
+          <SummaryCard label="連続ログイン" value={`${saveData.login.streak}日`} color="#38bdf8" />
           {(saveData.login.rescueCount ?? 0) > 0 && (
-            <SummaryCard label="rescue" value={`x${saveData.login.rescueCount}`} color="#a78bfa" />
+            <SummaryCard label="救済" value={`x${saveData.login.rescueCount}`} color="#a78bfa" />
           )}
-          <SummaryCard label="蝗ｳ髑鷹＃謌千紫" value={`${collectionRate}%`} color="#f59e0b" />
-          <SummaryCard label="邱上せ繧ｿ繝ｼ" value={`${totalStars}`} color="#facc15" />
-          <SummaryCard label="邏ｯ險域ｭ｣隗｣" value={`${saveData.totalCorrect}`} color="#4ade80" />
+          <SummaryCard label="収集率" value={`${collectionRate}%`} color="#f59e0b" />
+          <SummaryCard label="総スター" value={`${totalStars}`} color="#facc15" />
+          <SummaryCard label="総正解" value={`${saveData.totalCorrect}`} color="#4ade80" />
         </div>
 
         <div
@@ -228,8 +228,8 @@ export function StageSelect({
           }}
         >
           {[
-            { key: "play", label: "繝励Ξ繧､", color: "#3b82f6" },
-            { key: "growth", label: "謌宣聞", color: "#8b5cf6" },
+            { key: "play", label: "プレイ", color: "#3b82f6" },
+            { key: "growth", label: "成長", color: "#8b5cf6" },
           ].map((item) => (
             <button
               key={item.key}
