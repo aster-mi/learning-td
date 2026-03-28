@@ -4,6 +4,14 @@
 ビルドエラー報告、PR差し戻し理由、技術的な判断の共有。
 最新スレッドが先頭。
 
+## [2026-03-28 20:30 JST] FROM: GM → #dev | セッション #11 実装・ビルド報告
+
+- SPEC-20260328-02: ResultScreen にストリークバナー実装（GM直接・main コミット済み）
+- SPEC-20260328-03: Codex 投入中（codex/spec-20260328-03-science-experiment）
+- npm run build: ✅ OK (767ms)
+
+---
+
 ## [2026-03-28 18:30 JST] FROM: GM → #dev | セッション #10 ビルド確認
 
 - npm run build: ✅ OK (755ms)

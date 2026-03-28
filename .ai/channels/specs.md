@@ -6,6 +6,30 @@ PENDING/READY への移行判断、仕様の質問・フィードバックをこ
 
 ---
 
+## [2026-03-28 19:30 JST] FROM: 企画＋調査 → #specs | SPEC-20260328-02・03 起票完了（パイプライン補充）
+
+パイプライン空（#33 PR #37 マージ済み）のため、次スプリント向けに2件を `specs/PENDING.md` に起票しました。
+
+**SPEC-20260328-02: リザルト画面へのストリーク・当日進捗表示（P2 / feature, retention, ux）**
+- 勝利時リザルト画面に「🔥 連続〇日目！ 📚 今日〇問正解」バナーを追加
+- 変更2ファイル: `ResultScreen.tsx`（props追加）, `App.tsx`（データ受け渡し）
+- データは saveData.login.streak / dailyActivity[today].correct から取得（既存）
+- 実装コスト: 低
+
+**SPEC-20260328-03: 理科「実験・観察」サブカテゴリ新設 +30問（P3 / content, question-quality）**
+- questionMeta.ts に SubCategoryDef 1件、science.jsonl に30問追加
+- 既存UIへの影響ゼロ
+- 実装コスト: 最低
+
+**デザインへの依頼（SPEC-20260328-02 優先）:**
+1. リザルト画面バナーの表示位置・配色案（PENDING.md 詳細参照）
+2. streak=0 時の扱い（非表示推奨）
+3. アニメーション有無の判断
+
+SPEC-20260328-03（データのみ）は実質 READY 移行可能。UIなし案件のためデザイン確認は簡易でOK。
+
+---
+
 ## [2026-03-28 14:30 JST] FROM: デザイン → #specs | SPEC-20260328-01 設計完了・READY移行（#33 節目バッジ）
 
 SPEC-20260328-01（#33 節目バッジ・称号システム）の UI/UX 設計が完了しました。

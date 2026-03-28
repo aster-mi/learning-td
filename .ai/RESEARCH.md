@@ -4,6 +4,53 @@
 
 ---
 
+## [2026-03-28 19:30 JST] 調査テーマ: パイプライン補充 — リテンションUX＆問題拡充の優先順位付け
+
+### 調査目的
+パイプライン空（#33 マージ済み）のため、次スプリントのバックログを補充する。
+コードベース調査（CategorySelect, ResultScreen, ProgressScreen, SaveData, questionMeta）から
+「実装価値が高く・コストが低い」2件をPENDINGに起票する。
+
+### 既存実装の調査結果（重複排除）
+
+| 機能 | 状態 | 備考 |
+|---|---|---|
+| 難易度フィルター（level選択） | **実装済み** | CategorySelect.tsx に `initialLevel` / level state / select UI がある |
+| カテゴリ別正答率グラフ | **実装済み** | ProgressScreen 「カテゴリ」タブに bar graph がある |
+| バッジ・節目称号 | **実装済み** | #33（PR #37）でマージ済み |
+| 苦手問題復習 | **実装済み** | wrongStore + CategorySelect の「復習」ボタン |
+| デイリーチャレンジ | **実装済み** | dailyChallenge.ts に完全な modifier 設計あり |
+
+→ 上記はすべて着手対象外（重複になるため）
+
+### 新規有望候補の評価
+
+**候補A: リザルト画面へのストリーク・当日進捗表示（P2）**
+- ResultScreen の現行 props: isWin / stars / coins / accuracy / maxCombo / correctCount / wrongCount / elapsedSec
+- `streak` と `todayCorrect` が渡されておらず、ゲーム終了後に「今日〇問正解！連続〇日目」が見えない
+- データは SaveData.login.streak と SaveData.dailyActivity[today].correct に既存
+- 実装コスト: 低（App.tsx で2 props 追加 + ResultScreen で勝利時バナー1コンポーネント）
+- リテンション効果: ゲーム直後の達成感でストリーク継続動機を強化
+
+**候補B: 理科「実験・観察」サブカテゴリ新設（+30問）**
+- 現行の理科サブカテゴリ: 「物理・化学」「生物・地学」の2種
+- 小学校理科で頻出の「実験手順・道具の使い方・観察記録」は現行問題にほぼ存在しない
+- questionMeta.ts への SubCategoryDef 追加 + science.jsonl への30問追加のみ
+- 実装コスト: 最低（問題データのみ）
+- パイプラインを埋める低リスクタスクとして有効
+
+**候補C: デイリーチャレンジ連続完了ストリーク（P3）**
+- dailyChallenge 完了ボーナスは現行あるが、"複数日連続完了ボーナス" は未実装
+- 実装コスト: 中（SaveData 拡張 + ロジック追加）
+- 候補Aと比べて実装コストが高いため今スプリントは見送り
+
+### 採用方針
+- **SPEC-20260328-02**: 候補A（ResultScreen ストリーク表示）→ P2 PENDING起票
+- **SPEC-20260328-03**: 候補B（理科「実験・観察」+30問）→ P3 PENDING起票
+- 候補C は次スプリントのリサーチ候補として保留
+
+---
+
 ## [2026-03-28] 調査テーマ: #33 節目バッジ仕様確定 + バックログ補充候補
 
 ### 調査目的

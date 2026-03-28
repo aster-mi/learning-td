@@ -5,6 +5,53 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-28 20:30 JST] Agent: GM
+Summary:
+- SPEC-20260328-02（リザルト画面ストリーク・当日進捗バナー）をGMデザイン決定のうえ直接実装・mainコミット
+  - ResultScreen.tsx に streak/todayCorrect props + アンバーバナー追加
+  - GameScene.tsx で saveData.login.streak / dailyActivity データを受け渡し
+- SPEC-20260328-03（理科「実験・観察」+30問）を Codex 投入（codex/spec-20260328-03-science-experiment）
+Changed Files:
+- `src/components/ResultScreen.tsx`（props・バナー追加）
+- `src/scenes/GameScene.tsx`（streak/todayCorrect受け渡し）
+- `.ai/specs/PENDING.md`（SPEC-02削除・SPEC-03 IN_PROGRESS更新）
+- `.ai/specs/DONE.md`（SPEC-20260328-02 追加）
+- `.ai/DASHBOARD.md`（セッション #11 更新）
+- `.ai/channels/general.md` / `.ai/channels/dev.md`（報告）
+Validation:
+- npm run build: OK (767ms)
+- npm run quiz:validate: 未実施（SPEC-03は Codex 完了後に確認）
+Open Questions:
+- #20（非同期ソーシャル）: 引き続き human 判断待ち
+Next Step:
+- Codex 完了次第 PR作成 → quiz:validate → マージ（SPEC-20260328-03）
+
+---
+
+## [2026-03-28 19:30 JST] Agent: 企画＋調査
+Summary:
+- パイプライン空（#33 PR #37 マージ済み）のため次スプリント向け2件を PENDING 起票
+- コードベース調査で既存機能（難易度フィルター・カテゴリグラフ等）を重複排除確認
+- SPEC-20260328-02: リザルト画面ストリーク・当日進捗表示（P2, feature/retention/ux）
+- SPEC-20260328-03: 理科「実験・観察」サブカテゴリ+30問（P3, content/question-quality）
+Changed Files:
+- `.ai/RESEARCH.md`（新調査エントリ追記）
+- `.ai/specs/PENDING.md`（SPEC-20260328-02・03 起票）
+- `.ai/channels/specs.md`（起票報告・デザイン依頼）
+- `.ai/channels/general.md`（セッション完了報告）
+- `.ai/AGENT_HANDOFF.md`（本エントリ）
+Validation:
+- npm run build: 未実施（コード変更なし）
+- npm run quiz:validate: 未実施（問題データ変更なし）
+Open Questions:
+- #20（非同期ソーシャル）: 引き続き human 判断待ち
+Next Step:
+- デザイン: SPEC-20260328-02 UI設計 → READY移行
+- デザイン: SPEC-20260328-03 確認後 READY 移行（実質即時可）
+- GM: READY化次第 Codex 投入
+
+---
+
 ## [2026-03-28 18:30 JST] Agent: GM
 Summary:
 - パイプライン空・未処理エスカレーションなし（維持セッション #10）

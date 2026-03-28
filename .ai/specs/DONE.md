@@ -4,6 +4,14 @@ GMがPRマージ後にREADY.mdからここへ移す。
 
 ---
 
+## [SPEC-20260328-02] リザルト画面ストリーク・当日進捗バナー
+
+実装完了: 2026-03-28
+担当: Claude GM（直接実装・GMデザイン決定）
+変更ファイル: ResultScreen.tsx（props追加・バナー追加）, GameScene.tsx（streak/todayCorrect受け渡し）
+
+---
+
 ## [SPEC-20260328-01] #33 節目バッジ・称号システム
 
 実装完了: 2026-03-28
