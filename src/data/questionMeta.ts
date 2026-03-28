@@ -54,6 +54,7 @@ export const SUB_CATEGORIES: SubCategoryDef[] = [
   { main: "国語", name: "熟語・慣用句", emoji: "📝", color: "#c084fc", desc: "四字熟語・慣用句・ことわざ" },
   { main: "理科", name: "物理・化学", emoji: "⚗️", color: "#10b981", desc: "光・音・電気・化学式" },
   { main: "理科", name: "生物・地学", emoji: "🌿", color: "#34d399", desc: "動植物・地球・宇宙" },
+  { main: "理科", name: "実験・観察", emoji: "🧪", color: "#14b8a6", desc: "実験手順・観察記録・道具の使い方" },
   { main: "社会", name: "地理", emoji: "🗾", color: "#f59e0b", desc: "日本と世界の地理" },
   { main: "社会", name: "歴史", emoji: "🏯", color: "#fbbf24", desc: "日本史・世界史" },
   { main: "社会", name: "世界地理", emoji: "🌍", color: "#f97316", desc: "世界の国・地形・首都・地名" },
