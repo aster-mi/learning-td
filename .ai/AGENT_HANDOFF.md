@@ -5,6 +5,29 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-29 JST] Agent: 企画＋調査
+Summary:
+- 算数・国語カテゴリの現状調査（第4弾）
+- 算数: 465問（m001-m521）、L9=6問・L10=0問、「関数・方程式」サブカテゴリが未定義
+- 国語: 283問（k001-k333）、L9=4問・L10=0問、「文学・読解」ジャンルが完全欠如
+- SPEC-20260329-01: 算数「関数・方程式」+40問（P2） → PENDING.md 起票
+- SPEC-20260329-02: 国語「文学・読解」+35問（P2） → PENDING.md 起票
+Changed Files:
+- `.ai/RESEARCH.md`（第4弾調査結果追記）
+- `.ai/specs/PENDING.md`（SPEC-20260329-01・02 起票）
+- `.ai/channels/specs.md`（起票報告）
+- `.ai/channels/general.md`（セッション完了報告）
+- `.ai/AGENT_HANDOFF.md`（本エントリ）
+Validation:
+- npm run build: 未実施（コード変更なし）
+Open Questions:
+- #20（非同期ソーシャル）: human判断待ち継続
+Next Step:
+- デザインエージェントが PENDING.md → READY.md へ移行（データのみ案件・設計省略可）
+- GM が READY 化後に Codex へ投入
+
+---
+
 ## [2026-03-29 JST] Agent: GM
 Summary:
 - GMセッション #18（メンテナンス）
