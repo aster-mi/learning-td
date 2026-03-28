@@ -16,6 +16,7 @@ import { AchievementList } from "./components/AchievementList";
 import { ProgressScreen } from "./components/ProgressScreen";
 import { GachaModal, type GachaReward } from "./components/GachaModal";
 import { StreakRescueModal } from "./components/StreakRescueModal";
+import { MilestoneBadgeModal } from "./components/MilestoneBadgeModal";
 import { useWindowSize } from "./hooks/useWindowSize";
 import { Tutorial } from "./components/Tutorial";
 import { ReleaseNotesScreen } from "./components/ReleaseNotesScreen";
@@ -73,6 +74,9 @@ export default function App() {
   const [saveData, setSaveData]           = useState(initialLoginProgress.data);
   const [rescueState, setRescueState]     = useState<{ previousStreak: number } | null>(
     initialLoginProgress.streakBroke ? { previousStreak: initialLoginProgress.previousStreak } : null,
+  );
+  const [milestonePending, setMilestonePending] = useState(
+    initialLoginProgress.milestoneReached ?? null,
   );
   const [missionToast, setMissionToast]   = useState<string | null>(null);
   const gameKeyRef = useRef<number>(0);
@@ -197,6 +201,16 @@ export default function App() {
   const handleDismissRescue = useCallback(() => {
     setRescueState(null);
   }, []);
+
+  const handleDismissMilestone = useCallback(() => {
+    if (!milestonePending) return;
+    const milestoneId = milestonePending.id;
+    updateSaveData(current => ({
+      ...current,
+      badges: [...(current.badges ?? []), milestoneId],
+    }));
+    setMilestonePending(null);
+  }, [milestonePending]);
 
   const handleClaimMission = useCallback((missionId: string, rewardCoins: number) => {
     updateSaveData(current => claimMission(current, missionId, rewardCoins));
@@ -363,6 +377,12 @@ export default function App() {
           coins={saveData.coins}
           onRescue={handleRescue}
           onDismiss={handleDismissRescue}
+        />
+      )}
+      {milestonePending !== null && (
+        <MilestoneBadgeModal
+          milestone={milestonePending}
+          onClose={handleDismissMilestone}
         />
       )}
     </>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { SaveData } from "../data/saveData";
+import { STREAK_MILESTONES } from "../data/progression";
 import { SUB_CATEGORIES } from "../data/questions";
 import { exStages, normalStages } from "../data/stages";
 import { useWindowSize } from "../hooks/useWindowSize";
@@ -92,31 +93,97 @@ export function ProgressScreen({ saveData, onClose }: Props) {
 
         {/* 概要タブ */}
         {tab === "summary" && (
-          <div style={{
-            display: "grid",
-            gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(3, 1fr)",
-            gap: 12,
-          }}>
-            {[
-              { label: "正解数", value: totalCorrect.toLocaleString(), color: "#34d399" },
-              { label: "不正解数", value: totalWrong.toLocaleString(), color: "#f87171" },
-              { label: "正答率", value: pct(totalCorrect, totalWrong), color: "#818cf8" },
-              { label: "最大コンボ", value: saveData.maxCombo.toLocaleString(), color: "#fbbf24" },
-              { label: "ログイン連続", value: `${saveData.login.streak}日`, color: "#60a5fa" },
-              { label: "rescue", value: (saveData.login.rescueCount ?? 0) > 0 ? `x${saveData.login.rescueCount}` : "なし", color: (saveData.login.rescueCount ?? 0) > 0 ? "#a78bfa" : "#475569" },
-              { label: "コイン", value: saveData.coins.toLocaleString(), color: "#fbbf24" },
-            ].map(({ label, value, color }) => (
-              <div key={label} style={{
-                background: "#1e293b",
-                border: "1px solid #334155",
-                borderRadius: 10,
-                padding: "14px 16px",
-                display: "flex", flexDirection: "column", gap: 4,
-              }}>
-                <div style={{ fontSize: 11, color: "#94a3b8" }}>{label}</div>
-                <div style={{ fontSize: 22, fontWeight: "bold", color }}>{value}</div>
+          <div style={{ display: "grid", gap: 16 }}>
+            {/* 最高称号バナー */}
+            {(saveData.badges ?? []).length > 0 && (() => {
+              const topMilestone = [...STREAK_MILESTONES].reverse().find(
+                (m) => (saveData.badges ?? []).includes(m.id),
+              );
+              return topMilestone ? (
+                <div style={{
+                  background: "linear-gradient(90deg, rgba(30,27,75,0.8), rgba(79,70,229,0.3))",
+                  border: "1px solid #4f46e5",
+                  borderRadius: 8,
+                  padding: "10px 16px",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 8,
+                }}>
+                  <span style={{ color: "#94a3b8", fontSize: 13 }}>🏅 現在の称号:</span>
+                  <span style={{ color: "#fbbf24", fontWeight: "bold", fontSize: 14 }}>
+                    「{topMilestone.title}」
+                  </span>
+                </div>
+              ) : null;
+            })()}
+
+            {/* Stats グリッド */}
+            <div style={{
+              display: "grid",
+              gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(3, 1fr)",
+              gap: 12,
+            }}>
+              {[
+                { label: "正解数", value: totalCorrect.toLocaleString(), color: "#34d399" },
+                { label: "不正解数", value: totalWrong.toLocaleString(), color: "#f87171" },
+                { label: "正答率", value: pct(totalCorrect, totalWrong), color: "#818cf8" },
+                { label: "最大コンボ", value: saveData.maxCombo.toLocaleString(), color: "#fbbf24" },
+                { label: "ログイン連続", value: `${saveData.login.streak}日`, color: "#60a5fa" },
+                { label: "rescue", value: (saveData.login.rescueCount ?? 0) > 0 ? `x${saveData.login.rescueCount}` : "なし", color: (saveData.login.rescueCount ?? 0) > 0 ? "#a78bfa" : "#475569" },
+                { label: "コイン", value: saveData.coins.toLocaleString(), color: "#fbbf24" },
+              ].map(({ label, value, color }) => (
+                <div key={label} style={{
+                  background: "#1e293b",
+                  border: "1px solid #334155",
+                  borderRadius: 10,
+                  padding: "14px 16px",
+                  display: "flex", flexDirection: "column", gap: 4,
+                }}>
+                  <div style={{ fontSize: 11, color: "#94a3b8" }}>{label}</div>
+                  <div style={{ fontSize: 22, fontWeight: "bold", color }}>{value}</div>
+                </div>
+              ))}
+            </div>
+
+            {/* バッジコレクション */}
+            <div>
+              <div style={{ fontSize: 13, color: "#94a3b8", marginBottom: 8 }}>
+                🔥 ストリーク節目バッジ
               </div>
-            ))}
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: isMobile ? "1fr 1fr" : "repeat(4, 1fr)",
+                gap: 8,
+              }}>
+                {STREAK_MILESTONES.map((m) => {
+                  const earned = (saveData.badges ?? []).includes(m.id);
+                  return (
+                    <div key={m.id} style={{
+                      background: earned ? "#1e293b" : "#0f172a",
+                      border: earned ? "1px solid #fbbf24" : "1px solid #334155",
+                      borderRadius: 8,
+                      padding: "12px 8px",
+                      textAlign: "center",
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: 4,
+                      opacity: earned ? 1 : 0.4,
+                    }}>
+                      <div style={{ fontSize: 32 }}>{m.badge}</div>
+                      <div style={{ fontSize: 11, color: "#94a3b8" }}>{m.days}日</div>
+                      <div style={{
+                        fontSize: 11,
+                        fontWeight: "bold",
+                        color: earned ? "#fbbf24" : "#475569",
+                      }}>
+                        {m.title}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         )}
 
