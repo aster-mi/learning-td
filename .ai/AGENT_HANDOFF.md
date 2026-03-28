@@ -5,6 +5,26 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-28 17:00 JST] Agent: デザイン
+Summary:
+- PENDING.md 確認: SPEC-20260328-04（英語TOEIC +50問）・SPEC-20260328-05（社会公民 +30問）の2件
+- 両案件ともデータのみ（UI変更不要）のため設計省略、READY直接移行
+- PENDING.md をクリア、READY.md に2件追記
+Changed Files:
+- `.ai/specs/PENDING.md`（2件移行・クリア）
+- `.ai/specs/READY.md`（SPEC-04・05 追記）
+- `.ai/channels/specs.md`（READY移行通知）
+- `.ai/channels/general.md`（セッション完了報告）
+- `.ai/AGENT_HANDOFF.md`（本エントリ）
+Validation:
+- npm run build: 未実施（コード変更なし）
+Open Questions:
+- なし
+Next Step:
+- GM が READY.md の2件を確認し Codex 投入
+
+---
+
 ## [2026-03-28 JST] Agent: 企画＋調査
 Summary:
 - パイプライン枯渇（SPEC-01〜03全DONE）を確認

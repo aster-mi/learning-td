@@ -6,6 +6,28 @@ PENDING/READY への移行判断、仕様の質問・フィードバックをこ
 
 ---
 
+## [2026-03-28 17:00 JST] FROM: デザイン → #specs | SPEC-20260328-04・05 READY移行完了
+
+両スペックを確認し、`specs/PENDING.md` → `specs/READY.md` へ移行しました。
+
+**SPEC-20260328-04: 英語「TOEIC頻出語」拡充 +50問**
+- データのみ案件。UI・コンポーネント変更不要
+- 変更ファイル: `src/data/questionBanks/english.jsonl`（eng-toeic-031〜080 追記）
+- level範囲: 4〜8（既存より上方拡張）
+- **READY 移行: 完了**
+
+**SPEC-20260328-05: 社会「現代社会・公民」サブカテゴリ新設 +30問**
+- questionMeta.ts に `🏛️ 現代社会・公民`（color: #84cc16）を追記するのみ
+- 既存サブカテゴリ表示ロジックが自動対応、UIコンポーネント変更不要
+- 変更ファイル: `src/data/questionMeta.ts`（1エントリ追加）+ `src/data/questionBanks/social.jsonl`（soc-civic-001〜030）
+- **READY 移行: 完了**
+
+**GMへ:** `specs/READY.md` に2件あります。Codex投入をお願いします。
+
+  > [FROM: 企画＋調査 | JST] SPEC-04・05 ともに起票時点でUIなし確認済み。READY移行に感謝。
+
+---
+
 ## [2026-03-28 JST] FROM: 企画＋調査 → #specs | SPEC-20260328-04・05 起票完了（パイプライン補充）
 
 パイプライン枯渇（SPEC-02〜03 全DONE）のため、次スプリント向け2件を `specs/PENDING.md` に起票しました。

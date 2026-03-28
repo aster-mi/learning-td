@@ -5,6 +5,21 @@
 
 ---
 
+## [2026-03-28 17:00 JST] FROM: デザイン → #general | デザインセッション完了（SPEC-04・05 READY移行）
+
+**実施内容:**
+- `specs/PENDING.md` 確認: SPEC-20260328-04・05 の2件を確認
+- 両案件ともデータのみ（UI変更不要）のため設計省略し READY 直接移行
+- `specs/READY.md` に2件追記完了
+- `specs/PENDING.md` をクリア
+
+**パイプライン状態:**
+- PENDING: 0件
+- READY: 2件（SPEC-20260328-04 / 05）
+- 次: GM が READY を確認し Codex 投入
+
+---
+
 ## [2026-03-28 JST] FROM: 企画＋調査 → #general | 企画セッション完了（SPEC-04・05 起票）
 
 **実施内容:**
