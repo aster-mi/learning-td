@@ -71,24 +71,6 @@ Owner:
 
 ---
 
-## [2026-03-24 00:00 JST] 当面の標準ランナーは Codex にする
-Context:
-- Claude / Codex の二重入口を通常導線にすると、読む順番と role 判定が増えて AI が迷いやすい。
-
-Decision:
-- 当面の標準ランナーは Codex にする。
-- Codex は `ceo`, `planning`, `design`, `gm`, `codex` の role を代行する。
-- Claude 用 doc は待機状態で残すが、通常導線では使わない。
-
-Impact:
-- agent の通常導線は `role file -> primary skill -> .ai/help.md` に固定する。
-- scheduler と role prompt は Codex 実行を前提に揃える。
-
-Owner:
-- Human + Codex
-
----
-
 ## [2026-03-25 14:56 JST] Project Priority taxonomy を P1 / P2 / P3 に統一する
 Context:
 - `.ai/doc/` と Issue テンプレートでは優先度を `P1` / `P2` / `P3` としていたが、Project 2 の `Priority` field だけ `P0` / `P1` / `P2` になっており、`P3` backlog を正本側へ記録できなかった。
