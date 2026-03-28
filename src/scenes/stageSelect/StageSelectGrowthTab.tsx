@@ -157,7 +157,7 @@ function RadarChart({ data }: { data: CategoryInsight[] }) {
 
   return (
     <div style={{ display: "flex", justifyContent: "center", padding: "8px 0" }}>
-      <canvas ref={canvasRef} aria-label="繧ｫ繝・ざ繝ｪ蛻･豁｣遲皮紫繝ｬ繝ｼ繝繝ｼ繝√Ε繝ｼ繝・" style={{ maxWidth: "100%" }} />
+      <canvas ref={canvasRef} aria-label="カテゴリ正答率レーダーチャート" style={{ maxWidth: "100%" }} />
     </div>
   );
 }
@@ -187,7 +187,7 @@ export function StageSelectGrowthTab({
           padding: "16px",
         }}
       >
-        <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 12 }}>繝溘ャ繧ｷ繝ｧ繝ｳ</div>
+        <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 12 }}>ミッション</div>
         <div style={{ display: "grid", gap: 10 }}>
           {missions.map((mission) => {
             const completed = mission.progress >= mission.target;
@@ -230,9 +230,9 @@ export function StageSelectGrowthTab({
                     }}
                   >
                     {mission.claimed
-                      ? "蜿怜叙貂医∩"
+                      ? "受取済み"
                       : completed
-                        ? `蜿怜叙 +${mission.rewardCoins}`
+                        ? `受け取る +${mission.rewardCoins}`
                         : `${Math.min(mission.progress, mission.target)}/${mission.target}`}
                   </button>
                 </div>
@@ -262,7 +262,7 @@ export function StageSelectGrowthTab({
           }}
         >
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
-            <div style={{ fontSize: 18, fontWeight: 800 }}>蠕玲э繝ｻ闍ｦ謇・</div>
+            <div style={{ fontSize: 18, fontWeight: 800 }}>カテゴリ別正答率</div>
             <div
               style={{
                 display: "flex",
@@ -284,7 +284,7 @@ export function StageSelectGrowthTab({
                   color: insightView === "bar" ? "#c7d2fe" : "#64748b",
                 }}
               >
-                繝舌・
+                棒
               </button>
               <button
                 onClick={() => onChangeInsightView("radar")}
@@ -298,7 +298,7 @@ export function StageSelectGrowthTab({
                   color: insightView === "radar" ? "#67e8f9" : "#64748b",
                 }}
               >
-                繝ｬ繝ｼ繝繝ｼ
+                レーダー
               </button>
             </div>
           </div>
@@ -312,7 +312,7 @@ export function StageSelectGrowthTab({
                       {item.emoji} {item.name}
                     </span>
                     <span style={{ color: "#e2e8f0" }}>
-                      {item.correct + item.wrong > 0 ? `${Math.round(item.accuracy * 100)}%` : "譛ｪ繝励Ξ繧､"}
+                      {item.correct + item.wrong > 0 ? `${Math.round(item.accuracy * 100)}%` : "未プレイ"}
                     </span>
                   </div>
                   <div style={{ height: 10, background: "#0f172a", borderRadius: 999 }}>
@@ -326,7 +326,7 @@ export function StageSelectGrowthTab({
                     />
                   </div>
                   <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 3 }}>
-                    豁｣隗｣ {item.correct} / 荳肴ｭ｣隗｣ {item.wrong}
+                    正解 {item.correct} / 不正解 {item.wrong}
                   </div>
                 </div>
               ))}
@@ -344,7 +344,7 @@ export function StageSelectGrowthTab({
             padding: "16px",
           }}
         >
-          <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 12 }}>逶ｴ霑・譌･縺ｮ蟄ｦ鄙・</div>
+          <div style={{ fontSize: 18, fontWeight: 800, marginBottom: 12 }}>直近7日の正解数</div>
           <MiniBarChart values={recentActivity.map((item) => item.correct)} color="#22c55e" />
           <div
             style={{
