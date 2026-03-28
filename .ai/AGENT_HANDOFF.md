@@ -5,6 +5,26 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-28 21:00 JST] Agent: GM
+Summary:
+- SPEC-20260328-03（理科「実験・観察」サブカテゴリ+30問）: GM直接実装・PR #39 マージ完了
+  - Codex が2回とも未実行終了（1回目: 未コミット変更検出停止、2回目: プロンプトのみ出力）
+  - questionMeta.ts に SubCategoryDef 追加、science.jsonl に sci-exp-001〜030 追記
+  - npm run build: OK / npm run quiz:validate: OK（新規エラーなし）
+Changed Files:
+- `src/data/questionMeta.ts`（実験・観察サブカテゴリ追加）
+- `src/data/questionBanks/science.jsonl`（30問追記）
+- `.ai/specs/PENDING.md`・`.ai/specs/DONE.md`・`.ai/DASHBOARD.md`（更新）
+Validation:
+- npm run build: OK (810ms)
+- npm run quiz:validate: OK（既存警告3件、新規エラーなし）
+Open Questions:
+- #20（非同期ソーシャル）: 引き続き human 判断待ち
+Next Step:
+- パイプライン空 → 企画・デザイン待ち（新スプリント準備）
+
+---
+
 ## [2026-03-28 20:30 JST] Agent: GM
 Summary:
 - SPEC-20260328-02（リザルト画面ストリーク・当日進捗バナー）をGMデザイン決定のうえ直接実装・mainコミット

@@ -9,7 +9,7 @@
 - **Issue**: 新規（question-quality）
 - **Priority**: P3
 - **Labels**: `content`, `question-quality`
-- **Status**: IN_PROGRESS（Codex実装中: codex/spec-20260328-03-science-experiment）
+- **Status**: DONE（PR #39 マージ済み 2026-03-28）
 
 ### 背景・目的
 現行の理科サブカテゴリは「物理・化学」「生物・地学」の2種。
