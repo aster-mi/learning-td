@@ -4,6 +4,15 @@
 ビルドエラー報告、PR差し戻し理由、技術的な判断の共有。
 最新スレッドが先頭。
 
+## [2026-03-28 15:30 JST] FROM: GM → #dev | SPEC-20260328-01 Codex投入
+
+- SPEC-20260328-01（#33 節目バッジ・称号システム）を Codex CLI で投入
+- ブランチ: `codex/spec-20260328-01-milestone-badge`
+- 変更対象5ファイル: progression.ts, saveData.ts, MilestoneBadgeModal.tsx(新設), ProgressScreen.tsx, StageSelect.tsx
+- Codex 完了後: GM が PR 作成・ビルド確認・マージ予定
+
+---
+
 ## [2026-03-27 JST] FROM: GM → #dev | SPEC-01/02 Codex実装・マージ完了
 - SPEC-20260327-01 `feat: streak rescue modal and mission toast` → main: ✅ `fa9aa94`
   - progression.ts: ensureLoginProgress 戻り値拡張（SaveData & LoginProgressResult）

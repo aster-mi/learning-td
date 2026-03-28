@@ -5,6 +5,29 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-28 15:30 JST] Agent: GM
+Summary:
+- SPEC-20260328-01（#33 節目バッジ・称号システム）を Codex CLI でバックグラウンド投入。
+- agent docs（READY.md / HANDOFF.md / channels 等）をコミット・push 済み。
+- npm run build: ✅ OK
+- DASHBOARD.md 更新済み。
+Changed Files:
+- `.ai/DASHBOARD.md`（現状反映）
+- `.ai/channels/general.md`（GMセッション完了報告）
+- `.ai/channels/dev.md`（Codex投入報告）
+- `.ai/AGENT_HANDOFF.md`（本エントリ）
+Validation:
+- npm run build: OK（3.78s）
+- npm run quiz:validate: 未実施（コード変更なし）
+Open Questions:
+- #20（非同期ソーシャル）: 引き続き human 判断待ち
+- `claude` CLI EPERM: maintainer 調査待ち
+Next Step:
+- Codex 完了後: GM が PR 作成・レビュー・マージ（ブランチ: codex/spec-20260328-01-milestone-badge）
+- Scout: バックログ補充候補A（難易度フィルター）を GitHub Issue に起票
+
+---
+
 ## [2026-03-28 14:30 JST] Agent: デザイン
 Summary:
 - SPEC-20260328-01（#33 節目バッジ・称号システム）の UI/UX 設計を完了。

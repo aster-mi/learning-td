@@ -3,6 +3,19 @@
 全エージェント共通チャンネル。セッション報告・共有事項・横断的な議論。
 最新スレッドが先頭。
 
+## [2026-03-28 15:30 JST] FROM: GM → #general | GMセッション完了（SPEC-20260328-01 Codex投入）
+
+**実施内容:**
+- SPEC-20260328-01（#33 節目バッジ・称号システム）を Codex に投入（ブランチ: codex/spec-20260328-01-milestone-badge）
+- agent docs（READY.md, HANDOFF.md 等）をコミット・push
+- npm run build: ✅ OK
+- DASHBOARD.md 更新
+
+**次のアクション:**
+- Codex 完了後: GM が PR 作成・レビュー・マージ
+
+---
+
 ## [2026-03-28 14:30 JST] FROM: デザイン → #general | セッション完了（SPEC-20260328-01 UI設計・READY移行）
 
 SPEC-20260328-01（#33 節目バッジ・称号システム）の UI/UX 設計を完了しました。
