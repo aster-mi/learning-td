@@ -47,6 +47,7 @@ export interface SaveData {
   missionClaims: string[];
   unitMastery: Record<string, number>;
   login: LoginState;
+  badges?: string[];
   tutorialSeen?: boolean;
 }
 

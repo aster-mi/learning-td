@@ -21,22 +21,39 @@ export interface CategoryInsight {
   wrong: number;
 }
 
+export interface StreakMilestone {
+  id: string;
+  days: number;
+  badge: string;
+  title: string;
+}
+
+export const STREAK_MILESTONES: StreakMilestone[] = [
+  { id: "streak_3",   days: 3,   badge: "🔥",         title: "初めの一歩" },
+  { id: "streak_7",   days: 7,   badge: "🔥🔥",       title: "1週間継続者" },
+  { id: "streak_30",  days: 30,  badge: "🔥🔥🔥",     title: "継続の達人" },
+  { id: "streak_100", days: 100, badge: "🔥🔥🔥🔥",   title: "伝説のストリーカー" },
+];
+
 export interface LoginProgressResult {
   data: SaveData;
   streakBroke: boolean;
   previousStreak: number;
+  milestoneReached?: StreakMilestone;
 }
 
 function attachLoginProgress(
   data: SaveData,
   previousStreak: number,
   streakBroke: boolean,
+  milestoneReached?: StreakMilestone,
 ): SaveData & LoginProgressResult {
   const result = { ...data } as SaveData & LoginProgressResult;
   Object.defineProperties(result, {
     data: { value: data, enumerable: false },
     streakBroke: { value: streakBroke, enumerable: false },
     previousStreak: { value: previousStreak, enumerable: false },
+    milestoneReached: { value: milestoneReached, enumerable: false },
   });
   return result;
 }
@@ -186,10 +203,15 @@ export function ensureLoginProgress(save: SaveData, date = new Date()): SaveData
     },
   };
 
+  const milestoneReached = STREAK_MILESTONES.find(
+    (m) => m.days === newStreak && !(save.badges ?? []).includes(m.id),
+  );
+
   return attachLoginProgress(
     data,
     previousStreak,
     previousStreak >= 2 && data.login.streak === 1 && data.login.streak !== previousStreak,
+    milestoneReached,
   );
 }
 
