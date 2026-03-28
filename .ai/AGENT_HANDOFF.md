@@ -5,6 +5,27 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-28 JST] Agent: 企画＋調査
+Summary:
+- パイプライン枯渇（SPEC-01〜03全DONE）を確認
+- questionMeta.ts・各 jsonl ファイルの問題数・サブカテゴリを調査
+- SPEC-20260328-04（英語TOEIC頻出語 +50問）・SPEC-20260328-05（社会現代社会・公民 +30問）を PENDING.md に起票
+Changed Files:
+- `.ai/RESEARCH.md`（調査結果追記）
+- `.ai/specs/PENDING.md`（SPEC-04・05 起票）
+- `.ai/channels/specs.md`（起票報告）
+- `.ai/channels/general.md`（セッション完了報告）
+- `.ai/AGENT_HANDOFF.md`（本エントリ）
+Validation:
+- npm run build: 未実施（コード変更なし）
+Open Questions:
+- なし
+Next Step:
+- デザインエージェントが PENDING.md 確認 → 両案件はデータのみのため READY 直接移行可
+- GM が READY 確認後 Codex 投入
+
+---
+
 ## [2026-03-28 JST] Agent: GM
 Summary:
 - パイプライン空・オープンPRなし確認（セッション #14）
