@@ -228,3 +228,53 @@
 {"id":"e278","main":"英語","sub":"TOEIC頻出語","level":9,"question":"\"revenue\" の意味は？","choices":["収益","在庫","経歴","手数料"],"answer":"収益"}
 {"id":"e279","main":"英語","sub":"TOEIC頻出語","level":9,"question":"\"vacancy\" の意味は？","choices":["空席・欠員","昇給","棚卸し","会議録"],"answer":"空席・欠員"}
 {"id":"e280","main":"英語","sub":"TOEIC頻出語","level":9,"question":"\"purchase order\" の意味は？","choices":["発注書","領収書","求人票","旅程表"],"answer":"発注書"}
+{"id":"e281","main":"英語","sub":"TOEIC頻出語","level":5,"question":"\"enterprise\" の意味は？","choices":["企業・事業","実験","外交","探検"],"answer":"企業・事業"}
+{"id":"e282","main":"英語","sub":"TOEIC頻出語","level":5,"question":"\"negotiate\" の意味は？","choices":["交渉する","記録する","評価する","整理する"],"answer":"交渉する"}
+{"id":"e283","main":"英語","sub":"TOEIC頻出語","level":4,"question":"\"deadline\" の意味は？","choices":["締め切り","出発時刻","会議室","上司"],"answer":"締め切り"}
+{"id":"e284","main":"英語","sub":"TOEIC頻出語","level":5,"question":"\"agenda\" の意味は？","choices":["議題・予定表","報告書","名刺","会議録"],"answer":"議題・予定表"}
+{"id":"e285","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"executive\" の意味は？","choices":["幹部・役員","顧客","受付","部長代理"],"answer":"幹部・役員"}
+{"id":"e286","main":"英語","sub":"TOEIC頻出語","level":4,"question":"\"budget\" の意味は？","choices":["予算","スケジュール","会議","報告"],"answer":"予算"}
+{"id":"e287","main":"英語","sub":"TOEIC頻出語","level":5,"question":"\"expense\" の意味は？","choices":["費用・経費","利益","期間","割引"],"answer":"費用・経費"}
+{"id":"e288","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"invoice\" の意味は？","choices":["請求書","領収書","申請書","報告書"],"answer":"請求書"}
+{"id":"e289","main":"英語","sub":"TOEIC頻出語","level":4,"question":"\"contract\" の意味は？","choices":["契約","資料","議事録","手順"],"answer":"契約"}
+{"id":"e290","main":"英語","sub":"TOEIC頻出語","level":5,"question":"\"resign\" の意味は？","choices":["辞職する","応募する","昇進する","転勤する"],"answer":"辞職する"}
+{"id":"e291","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"reimburse\" の意味は？","choices":["払い戻す","延期する","承認する","記録する"],"answer":"払い戻す"}
+{"id":"e292","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"quarterly\" の意味は？","choices":["四半期ごとの","毎月の","年間の","週次の"],"answer":"四半期ごとの"}
+{"id":"e293","main":"英語","sub":"TOEIC頻出語","level":7,"question":"\"turnover\" のビジネス上の意味は？","choices":["売上高","残業","在庫","予算超過"],"answer":"売上高"}
+{"id":"e294","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"delegate\" の動詞としての意味は？","choices":["委任する","削減する","交渉する","調達する"],"answer":"委任する"}
+{"id":"e295","main":"英語","sub":"TOEIC頻出語","level":7,"question":"\"liability\" の意味は？","choices":["負債・法的責任","資産","利益","権限"],"answer":"負債・法的責任"}
+{"id":"e296","main":"英語","sub":"TOEIC頻出語","level":5,"question":"\"despite\" の意味は？","choices":["〜にもかかわらず","〜のために","〜のような","〜を通じて"],"answer":"〜にもかかわらず"}
+{"id":"e297","main":"英語","sub":"TOEIC頻出語","level":5,"question":"\"regarding\" の意味は？","choices":["〜に関して","〜を除いて","〜の前に","〜とともに"],"answer":"〜に関して"}
+{"id":"e298","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"whereas\" の意味は？","choices":["一方で","したがって","さらに","ただし"],"answer":"一方で"}
+{"id":"e299","main":"英語","sub":"TOEIC頻出語","level":7,"question":"\"provided that\" の意味は？","choices":["〜という条件で","〜に加えて","〜にもかかわらず","〜のおかげで"],"answer":"〜という条件で"}
+{"id":"e300","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"prior to\" の意味は？","choices":["〜の前に","〜の後に","〜の間に","〜の代わりに"],"answer":"〜の前に"}
+{"id":"e301","main":"英語","sub":"TOEIC頻出語","level":7,"question":"\"subsequent\" の意味は？","choices":["その後の","以前の","現在の","将来の"],"answer":"その後の"}
+{"id":"e302","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"mandatory\" の意味は？","choices":["義務的な","任意の","推奨される","禁止された"],"answer":"義務的な"}
+{"id":"e303","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"alternatively\" の意味は？","choices":["あるいは・代替として","結果として","一般的に","特に"],"answer":"あるいは・代替として"}
+{"id":"e304","main":"英語","sub":"TOEIC頻出語","level":7,"question":"\"compliance\" の意味は？","choices":["法令遵守","契約更新","顧客対応","品質管理"],"answer":"法令遵守"}
+{"id":"e305","main":"英語","sub":"TOEIC頻出語","level":5,"question":"\"efficiently\" の意味は？","choices":["効率よく","正確に","迅速に","丁寧に"],"answer":"効率よく"}
+{"id":"e306","main":"英語","sub":"TOEIC頻出語","level":7,"question":"\"be eligible for\" の意味は？","choices":["〜の資格がある","〜を担当する","〜を申請する","〜を取得する"],"answer":"〜の資格がある"}
+{"id":"e307","main":"英語","sub":"TOEIC頻出語","level":7,"question":"\"in accordance with\" の意味は？","choices":["〜に従って","〜にもかかわらず","〜の目的で","〜の代わりに"],"answer":"〜に従って"}
+{"id":"e308","main":"英語","sub":"TOEIC頻出語","level":8,"question":"\"pursuant to\" の意味は？","choices":["〜に基づき","〜を除いて","〜に加えて","〜と比較して"],"answer":"〜に基づき"}
+{"id":"e309","main":"英語","sub":"TOEIC頻出語","level":8,"question":"\"notwithstanding\" の意味は？","choices":["〜にもかかわらず","〜のために","〜を通じて","〜によると"],"answer":"〜にもかかわらず"}
+{"id":"e310","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"substantial\" の意味は？","choices":["相当な・かなりの","わずかな","一時的な","正式な"],"answer":"相当な・かなりの"}
+{"id":"e311","main":"英語","sub":"TOEIC頻出語","level":5,"question":"\"Please find attached\" の意味は？","choices":["添付ファイルをご確認ください","以下をご参照ください","折り返しご連絡ください","ご返信をお待ちしています"],"answer":"添付ファイルをご確認ください"}
+{"id":"e312","main":"英語","sub":"TOEIC頻出語","level":5,"question":"\"I look forward to hearing from you.\" の意味は？","choices":["ご連絡をお待ちしております","またいつでもご相談ください","引き続きよろしくお願いします","ご理解のほどよろしくお願いします"],"answer":"ご連絡をお待ちしております"}
+{"id":"e313","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"As per your request\" の意味は？","choices":["ご要望通りに","ご参考までに","ご確認のうえ","ご都合に合わせて"],"answer":"ご要望通りに"}
+{"id":"e314","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"Please be advised that\" の意味は？","choices":["〜をご承知おきください","〜をご確認ください","〜をご了承ください","〜についてお知らせします"],"answer":"〜をご承知おきください"}
+{"id":"e315","main":"英語","sub":"TOEIC頻出語","level":5,"question":"\"I am writing to inform you that\" の意味は？","choices":["〜についてご連絡しております","〜をお願いしております","〜についてご質問があります","〜について確認したいことがあります"],"answer":"〜についてご連絡しております"}
+{"id":"e316","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"At your earliest convenience\" の意味は？","choices":["ご都合のよい時に","できるだけ早く","期日までに","改めて"],"answer":"ご都合のよい時に"}
+{"id":"e317","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"Please do not hesitate to contact me.\" の意味は？","choices":["お気軽にご連絡ください","ご連絡をお待ちしております","また何かあればご相談ください","いつでもお声がけください"],"answer":"お気軽にご連絡ください"}
+{"id":"e318","main":"英語","sub":"TOEIC頻出語","level":7,"question":"\"We regret to inform you that\" の意味は？","choices":["残念ながら〜をお伝えします","喜んで〜をお知らせします","改めて〜についてご連絡します","〜についてご確認させてください"],"answer":"残念ながら〜をお伝えします"}
+{"id":"e319","main":"英語","sub":"TOEIC頻出語","level":7,"question":"\"Further to my previous email\" の意味は？","choices":["先ほどのメールに加えて","以前のメールの件でお詫びします","メールの件でご確認します","以前のメールを転送します"],"answer":"先ほどのメールに加えて"}
+{"id":"e320","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"In reference to\" の意味は？","choices":["〜に関して","〜の代わりに","〜にもかかわらず","〜によると"],"answer":"〜に関して"}
+{"id":"e321","main":"英語","sub":"TOEIC頻出語","level":5,"question":"\"approximately\" の意味は？","choices":["おおよそ・約","正確に","少なくとも","最大で"],"answer":"おおよそ・約"}
+{"id":"e322","main":"英語","sub":"TOEIC頻出語","level":5,"question":"\"the majority of\" の意味は？","choices":["〜の大半","〜のすべて","〜の一部","〜のごく少数"],"answer":"〜の大半"}
+{"id":"e323","main":"英語","sub":"TOEIC頻出語","level":4,"question":"\"compared to\" の意味は？","choices":["〜と比べて","〜に加えて","〜を除いて","〜のために"],"answer":"〜と比べて"}
+{"id":"e324","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"significantly\" の意味は？","choices":["著しく・大幅に","わずかに","徐々に","一時的に"],"answer":"著しく・大幅に"}
+{"id":"e325","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"consistently\" の意味は？","choices":["一貫して","時々","急激に","部分的に"],"answer":"一貫して"}
+{"id":"e326","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"throughout\" の意味は？","choices":["〜を通じて・全体にわたって","〜の後に","〜の前に","〜の間だけ"],"answer":"〜を通じて・全体にわたって"}
+{"id":"e327","main":"英語","sub":"TOEIC頻出語","level":5,"question":"\"gradually\" の意味は？","choices":["徐々に・段階的に","急激に","突然に","定期的に"],"answer":"徐々に・段階的に"}
+{"id":"e328","main":"英語","sub":"TOEIC頻出語","level":4,"question":"\"a number of\" の意味は？","choices":["多くの・いくつかの","一定数の","正確な数の","限られた数の"],"answer":"多くの・いくつかの"}
+{"id":"e329","main":"英語","sub":"TOEIC頻出語","level":7,"question":"\"in excess of\" の意味は？","choices":["〜を超えて","〜以下で","〜に近い","〜と同じ"],"answer":"〜を超えて"}
+{"id":"e330","main":"英語","sub":"TOEIC頻出語","level":6,"question":"\"in terms of\" の意味は？","choices":["〜の点で・〜に関して","〜の代わりに","〜にもかかわらず","〜によると"],"answer":"〜の点で・〜に関して"}
