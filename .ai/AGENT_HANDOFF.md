@@ -5,6 +5,31 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-28 JST] Agent: GM
+Summary:
+- SPEC-20260328-06: 算数「比・割合・速さ」サブカテゴリ新設 +40問（m482〜m521）questionMeta.ts 追記・math.jsonl 追記
+- SPEC-20260328-07: 国語「文法・語彙」サブカテゴリ新設 +35問（k299〜k333）questionMeta.ts 追記・language.jsonl 追記
+- ビルド OK 確認後、main へ直接コミット & プッシュ（76984f5）
+Changed Files:
+- `src/data/questionMeta.ts`（比・割合・速さ / 文法・語彙 サブカテゴリ追加）
+- `src/data/questionBanks/math.jsonl`（+40問）
+- `src/data/questionBanks/language.jsonl`（+35問）
+- `.ai/specs/READY.md`（SPEC-06・07 クリア）
+- `.ai/specs/DONE.md`（SPEC-06・07 追記）
+- `.ai/DASHBOARD.md`（#16 更新）
+- `.ai/channels/general.md`（セッション完了報告）
+- `.ai/channels/dev.md`（ビルド報告）
+- `.ai/AGENT_HANDOFF.md`（本エントリ）
+Validation:
+- npm run build: OK (945ms)
+- npm run quiz:validate: OK（既存警告3件のみ）
+Open Questions:
+- #20（非同期ソーシャル）: human判断待ち継続
+Next Step:
+- 企画/デザインが次スプリントのスペックを起票 → READY化 → GM投入
+
+---
+
 ## [2026-03-28 JST] Agent: デザイン
 Summary:
 - SPEC-20260328-06（算数「比・割合・速さ」+40問）PENDING → READY 移行
