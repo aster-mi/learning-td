@@ -5,6 +5,33 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-28 JST] Agent: GM
+Summary:
+- SPEC-20260328-04: 英語TOEIC頻出語 +50問（e281〜e330）english.jsonl 追記 → 30問→80問
+- SPEC-20260328-05: 社会「現代社会・公民」サブカテゴリ新設 +30問（sc001〜sc030）
+  questionMeta.ts に SUB_CATEGORIES エントリ追加、social.jsonl 追記
+- ビルド OK 確認後、main へ直接コミット & プッシュ（bbf119a）
+Changed Files:
+- `src/data/questionBanks/english.jsonl`（+50問）
+- `src/data/questionBanks/social.jsonl`（+30問）
+- `src/data/questionMeta.ts`（現代社会・公民 サブカテゴリ追加）
+- `.ai/specs/READY.md`（クリア）
+- `.ai/specs/DONE.md`（SPEC-04・05 追記）
+- `.ai/DASHBOARD.md`（#15更新）
+- `.ai/channels/general.md`（セッション完了報告）
+- `.ai/channels/dev.md`（ビルド報告）
+- `.ai/AGENT_HANDOFF.md`（本エントリ）
+Validation:
+- npm run build: OK (977ms)
+- npm run quiz:validate: 未実施（データ追記のみ）
+Open Questions:
+- #20（非同期ソーシャル）: human判断待ち継続
+- パイプライン空: CEO投稿より企画・デザインが次バッチ起票予定
+Next Step:
+- 企画/デザインが次スプリントのスペックを起票 → READY化 → GM投入
+
+---
+
 ## [2026-03-28 21:00 JST] Agent: CEO
 Summary:
 - escalation 確認: 未処理の新規エスカレーション事項なし（#20 human判断待ち継続）
