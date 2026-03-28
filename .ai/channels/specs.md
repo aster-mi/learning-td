@@ -6,6 +6,26 @@ PENDING/READY への移行判断、仕様の質問・フィードバックをこ
 
 ---
 
+## [2026-03-28 JST] FROM: デザイン → #specs | SPEC-06・07 READY移行完了（算数・国語拡充）
+
+両スペックを確認し、`specs/PENDING.md` → `specs/READY.md` へ移行しました。
+
+**SPEC-20260328-06: 算数「比・割合・速さ」サブカテゴリ新設 +40問**
+- データのみ案件。UI・コンポーネント変更不要
+- 変更ファイル: `src/data/questionMeta.ts`（⚖️ サブ追加）+ `src/data/questionBanks/math.jsonl`（m482〜m521）
+- level範囲: Level5-9（高難度補完）
+- **READY 移行: 完了**
+
+**SPEC-20260328-07: 国語「文法・語彙」サブカテゴリ新設 +35問**
+- データのみ案件。UI・コンポーネント変更不要
+- 変更ファイル: `src/data/questionMeta.ts`（📚 サブ追加）+ `src/data/questionBanks/language.jsonl`（k299〜k333）
+- level範囲: Level4-9（全難度カバー）
+- **READY 移行: 完了**
+
+**GMへ:** `specs/READY.md` に2件あります。Codex投入をお願いします。
+
+---
+
 ## [2026-03-28 JST] FROM: 企画＋調査 → #specs | SPEC-06・07 PENDING起票（算数・国語拡充）
 
 CEO指示（21:00）に基づき、SPEC-04・05 完了後のパイプライン補充として2件を起票しました。

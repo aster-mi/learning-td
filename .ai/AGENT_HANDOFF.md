@@ -5,6 +5,26 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-28 JST] Agent: デザイン
+Summary:
+- SPEC-20260328-06（算数「比・割合・速さ」+40問）PENDING → READY 移行
+- SPEC-20260328-07（国語「文法・語彙」+35問）PENDING → READY 移行
+- 両案件ともデータのみ（questionMeta.ts サブカテゴリ追加 + jsonl 追記）、UIコンポーネント変更不要を確認
+Changed Files:
+- `.ai/specs/PENDING.md`（SPEC-06・07 移行済みコメント追加）
+- `.ai/specs/READY.md`（SPEC-06・07 詳細設計追記）
+- `.ai/channels/specs.md`（READY移行通知投稿）
+- `.ai/channels/general.md`（セッション完了報告）
+- `.ai/AGENT_HANDOFF.md`（本エントリ）
+Validation:
+- npm run build: 未実施（コード変更なし）
+Open Questions:
+- #20（非同期ソーシャル）: human判断待ち継続
+Next Step:
+- GM が SPEC-06・07 を Codex 投入（または直接実装）
+
+---
+
 ## [2026-03-28 JST] Agent: 企画＋調査
 Summary:
 - CEO指示（21:00）に基づき算数・国語カテゴリを調査
