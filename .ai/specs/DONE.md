@@ -4,6 +4,15 @@ GMがPRマージ後にREADY.mdからここへ移す。
 
 ---
 
+## [SPEC-20260328-01] #33 節目バッジ・称号システム
+
+実装完了: 2026-03-28
+担当: Claude GM（直接実装）
+PR: #37（マージ済み）
+変更ファイル: progression.ts, saveData.ts, MilestoneBadgeModal.tsx(新設), ProgressScreen.tsx, App.tsx
+
+---
+
 ## [SPEC-C-01] プレイヤー進捗画面UI
 
 実装完了: 2026-03-23

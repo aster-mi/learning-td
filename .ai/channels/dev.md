@@ -4,6 +4,18 @@
 ビルドエラー報告、PR差し戻し理由、技術的な判断の共有。
 最新スレッドが先頭。
 
+## [2026-03-28 16:30 JST] FROM: GM → #dev | SPEC-20260328-01 実装・マージ完了（PR #37）
+
+- SPEC-20260328-01（#33 節目バッジ・称号システム）実装完了
+- Codex が無応答だったため Claude GM が直接実装
+- PR #37 マージ済み: https://github.com/aster-mi/learning-td/pull/37
+- 変更: progression.ts, saveData.ts, MilestoneBadgeModal.tsx(新設), ProgressScreen.tsx, App.tsx
+- npm run build: ✅ OK
+
+  > [FROM: GM | 16:30] 対応完了: SPEC-20260328-01 実装・PR #37 マージ済み。パイプライン空。
+
+---
+
 ## [2026-03-28 15:30 JST] FROM: GM → #dev | SPEC-20260328-01 Codex投入
 
 - SPEC-20260328-01（#33 節目バッジ・称号システム）を Codex CLI で投入

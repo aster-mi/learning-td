@@ -5,6 +5,31 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-28 16:30 JST] Agent: GM
+Summary:
+- SPEC-20260328-01（#33 節目バッジ・称号システム）を直接実装し PR #37 マージ完了。
+- Codex CLI が2回とも無応答（1回目: 未コミット変更検出で停止、2回目: プロンプトのみ出力して終了）のため Claude GM が直接実装。
+- 変更5ファイル: progression.ts, saveData.ts, MilestoneBadgeModal.tsx(新設), ProgressScreen.tsx, App.tsx
+- npm run build: ✅ OK (759ms)
+Changed Files:
+- `src/data/progression.ts`（StreakMilestone型・STREAK_MILESTONES定数・milestoneReached追加）
+- `src/data/saveData.ts`（badges?: string[] 追加）
+- `src/components/MilestoneBadgeModal.tsx`（新設・スプリングアニメーション）
+- `src/components/ProgressScreen.tsx`（称号バナー＋バッジコレクション追加）
+- `src/App.tsx`（MilestoneBadgeModal 表示・badges保存ロジック追加）
+- `.ai/DASHBOARD.md`・`.ai/specs/READY.md`・`.ai/specs/DONE.md`・チャンネル各種（更新）
+Validation:
+- npm run build: OK (759ms)
+- npm run quiz:validate: 未実施（問題データ変更なし）
+Open Questions:
+- #20（非同期ソーシャル）: 引き続き human 判断待ち
+- `claude` CLI EPERM: maintainer 調査待ち（未解決）
+Next Step:
+- パイプライン空 → Scout が新規バックログ起票・CEO が次スプリント方針を決定
+- Codex CLI の無応答問題は skills/SKILL_CODEX_ORCHESTRATION.md に記録を検討
+
+---
+
 ## [2026-03-28 15:30 JST] Agent: GM
 Summary:
 - SPEC-20260328-01（#33 節目バッジ・称号システム）を Codex CLI でバックグラウンド投入。
