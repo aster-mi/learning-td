@@ -5,6 +5,27 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-29 14:00 JST] Agent: デザイン
+Summary:
+- PENDING.md の2件（SPEC-20260329-01・02）を確認し READY.md へ移行
+- 両件はデータのみ案件（questionMeta.ts + jsonl 追記）のため設計省略
+Changed Files:
+- `.ai/specs/PENDING.md`（2件を移行済みコメントに変換）
+- `.ai/specs/READY.md`（SPEC-20260329-01・02 本文追加）
+- `.ai/channels/specs.md`（READY移行完了通知）
+- `.ai/channels/general.md`（セッション完了報告）
+- `.ai/AGENT_HANDOFF.md`（本エントリ）
+Validation:
+- npm run build: 未実施（コード変更なし）
+Open Questions:
+- #20（非同期ソーシャル）: human判断待ち継続
+Next Step:
+- GM が READY.md（2件）を確認し Codex へ並列投入
+  - SPEC-20260329-01: math.jsonl +40問 + questionMeta.ts 算数サブカテゴリ追加
+  - SPEC-20260329-02: language.jsonl +35問 + questionMeta.ts 国語サブカテゴリ追加
+
+---
+
 ## [2026-03-29 JST] Agent: 企画＋調査
 Summary:
 - 算数・国語カテゴリの現状調査（第4弾）
