@@ -34,7 +34,7 @@ $TaskDefinitions = @(
     [pscustomobject]@{ Name = "learning-td-ceo";        Agent = "ceo";        Runner = "claude"; Start = "07:00"; RepeatHours = 12; Purpose = "priority / strategy" },
     [pscustomobject]@{ Name = "learning-td-planning";   Agent = "planning";   Runner = "claude"; Start = "08:30"; RepeatHours = 4;  Purpose = "research / readying" },
     [pscustomobject]@{ Name = "learning-td-design";     Agent = "design";     Runner = "claude"; Start = "09:30"; RepeatHours = 4;  Purpose = "ui / ux design" },
-    [pscustomobject]@{ Name = "learning-td-gm";         Agent = "gm";         Runner = "claude"; Start = "10:00"; RepeatHours = 1;  Purpose = "claude gm -> codex build/review" },
+    [pscustomobject]@{ Name = "learning-td-gm";         Agent = "gm";         Runner = "claude"; Start = "10:00"; RepeatHours = 3;  Purpose = "claude gm -> codex build/review" },
     [pscustomobject]@{ Name = "learning-td-librarian";  Agent = "librarian";  Runner = "claude"; Start = "22:30"; RepeatHours = 24; Purpose = "docs / skills upkeep" },
     [pscustomobject]@{ Name = "learning-td-maintainer"; Agent = "maintainer"; Runner = "codex";  Start = "03:15"; RepeatHours = 24; Purpose = "runner / scheduler upkeep" }
 )
@@ -71,7 +71,7 @@ function Register-Agent {
 
     $Action = New-ScheduledTaskAction `
         -Execute "powershell.exe" `
-        -Argument "-NonInteractive -NoProfile -ExecutionPolicy Bypass -File `"$RunAgent`" -Agent $Agent -Runner $AgentRunner" `
+        -Argument "-NonInteractive -NoProfile -ExecutionPolicy Bypass -File `"$RunAgent`" -Agent $Agent -Runner $AgentRunner -ScheduledRun" `
         -WorkingDirectory $ProjectDir
 
     $Trigger = New-ScheduledTaskTrigger `

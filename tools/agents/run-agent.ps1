@@ -1,5 +1,5 @@
 # run-agent.ps1
-# Usage: .\run-agent.ps1 -Agent <scout|ceo|planning|design|gm|librarian|maintainer> [-Runner <claude|codex>]
+# Usage: .\run-agent.ps1 -Agent <scout|ceo|planning|design|gm|librarian|maintainer> [-Runner <claude|codex>] [-ScheduledRun]
 # Runs the specified learning-td agent via the selected CLI runner.
 
 param(
@@ -9,7 +9,10 @@ param(
 
     [Parameter(Mandatory=$false)]
     [ValidateSet("claude", "codex")]
-    [string]$Runner = "claude"
+    [string]$Runner = "claude",
+
+    [Parameter(Mandatory=$false)]
+    [switch]$ScheduledRun
 )
 
 $ProjectDir = "D:\game\tower\learning-td"
@@ -117,6 +120,85 @@ function Import-EnvFile {
     }
 }
 
+function Get-CurrentBranch {
+    $Branch = (& git branch --show-current 2>$null)
+    if ($LASTEXITCODE -ne 0) {
+        return $null
+    }
+
+    return $Branch.Trim()
+}
+
+function Get-GitStatusPorcelain {
+    $Status = (& git status --porcelain 2>$null)
+    if ($LASTEXITCODE -ne 0) {
+        return @()
+    }
+
+    if ($null -eq $Status) {
+        return @()
+    }
+
+    return @($Status)
+}
+
+function Sync-ScheduledChanges {
+    param(
+        [string]$AgentName
+    )
+
+    $Branch = Get-CurrentBranch
+    if (-not $Branch) {
+        Write-RunnerLog "Auto-push skipped: current branch could not be determined."
+        return
+    }
+
+    $PostRunStatus = Get-GitStatusPorcelain
+    if ($PostRunStatus.Count -gt 0) {
+        Write-RunnerLog "Auto-commit: staging scheduled run changes."
+        & git add -A 2>&1 | Tee-Object -FilePath $LogFile -Append | Out-Host
+        if ($LASTEXITCODE -ne 0) {
+            throw "git add failed during scheduled auto-push."
+        }
+
+        $CommitMessage = "chore: auto-save $AgentName scheduled run"
+        & git commit -m $CommitMessage 2>&1 | Tee-Object -FilePath $LogFile -Append | Out-Host
+        if ($LASTEXITCODE -ne 0) {
+            throw "git commit failed during scheduled auto-push."
+        }
+    } else {
+        Write-RunnerLog "Auto-commit skipped: no working tree changes after scheduled run."
+    }
+
+    & git fetch origin $Branch 2>&1 | Tee-Object -FilePath $LogFile -Append | Out-Host
+    if ($LASTEXITCODE -ne 0) {
+        throw "git fetch failed during scheduled auto-push."
+    }
+
+    $AheadCount = [int]((& git rev-list --count "origin/$Branch..HEAD" 2>$null).Trim())
+    $BehindCount = [int]((& git rev-list --count "HEAD..origin/$Branch" 2>$null).Trim())
+
+    if ($BehindCount -gt 0) {
+        Write-RunnerLog "Auto-sync: rebasing scheduled branch onto origin/$Branch."
+        & git pull --rebase origin $Branch 2>&1 | Tee-Object -FilePath $LogFile -Append | Out-Host
+        if ($LASTEXITCODE -ne 0) {
+            throw "git pull --rebase failed during scheduled auto-push."
+        }
+
+        $AheadCount = [int]((& git rev-list --count "origin/$Branch..HEAD" 2>$null).Trim())
+    }
+
+    if ($AheadCount -gt 0) {
+        Write-RunnerLog "Auto-push: pushing $AheadCount commit(s) to origin/$Branch."
+        & git push origin $Branch 2>&1 | Tee-Object -FilePath $LogFile -Append | Out-Host
+        if ($LASTEXITCODE -ne 0) {
+            throw "git push failed during scheduled auto-push."
+        }
+    } else {
+        Write-RunnerLog "Auto-push skipped: branch is already in sync with origin/$Branch."
+    }
+}
+
 # Ensure log directory exists
 if (-not (Test-Path $LogDir)) {
     New-Item -ItemType Directory -Path $LogDir | Out-Null
@@ -134,6 +216,7 @@ $Prompt = Get-Content $PromptFile -Raw -Encoding utf8
 
 Write-RunnerLog "Starting agent: $Agent"
 Write-RunnerLog "Runner: $Runner"
+Write-RunnerLog "Scheduled run: $ScheduledRun"
 Write-RunnerLog "Prompt: $PromptFile"
 if (Test-Path $RoleFile) {
     Write-RunnerLog "Role: $RoleFile"
@@ -142,6 +225,21 @@ Write-RunnerLog "Mode: full-auto"
 Import-EnvFile -Path $SharedEnvFile -Logger ${function:Write-RunnerLog}
 
 Set-Location $ProjectDir
+
+$AutoSyncArmed = $false
+if ($ScheduledRun) {
+    if (Get-Command git -ErrorAction SilentlyContinue) {
+        $InitialGitStatus = Get-GitStatusPorcelain
+        if ($InitialGitStatus.Count -eq 0) {
+            $AutoSyncArmed = $true
+            Write-RunnerLog "Auto-push armed: working tree clean at scheduled run start."
+        } else {
+            Write-RunnerLog "Auto-push skipped: working tree was already dirty before scheduled run."
+        }
+    } else {
+        Write-RunnerLog "Auto-push skipped: git is not available on PATH."
+    }
+}
 
 $exitCode = 0
 
@@ -174,6 +272,15 @@ if ($Agent -eq "gm") {
             -ExecutionPolicy Bypass `
             -File $DiscordSessionReportScript `
             -ProjectDir $ProjectDir 2>&1 | Tee-Object -FilePath $LogFile -Append | Out-Host
+    }
+}
+
+if ($ScheduledRun -and $exitCode -eq 0 -and $AutoSyncArmed) {
+    try {
+        Sync-ScheduledChanges -AgentName $Agent
+    } catch {
+        $_ | Tee-Object -FilePath $LogFile -Append | Out-Host
+        $exitCode = 1
     }
 }
 

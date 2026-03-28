@@ -5,6 +5,28 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-28 15:26 JST] Agent: Codex
+Summary:
+- Scheduled agent runs now auto-commit and push at the end when they started from a clean repo state.
+- `learning-td-gm` cadence was reduced from hourly to once every 3 hours, and Task Scheduler registration now passes `-ScheduledRun`.
+Changed Files:
+- `.ai/AGENT_HANDOFF.md`
+- `.ai/DECISIONS.md`
+- `AGENTS.md`
+- `tools/agents/README.md`
+- `tools/agents/run-agent.ps1`
+- `tools/agents/setup-task-scheduler.ps1`
+Validation:
+- PowerShell parse check (`run-agent.ps1` / `setup-task-scheduler.ps1`): OK
+- scheduler dry run: OK
+- Task Scheduler re-register: OK
+Open Questions:
+- None
+Next Step:
+- Watch the next scheduled GM run and confirm auto-push only triggers when the run actually changes tracked files.
+
+---
+
 ## [2026-03-28 JST] Agent: GM
 Summary:
 - パイプライン空・オープンPRなし確認（セッション #13）

@@ -22,15 +22,32 @@ Owner:
 
 ---
 
-## [2026-03-27 09:30 JST] Streak Rescue コスト
+## [2026-03-28 03:17 JST] Scheduled Runner Auto Push
 Context:
-- SPEC-20260327-01 でストリーク救済モーダルを設計。コストの根拠が必要。
+- The user requested scheduled agent runs to push deployable changes automatically and to reduce GM cadence.
 
 Decision:
-- rescue コストは 50コイン固定。
+- `Task Scheduler` launches now pass `-ScheduledRun`, and successful scheduled runs auto-commit and push only when the repo started clean.
+- `learning-td-gm` cadence is reduced to once every 3 hours.
 
 Impact:
-- `StreakRescueModal` のデフォルト props、App.tsx の rescue ハンドラでこの値を使用。
+- Scheduled edits can reach GitHub Pages deploy without relying on the agent to remember a final push.
+- Pre-existing local changes are not swept into scheduler-generated commits.
+
+Owner:
+- Human + Codex
+
+---
+
+## [2026-03-27 09:30 JST] Streak Rescue コスト
+Context:
+- SPEC-20260327-01 でストリーク救済モーダルを設計し、コストの妥当性を決める必要があった。
+
+Decision:
+- rescue コストは 50 コイン固定。
+
+Impact:
+- `StreakRescueModal` の default props と `app.tsx` の rescue ハンドラでこの値を使う。
 
 Owner:
 - デザイン

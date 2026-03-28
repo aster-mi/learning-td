@@ -85,7 +85,7 @@ Next Step:
 | `learning-td-ceo` | 12時間ごと | CEO：戦略方針の決定 |
 | `learning-td-planning` | 4時間ごと | 企画＋調査：トレンド調査・仕様化 |
 | `learning-td-design` | 4時間ごと | デザイン：UI/UX設計・PENDING→READY移行 |
-| `learning-td-gm` | 1時間ごと | GM：Codex投入・レビュー調整・マージ |
+| `learning-td-gm` | 3時間ごと | GM：Codex投入・レビュー調整・マージ |
 | `learning-td-librarian` | 12時間ごと | Librarian：学びの反映 |
 | `learning-td-maintainer` | 6時間ごと | Maintainer：runner / scheduler / dashboard 保守 |
 | Codex（最大10本） | GMから起動 | 実装 / focused review：ブランチ実装・詳細レビュー |

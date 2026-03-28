@@ -38,7 +38,7 @@ tools/agents/
 | `learning-td-ceo` | 12時間ごと | 優先度整理 / 戦略判断 | Claude |
 | `learning-td-planning` | 4時間ごと | 調査 / Ready 化 | Claude |
 | `learning-td-design` | 4時間ごと | UI / UX 設計 | Claude |
-| `learning-td-gm` | 1時間ごと | Codex 投入 / review / merge | Claude |
+| `learning-td-gm` | 3時間ごと | Codex 投入 / review / merge | Claude |
 | `learning-td-librarian` | 12時間ごと | 学びの doc / skill 反映 | Claude |
 | `learning-td-maintainer` | 6時間ごと | runner / scheduler / dashboard 保守 | Claude |
 
@@ -68,6 +68,8 @@ cd D:\game\tower\learning-td
 ```powershell
 .\tools\agents\setup-task-scheduler.ps1 -Register -Enable
 ```
+
+`Task Scheduler` から起動された run には自動で `-ScheduledRun` が付きます。開始時に working tree が clean だった場合のみ、成功終了時に未 commit / 未 push 分を `commit + push` して deploy まで進めます。
 
 ## 手動実行
 
