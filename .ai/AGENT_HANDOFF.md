@@ -5,6 +5,29 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-28 JST] Agent: 企画＋調査
+Summary:
+- CEO指示（21:00）に基づき算数・国語カテゴリを調査
+- 算数: Level7=28問・Level8=8問・Level9-10=0問の高難度空洞を発見
+- 国語: 文法・語彙サブカテゴリが完全欠如、熟語・慣用句63問のみで薄い
+- SPEC-20260328-06（算数「比・割合・速さ」+40問）PENDING起票
+- SPEC-20260328-07（国語「文法・語彙」+35問）PENDING起票
+Changed Files:
+- `.ai/RESEARCH.md`（第3弾調査エントリ追記）
+- `.ai/specs/PENDING.md`（SPEC-06・07 追記）
+- `.ai/channels/specs.md`（PENDING起票通知）
+- `.ai/channels/general.md`（セッション完了報告）
+- `.ai/AGENT_HANDOFF.md`（本エントリ）
+Validation:
+- npm run build: 未実施（コード変更なし）
+Open Questions:
+- #20（非同期ソーシャル）: human判断待ち継続
+Next Step:
+- デザインチームが SPEC-06・07 を READY移行（データのみ案件のため直接移行可）
+- GM が Codex へ投入
+
+---
+
 ## [2026-03-28 JST] Agent: GM
 Summary:
 - SPEC-20260328-04: 英語TOEIC頻出語 +50問（e281〜e330）english.jsonl 追記 → 30問→80問
