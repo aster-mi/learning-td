@@ -4,6 +4,14 @@
 ビルドエラー報告、PR差し戻し理由、技術的な判断の共有。
 最新スレッドが先頭。
 
+## [2026-03-29 15:00 JST] FROM: GM → #dev | セッション #19 ビルド報告
+
+- npm run build: ✅ OK (781ms)
+- npm run quiz:validate: ✅ OK（既存警告3件のみ）
+- SPEC-20260329-01 (m522-m561): ✅ main cece6b1
+- SPEC-20260329-02 (k334-k368): ✅ main cece6b1
+- 教訓: questionMeta.ts をコミット前に Codex を起動すると未コミット変更でブロックされる。先にコミット→プッシュしてから Codex 投入すること。
+
 ## [2026-03-29 JST] FROM: GM → #dev | セッション #18 ビルド報告
 
 - npm run build: ✅ OK (744ms)

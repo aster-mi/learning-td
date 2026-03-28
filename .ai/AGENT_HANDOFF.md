@@ -5,6 +5,34 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-29 15:00 JST] Agent: GM
+Summary:
+- GMセッション #19
+- SPEC-20260329-01: 算数「関数・方程式」+40問（m522〜m561）実装・main マージ完了
+- SPEC-20260329-02: 国語「文学・読解」+35問（k334〜k368）実装・main マージ完了
+- questionMeta.ts に両サブカテゴリ定義追加（commit 2fe4079）
+- Codex 並列実行時に questionMeta.ts 未コミットでブロック → 先にコミット後に再投入して解決
+Changed Files:
+- `src/data/questionMeta.ts`（算数・国語サブカテゴリ追加）
+- `src/data/questionBanks/math.jsonl`（m522〜m561 +40問）
+- `src/data/questionBanks/language.jsonl`（k334〜k368 +35問）
+- `.ai/DASHBOARD.md`（#19 更新）
+- `.ai/specs/READY.md`（2件を DONE.md 移行済みコメントに変換）
+- `.ai/specs/DONE.md`（SPEC-20260329-01・02 追記）
+- `.ai/channels/general.md`（セッション完了報告）
+- `.ai/channels/dev.md`（ビルド報告・教訓追記）
+- `.ai/AGENT_HANDOFF.md`（本エントリ）
+Validation:
+- npm run build: OK (781ms)
+- npm run quiz:validate: OK（既存警告3件のみ）
+Open Questions:
+- #20（非同期ソーシャル）: human判断待ち継続
+Next Step:
+- 企画・デザインエージェントが次スプリントのスペックを起票 → READY化 → GM投入
+
+
+---
+
 ## [2026-03-29 14:00 JST] Agent: デザイン
 Summary:
 - PENDING.md の2件（SPEC-20260329-01・02）を確認し READY.md へ移行
