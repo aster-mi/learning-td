@@ -5,6 +5,78 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-28 14:30 JST] Agent: デザイン
+Summary:
+- SPEC-20260328-01（#33 節目バッジ・称号システム）の UI/UX 設計を完了。
+- MilestoneBadgeModal: StreakRescueModal ベース、スプリングアニメーション (zIndex: 310)。
+- 称号表示は ProgressScreen 概要タブのみ（StageSelectヘッダー追加なし、mobile overflow 回避）。
+- ProgressScreen 概要タブに称号バナー + バッジコレクション（4枚グリッド）追加レイアウトを設計。
+- PENDING.md → READY.md 移行完了。Codex 指示文も READY.md に記載済み。
+Changed Files:
+- `.ai/specs/READY.md`（SPEC-20260328-01 フル設計追記）
+- `.ai/specs/PENDING.md`（SPEC-20260328-01 削除・空化）
+- `.ai/channels/specs.md`（設計完了通知投稿）
+- `.ai/channels/general.md`（セッション完了報告）
+- `.ai/AGENT_HANDOFF.md`（本エントリ）
+Validation:
+- npm run build: 未実施（コード変更なし）
+- npm run quiz:validate: 未実施（コード変更なし）
+Open Questions:
+- #20（非同期ソーシャル）: 引き続き human 判断待ち
+- `claude` CLI EPERM: maintainer 調査待ち
+Next Step:
+- GM: READY.md の SPEC-20260328-01 を確認し Codex へ投入（P2）
+- Scout: バックログ補充候補A（難易度フィルター）を GitHub Issue に起票
+
+---
+
+## [2026-03-28 13:00 JST] Agent: 企画＋調査
+Summary:
+- CEO指示に従い #33（節目バッジ/称号）の仕様を `specs/PENDING.md` に起票（SPEC-20260328-01）。
+- RESEARCH.md に 100日節目定義とバックログ補充候補3件（難易度フィルター・理科拡充・サマリ表示）を追記。
+- #specs にデザインチームへの設計依頼を投稿、#general にセッション完了を報告。
+Changed Files:
+- `.ai/RESEARCH.md`（100日節目追加・バックログ補充候補3件追記）
+- `.ai/specs/PENDING.md`（SPEC-20260328-01 新規起票）
+- `.ai/channels/specs.md`（SPEC起票報告・デザイン依頼）
+- `.ai/channels/general.md`（セッション完了報告）
+- `.ai/AGENT_HANDOFF.md`（本エントリ）
+Validation:
+- npm run build: 未実施（コード変更なし）
+- npm run quiz:validate: 未実施（コード変更なし）
+Open Questions:
+- #20（非同期ソーシャル）: 引き続き human 判断待ち
+- `claude` CLI EPERM: maintainer 調査待ち
+Next Step:
+- デザインエージェント: SPEC-20260328-01 のUI設計を行い READY.md へ移行
+- Scout: バックログ補充候補A（難易度フィルター）を GitHub Issue に起票
+- GM: READY入り次第 Codex へ投入（P2優先）
+
+---
+
+## [2026-03-28 09:00 JST] Agent: Claude CEO
+Summary:
+- パイプライン空（READY/PENDING ともに空）を受け、次スプリント方針を決定。
+- #33（節目バッジ/称号）を P3 → P2 昇格し、企画チームへ仕様化を指示。
+- Scout へバックログ補充（新規1〜2件起票）を指示。
+- maintainer へ `claude` CLI EPERM 問題（uv_spawn 'reg'）の切り分けを手配。
+Changed Files:
+- `.ai/STRATEGY.md`（新エントリ追加）
+- `.ai/channels/general.md`（方針投稿追加）
+- `.ai/AGENT_HANDOFF.md`（本エントリ）
+Validation:
+- npm run build: 未実施（infra/docs変更のみ）
+- npm run quiz:validate: 未実施
+Open Questions:
+- #20（非同期ソーシャル）は human 判断待ち継続
+- `claude` CLI EPERM（uv_spawn 'reg'）: maintainer 調査待ち
+Next Step:
+- 企画チームが #33 仕様を PENDING.md に起票すること
+- Scout が新規改善候補を GitHub Issue に起票すること
+- デザインチームが PENDING.md を見て READY.md へ移行すること
+
+---
+
 ## [2026-03-28 03:19 JST] Agent: Codex
 Summary:
 - dashboard の Task Scheduler 読み取りで PowerShell progress が `dashboard.err.log` を CLIXML で汚染していたため抑止した。

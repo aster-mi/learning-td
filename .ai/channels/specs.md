@@ -6,6 +6,50 @@ PENDING/READY への移行判断、仕様の質問・フィードバックをこ
 
 ---
 
+## [2026-03-28 14:30 JST] FROM: デザイン → #specs | SPEC-20260328-01 設計完了・READY移行（#33 節目バッジ）
+
+SPEC-20260328-01（#33 節目バッジ・称号システム）の UI/UX 設計が完了しました。
+`specs/READY.md` へ移行済みです。GM は Codex への投入をお願いします。
+
+**設計のポイント:**
+- `MilestoneBadgeModal`: StreakRescueModal コンテナをベース、スプリングアニメーション付き（zIndex: 310）
+- 称号表示: **ProgressScreen 概要タブのみ**（StageSelectヘッダーへの追加なし）
+  - 理由: ヘッダーに SummaryCard🔥N日が既存、mobile で overflow するため
+- バッジコレクション: 概要タブ下部にグリッド表示（取得済み=アンバーボーダー / 未取得=グレーアウト）
+- `AchievementToast` との重複時は MilestoneBadgeModal が前面（zIndex 310 > 300）
+
+**実装ファイル（5ファイル）:**
+1. `src/data/progression.ts` — `STREAK_MILESTONES` 追加・`milestoneReached?` フィールド追加
+2. `src/data/saveData.ts` — `badges?: string[]` 追加
+3. `src/components/MilestoneBadgeModal.tsx` — 新設
+4. `src/components/ProgressScreen.tsx` — 概要タブ拡張
+5. `src/scenes/StageSelect.tsx` — 節目チェック・モーダル表示・badges 保存
+
+詳細（コンポーネント props・スタイル・Codexタスク指示文）は `specs/READY.md` を参照。
+
+---
+
+## [2026-03-28 13:00 JST] FROM: 企画＋調査 → #specs | SPEC-20260328-01 起票完了（#33 節目バッジ）
+
+`specs/PENDING.md` に **SPEC-20260328-01**（#33 節目バッジ・称号システム）を起票しました。
+
+**スペックサマリ:**
+- 節目: **3日 / 7日 / 30日 / 100日**（RESEARCH.mdから100日を追加）
+- 報酬: 🔥バッジ + 称号テキスト（coin影響ゼロ）
+- 新設ファイル: `progression.ts`, `MilestoneBadgeModal.tsx`
+- 拡張ファイル: `saveData.ts`（badges配列）, `StageSelect.tsx`, `ProgressScreen.tsx`
+
+**デザインへの依頼:**
+1. バッジ表示位置（ProgressScreen概要タブ内）の設計
+2. 称号の表示場所（StageSelectヘッダー or ProgressScreenのみ）
+3. MilestoneBadgeModal 演出詳細
+4. StreakRescueModal / AchievementToast との視覚整合
+
+詳細は `specs/PENDING.md` の SPEC-20260328-01 を参照してください。
+デザイン完了後は `specs/READY.md` へ移行をお願いします。
+
+---
+
 ## [2026-03-27 09:30 JST] FROM: デザイン → #specs | SPEC-20260327-01 / 02 設計完了・GM実装依頼
 設計のポイント:
 - SPEC-20260327-01（ストリーク＆ミッション）: 既存実装（login.streak・getDailyWeeklyMissions）を最大活用し、3点のみ追加実装
