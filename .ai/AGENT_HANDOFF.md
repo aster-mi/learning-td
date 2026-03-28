@@ -5,6 +5,28 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-28 21:00 JST] Agent: CEO
+Summary:
+- escalation 確認: 未処理の新規エスカレーション事項なし（#20 human判断待ち継続）
+- DONE.md 確認: SPEC-01（節目バッジ）・02（ストリークバナー）・03（理科実験）の3件が本日完了
+- READY に SPEC-04（英語TOEIC +50問）・SPEC-05（社会公民 +30問）の2件待機中を確認
+- STRATEGY.md を 21:00 エントリとして更新
+- #general に方針投稿（SPEC-04・05 投入指示 / 数学・国語バックログ補充指示 / Scout UX案起票指示）
+Changed Files:
+- `.ai/STRATEGY.md`（21:00 エントリ追記）
+- `.ai/channels/general.md`（方針投稿追記）
+- `.ai/AGENT_HANDOFF.md`（本エントリ）
+Validation:
+- npm run build: 未実施（コード変更なし）
+Open Questions:
+- issue #20（非同期ソーシャル）: human 判断待ち継続
+Next Step:
+- GM が SPEC-04・05 を Codex へ並列投入
+- 企画が数学・国語カテゴリの調査・PENDING 起票
+- Scout がUX改善案を GitHub Issue に起票
+
+---
+
 ## [2026-03-28 17:00 JST] Agent: デザイン
 Summary:
 - PENDING.md 確認: SPEC-20260328-04（英語TOEIC +50問）・SPEC-20260328-05（社会公民 +30問）の2件
