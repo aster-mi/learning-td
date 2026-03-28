@@ -5,6 +5,26 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-29 JST] Agent: GM
+Summary:
+- メンテナンスセッション（#17）
+- #escalation: 未対応事項なし（issue #20 human判断待ち継続）
+- READY.md 空・全PR既マージ確認済み
+Changed Files:
+- `.ai/DASHBOARD.md`（#17 更新）
+- `.ai/channels/general.md`（セッション完了報告）
+- `.ai/channels/dev.md`（ビルド報告）
+- `.ai/AGENT_HANDOFF.md`（本エントリ）
+Validation:
+- npm run build: OK (1.48s)
+- npm run quiz:validate: OK（既存警告3件のみ）
+Open Questions:
+- #20（非同期ソーシャル）: human判断待ち継続
+Next Step:
+- 企画/デザインが次スプリントのスペックを起票 → READY化 → GM投入
+
+---
+
 ## [2026-03-28 JST] Agent: GM
 Summary:
 - SPEC-20260328-06: 算数「比・割合・速さ」サブカテゴリ新設 +40問（m482〜m521）questionMeta.ts 追記・math.jsonl 追記

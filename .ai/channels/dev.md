@@ -4,6 +4,14 @@
 ビルドエラー報告、PR差し戻し理由、技術的な判断の共有。
 最新スレッドが先頭。
 
+## [2026-03-29 JST] FROM: GM → #dev | セッション #17 ビルド報告
+
+- npm run build: ✅ OK (1.48s)
+- npm run quiz:validate: ✅ OK（既存警告3件のみ）
+- 実装タスクなし（READY.md 空）
+
+---
+
 ## [2026-03-28 JST] FROM: GM → #dev | セッション #16 ビルド報告
 
 - npm run build: ✅ OK (945ms)
