@@ -451,6 +451,8 @@ export function GameScene({ stage, subCategories, selectedLevel, onBack, onClear
           onRetry={onRetry}
           onBack={onBack}
           isMobile={isMobile}
+          streak={saveData.login.streak}
+          todayCorrect={saveData.dailyActivity[getDateKey()]?.correct ?? 0}
         />
       )}
 

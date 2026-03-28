@@ -16,12 +16,15 @@ interface Props {
   onRetry: () => void;
   onBack: () => void;
   isMobile: boolean;
+  streak?: number;
+  todayCorrect?: number;
 }
 
 export function ResultScreen({
   isWin, stars, coins, accuracy, maxCombo,
   correctCount, wrongCount, elapsedSec, baseHpRatio,
   newUnlock, onRetry, onBack, isMobile,
+  streak = 0, todayCorrect = 0,
 }: Props) {
   const [showStars, setShowStars] = useState(0);
   const [showCoins, setShowCoins] = useState(false);
@@ -143,6 +146,23 @@ export function ResultScreen({
             <div style={{ fontSize: 32 }}>{getCatalogEntry(newUnlock)?.emoji ?? "❓"}</div>
             <div style={{ fontSize: 18, fontWeight: "bold", color: "#fff", marginTop: 4 }}>
               {getCatalogEntry(newUnlock)?.label ?? newUnlock}
+            </div>
+          </div>
+        )}
+
+        {/* ストリーク・当日進捗バナー (勝利時のみ) */}
+        {isWin && (streak > 0 || todayCorrect > 0) && (
+          <div style={{
+            textAlign: "center", marginBottom: 16,
+            padding: "8px 12px",
+            background: "#fef3c7",
+            borderRadius: 8,
+            border: "1px solid #fde68a",
+          }}>
+            <div style={{ fontSize: 12, color: "#92400e", fontWeight: "bold" }}>
+              {streak > 0 && `🔥 連続${streak}日目！`}
+              {streak > 0 && todayCorrect > 0 && "　"}
+              {todayCorrect > 0 && `📚 今日${todayCorrect}問正解`}
             </div>
           </div>
         )}
