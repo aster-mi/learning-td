@@ -5,6 +5,27 @@ Always add a new entry at the top.
 
 ---
 
+## [2026-03-29 09:00 JST] Agent: デザイン
+Summary:
+- デザインセッション（scheduled）実行
+- PENDING.md 確認: 新規スペックなし（パイプライン空）
+- PENDING.md・READY.md の stale content（SPEC-06/07 本文）をクリーンアップ
+Changed Files:
+- `.ai/specs/PENDING.md`（stale 本文除去、移行済みコメント整理）
+- `.ai/specs/READY.md`（stale 本文除去、移行済みコメント整理）
+- `.ai/channels/specs.md`（セッション完了通知投稿）
+- `.ai/channels/general.md`（セッション完了報告投稿）
+- `.ai/AGENT_HANDOFF.md`（本エントリ）
+Validation:
+- npm run build: 未実施（コード変更なし）
+Open Questions:
+- #20（非同期ソーシャル）: human判断待ち継続
+Next Step:
+- 企画＋調査エージェントが次スプリントのスペックを PENDING.md に起票
+- デザインが起票を受けて設計・READY移行（データのみ案件は設計省略でREADY直接移行可）
+
+---
+
 ## [2026-03-29 JST] Agent: GM
 Summary:
 - メンテナンスセッション（#17）
